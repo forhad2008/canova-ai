@@ -19,6 +19,12 @@ export interface Task {
   completed: boolean;
   dueDate: 'today' | 'week' | 'all';
   priority?: TaskPriority;
+  scheduledDate?: string; // YYYY-MM-DD
+  scheduledTime?: string; // HH:mm
+  alarmTime?: string;     // HH:mm
+  alarmEnabled?: boolean;
+  alarmFired?: boolean;
+  isOverdue?: boolean;
 }
 
 export interface FileItem {
@@ -48,6 +54,16 @@ export interface StructuredCard {
   followUp?: string;
 }
 
+export interface ChatAttachment {
+  id: string;
+  name: string;
+  type: 'image' | 'document';
+  mimeType: string;
+  size: string;
+  dataUrl: string; // Base64 data url or preview
+  textContent?: string;
+}
+
 export interface ChatMessage {
   id: string;
   sender: 'user' | 'assistant';
@@ -55,6 +71,15 @@ export interface ChatMessage {
   timestamp: string;
   structuredCard?: StructuredCard;
   suggestionChips?: string[];
+  attachments?: ChatAttachment[];
+}
+
+export interface ChatThread {
+  id: string;
+  title: string;
+  createdAt: string;
+  updatedAt: string;
+  messages: ChatMessage[];
 }
 
 export interface UserProfile {

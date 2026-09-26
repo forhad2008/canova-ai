@@ -24,7 +24,7 @@ function getGeminiClient(customApiKey?: string) {
   });
 }
 
-// 1. API route for Gemini conversational chat
+// 1. API route for Gemini conversational chat (Multimodal & Unlimited)
 app.post('/api/chat', async (req, res) => {
   try {
     const { messages, systemInstruction, model, customApiKey } = req.body;
@@ -37,19 +37,62 @@ app.post('/api/chat', async (req, res) => {
       });
     }
 
-    // Format conversation history
-    const contents = (messages || []).map((m: { role: string; content: string }) => ({
-      role: m.role === 'assistant' || m.role === 'model' ? 'model' : 'user',
-      parts: [{ text: m.content }],
-    }));
+    // Format conversation history with multimodal parts support
+    const contents = (messages || []).map((m: any) => {
+      const role = m.role === 'assistant' || m.role === 'model' || m.sender === 'assistant' ? 'model' : 'user';
+      const parts: any[] = [];
+
+      // Add text content
+      if (m.content || m.text) {
+        parts.push({ text: m.content || m.text });
+      }
+
+      // Add attachments if present (Image inlineData or Document text)
+      if (Array.isArray(m.attachments)) {
+        m.attachments.forEach((att: any) => {
+          if (att.type === 'image' && att.dataUrl) {
+            // Strip dataUrl prefix if present e.g. "data:image/png;base64,..."
+            const base64Data = att.dataUrl.includes('base64,')
+              ? att.dataUrl.split('base64,')[1]
+              : att.dataUrl;
+            parts.push({
+              inlineData: {
+                mimeType: att.mimeType || 'image/png',
+                data: base64Data,
+              },
+            });
+          } else if (att.textContent) {
+            parts.push({
+              text: `\n--- Attached Document (${att.name}) ---\n${att.textContent}\n--- End Document ---`,
+            });
+          } else if (att.type === 'document' && att.dataUrl && att.dataUrl.includes('data:application/pdf')) {
+            const base64Data = att.dataUrl.split('base64,')[1] || att.dataUrl;
+            parts.push({
+              inlineData: {
+                mimeType: 'application/pdf',
+                data: base64Data,
+              },
+            });
+          }
+        });
+      }
+
+      if (parts.length === 0) {
+        parts.push({ text: '' });
+      }
+
+      return { role, parts };
+    });
+
+    const targetModel = model || 'gemini-3.8-flash';
 
     const response = await ai.models.generateContent({
-      model: model || 'gemini-2.5-flash',
+      model: targetModel,
       contents,
       config: {
         systemInstruction:
           systemInstruction ||
-          'You are Canova AI, an ultra-smart, sleek executive AI work companion. Give structured, visually engaging, helpful, high-impact, and concise responses. Format key concepts cleanly with headings and lists when helpful.',
+          'You are Canova AI, an ultra-smart, sleek executive AI work companion. Give structured, visually engaging, helpful, high-impact, and concise responses. Format key concepts cleanly with headings and lists when helpful. When user provides images or document attachments, analyze them in detail and provide actionable insights.',
       },
     });
 
@@ -78,14 +121,14 @@ app.post('/api/ai/tool-execute', async (req, res) => {
     }
 
     let systemInstruction = 'You are an expert AI work assistant.';
-    let model = 'gemini-2.5-flash';
+    let model = 'gemini-3.8-flash';
     let userPrompt = prompt;
 
     switch (toolId) {
       case 'code-assistant':
         systemInstruction =
           'You are a senior full-stack software engineer and system architect. Write clean, production-ready, type-safe code with comments, edge-case analysis, and performance considerations. Return formatted markdown with code blocks.';
-        model = 'gemini-2.5-flash';
+        model = 'gemini-3.8-flash';
         break;
       case 'translator':
         systemInstruction = `You are a professional executive translator. Translate the text into ${targetLang || 'Japanese'} with natural business cadence, idiomatic accuracy, and contextual nuance. Provide phonetic pronunciation guide (e.g. Romaji/Pinyin) and cultural context if beneficial.`;
@@ -157,7 +200,7 @@ Return ONLY a valid JSON array of objects with the keys:
 Do not enclose in markdown code fences if possible, or return parseable JSON.`;
 
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-3.8-flash',
       contents: prompt,
       config: {
         responseMimeType: 'application/json',

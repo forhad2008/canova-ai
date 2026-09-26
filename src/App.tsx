@@ -29,6 +29,8 @@ import { ProModal } from './components/modals/ProModal';
 import { InstallAppModal } from './components/modals/InstallAppModal';
 import { OfflineIndicator } from './components/common/OfflineIndicator';
 
+import { startAlarmService } from './utils/alarmService';
+
 import photoAvatar from './assets/photo.png';
 
 const DEFAULT_USER: UserProfile = {
@@ -205,6 +207,18 @@ export default function App() {
     } catch {}
   }, [files]);
 
+  // Start Task Alarm & Daily Goal Check-in background runner
+  useEffect(() => {
+    startAlarmService(
+      () => tasks,
+      (taskId) => {
+        setTasks((prev) =>
+          prev.map((t) => (t.id === taskId ? { ...t, alarmFired: true } : t))
+        );
+      }
+    );
+  }, [tasks]);
+
   // Task actions
   const handleToggleTask = (id: string) => {
     setTasks((prev) =>
@@ -223,6 +237,33 @@ export default function App() {
   const handleUpdateTaskPriority = (id: string, priority: 'low' | 'medium' | 'high') => {
     setTasks((prev) =>
       prev.map((t) => (t.id === id ? { ...t, priority } : t))
+    );
+  };
+
+  const handleUpdateTaskDate = (id: string, newDateStr: string) => {
+    const todayStr = new Date().toISOString().split('T')[0];
+    const targetDateObj = new Date(newDateStr + 'T00:00:00');
+    const todayDateObj = new Date(todayStr + 'T00:00:00');
+    const diffDays = Math.round((targetDateObj.getTime() - todayDateObj.getTime()) / (1000 * 3600 * 24));
+
+    let dueDate: 'today' | 'week' | 'all' = 'all';
+    if (newDateStr === todayStr) {
+      dueDate = 'today';
+    } else if (diffDays >= 0 && diffDays <= 7) {
+      dueDate = 'week';
+    }
+
+    setTasks((prev) =>
+      prev.map((t) =>
+        t.id === id
+          ? {
+              ...t,
+              scheduledDate: newDateStr,
+              dueDate,
+              isOverdue: false,
+            }
+          : t
+      )
     );
   };
 
@@ -263,6 +304,7 @@ export default function App() {
         return (
           <Home
             user={user}
+            tasks={tasks}
             onNavigate={(screen) => setCurrentScreen(screen)}
             onQuickPrompt={handleQuickPrompt}
             onOpenInstallModal={handleOpenInstallModal}
@@ -273,6 +315,8 @@ export default function App() {
           <Assistant
             onBack={() => setCurrentScreen('home')}
             initialPrompt={assistantPrompt}
+            tasks={tasks}
+            onToggleTask={handleToggleTask}
           />
         );
       case 'tasks':
@@ -283,6 +327,7 @@ export default function App() {
             onAddTask={handleAddTask}
             onDeleteTask={handleDeleteTask}
             onUpdateTaskPriority={handleUpdateTaskPriority}
+            onUpdateTaskDate={handleUpdateTaskDate}
           />
         );
       case 'analytics':
@@ -359,6 +404,7 @@ export default function App() {
             onAddTask={handleAddTask}
             onDeleteTask={handleDeleteTask}
             onUpdateTaskPriority={handleUpdateTaskPriority}
+            onUpdateTaskDate={handleUpdateTaskDate}
             onAddFile={handleAddFile}
             onDeleteFile={handleDeleteFile}
             onSelectTool={(tool) => setActiveTool(tool)}

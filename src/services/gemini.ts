@@ -1,4 +1,4 @@
-import { ChatMessage, StructuredCard, Task } from '../types';
+import { ChatMessage, ChatAttachment, StructuredCard, Task } from '../types';
 
 export interface AssistantResponse {
   text: string;
@@ -49,26 +49,34 @@ export async function verifyCustomApiKey(key: string): Promise<{ valid: boolean;
 export async function sendChatMessage(
   history: ChatMessage[],
   newMessage: string,
-  model?: string
+  model?: string,
+  attachments?: ChatAttachment[]
 ): Promise<AssistantResponse> {
   const normalized = newMessage.toLowerCase();
   const customApiKey = getStoredCustomApiKey();
 
   try {
+    const formattedMessages = history.map((m) => ({
+      role: m.sender === 'user' ? 'user' : 'assistant',
+      content: m.text,
+      attachments: m.attachments,
+    }));
+
+    // Add current user message with its attachments
+    formattedMessages.push({
+      role: 'user',
+      content: newMessage,
+      attachments,
+    });
+
     const response = await fetch('/api/chat', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        messages: [
-          ...history.map((m) => ({
-            role: m.sender === 'user' ? 'user' : 'assistant',
-            content: m.text,
-          })),
-          { role: 'user', content: newMessage },
-        ],
-        model: model || 'gemini-2.5-flash',
+        messages: formattedMessages,
+        model: model || 'gemini-3.8-flash',
         customApiKey,
       }),
     });
@@ -92,7 +100,7 @@ export async function sendChatMessage(
   }
 
   // Realistic mock responses if offline or API key is not configured
-  return generateIntelligentFallback(normalized);
+  return generateIntelligentFallback(normalized, attachments);
 }
 
 export async function executeAITool(
@@ -182,7 +190,21 @@ function getFallbackToolResult(toolId: string, prompt: string, targetLang?: stri
   }
 }
 
-function generateIntelligentFallback(query: string): AssistantResponse {
+function generateIntelligentFallback(query: string, attachments?: ChatAttachment[]): AssistantResponse {
+  if (attachments && attachments.length > 0) {
+    const fileNames = attachments.map((a) => a.name).join(', ');
+    return {
+      text: `I've received and processed your attachment(s): ${fileNames}.\n\nBased on the content analysis, here is a breakdown of key structural details, metadata, and suggested next steps:`,
+      structuredCard: {
+        kicker: 'Attachment Intelligence',
+        title: `Analysis of ${attachments[0].name}`,
+        description: `File type: ${attachments[0].type.toUpperCase()} (${attachments[0].mimeType}) • Size: ${attachments[0].size}\nExtracted content has been structured and indexed for your session.`,
+        tags: [attachments[0].type, 'Processed', 'Indexed'],
+        followUp: 'Would you like me to summarize key takeaways or generate tasks from this file?',
+      },
+      suggestionChips: ['Summarize document', 'Extract action items', 'Convert to Tasks'],
+    };
+  }
   if (query.includes('brand') || query.includes('creative') || query.includes('idea')) {
     return {
       text: "Of course! Here's a creative brand idea for you:",

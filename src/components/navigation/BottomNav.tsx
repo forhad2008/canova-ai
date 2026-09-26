@@ -13,11 +13,11 @@ export const BottomNav: React.FC<BottomNavProps> = ({
   currentScreen,
   onNavigate,
 }) => {
-  // Don't show bottom nav on splash or assistant screens (assistant has bottom composer)
-  if (currentScreen === 'splash' || currentScreen === 'assistant') return null;
+  // Always show bottom nav on all screens (except initial splash)
+  if (currentScreen === 'splash') return null;
 
   return (
-    <div className="relative w-full z-40 select-none">
+    <div className="sticky bottom-0 left-0 right-0 w-full z-50 shrink-0 select-none">
       {/* Background container with rounded top and neumorphic glass finish */}
       <div className="relative bg-[#EEF2F9]/95 dark:bg-[#071329]/95 backdrop-blur-xl border-t border-[#CBD5E1]/70 dark:border-white/10 rounded-t-[32px] px-4 pt-2 pb-2.5 shadow-[0_-8px_24px_rgba(166,180,204,0.45)] dark:shadow-[0_-10px_30px_rgba(0,0,0,0.7)] transition-colors duration-200">
         <div className="flex items-center justify-between max-w-md mx-auto relative">

@@ -17,9 +17,10 @@ import {
   FileText,
   CheckSquare,
 } from 'lucide-react';
-import { ScreenType, UserProfile } from '../types';
+import { ScreenType, UserProfile, Task } from '../types';
 import { SphereOrb, SmokePattern, SmokeColor } from '../components/common/SphereOrb';
 import { NeumorphicDensitySlider } from '../components/common/NeumorphicDensitySlider';
+import { TaskProgressRing } from '../components/common/TaskProgressRing';
 import { soundFx } from '../utils/audio';
 import { useRecentSearches } from '../utils/useRecentSearches';
 import { RecentSearchChips } from '../components/common/RecentSearchChips';
@@ -29,6 +30,7 @@ import photoAvatar from '../assets/photo.png';
 
 interface HomeProps {
   user: UserProfile;
+  tasks?: Task[];
   onNavigate: (screen: ScreenType) => void;
   onQuickPrompt?: (prompt: string) => void;
   onOpenInstallModal?: (tab?: 'desktop' | 'android') => void;
@@ -36,6 +38,7 @@ interface HomeProps {
 
 export const Home: React.FC<HomeProps> = ({
   user,
+  tasks = [],
   onNavigate,
   onQuickPrompt,
   onOpenInstallModal,
@@ -134,6 +137,12 @@ export const Home: React.FC<HomeProps> = ({
     e.preventDefault();
     executeSearch(searchQuery);
   };
+
+  // Calculate today's task metrics for Daily Goal progress ring
+  const todayTasks = (tasks || []).filter((t) => t.dueDate === 'today');
+  const activeTaskList = todayTasks.length > 0 ? todayTasks : tasks || [];
+  const completedTodayCount = activeTaskList.filter((t) => t.completed).length;
+  const highPriorityPendingCount = activeTaskList.filter((t) => !t.completed && t.priority === 'high').length;
 
   return (
     <div className="relative flex flex-col space-y-4 px-5 py-4 pb-24 text-left select-none max-w-2xl mx-auto w-full">
@@ -441,7 +450,33 @@ export const Home: React.FC<HomeProps> = ({
         </div>
       </div>
 
-      {/* 4. 2-Column Grid of 4 Cards: Exact layout from Image */}
+      {/* 4. Daily Goal Progress Ring Component */}
+      <div
+        onClick={() => {
+          soundFx.playClick();
+          onNavigate('tasks');
+        }}
+        className="cursor-pointer group"
+      >
+        <div className="flex items-center justify-between mb-2 px-1">
+          <span className="text-xs font-extrabold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-1.5">
+            <CheckCircle2 size={15} className="text-purple-600 dark:text-[#8B5CFF]" />
+            <span>Daily Goal Progress</span>
+          </span>
+          <span className="text-[11px] font-bold text-purple-700 dark:text-purple-300 group-hover:underline flex items-center gap-0.5">
+            Manage Tasks <ArrowRight size={12} />
+          </span>
+        </div>
+
+        <TaskProgressRing
+          total={activeTaskList.length}
+          completed={completedTodayCount}
+          highPriorityPending={highPriorityPendingCount}
+          activeTabLabel="Daily Goal"
+        />
+      </div>
+
+      {/* 5. 2-Column Grid of 4 Cards */}
       <div className="grid grid-cols-2 gap-3.5">
         {quickCards.map((card) => {
           const Icon = card.icon;

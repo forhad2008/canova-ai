@@ -52,6 +52,9 @@ import { QuickAccessSidebar } from './QuickAccessSidebar';
 import { ThemeToggle } from '../common/ThemeToggle';
 import { PWAInstallButton } from '../common/PWAInstallButton';
 import { PriorityBadge } from '../common/PriorityBadge';
+import { OverdueBadge } from '../common/OverdueBadge';
+import { TaskCalendarView } from '../common/TaskCalendarView';
+import { isTaskOverdue } from '../../utils/alarmService';
 import { TaskProgressRing } from '../common/TaskProgressRing';
 import { useTheme } from '../../utils/ThemeContext';
 import { soundFx } from '../../utils/audio';
@@ -67,6 +70,7 @@ interface DesktopWorkspaceProps {
   onAddTask: (task: Omit<Task, 'id'>) => void;
   onDeleteTask: (id: string) => void;
   onUpdateTaskPriority?: (id: string, priority: TaskPriority) => void;
+  onUpdateTaskDate?: (id: string, newDateStr: string) => void;
   onAddFile: (file: Omit<FileItem, 'id'>) => void;
   onDeleteFile: (id: string) => void;
   onSelectTool: (tool: AITool) => void;
@@ -87,6 +91,7 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
   onAddTask,
   onDeleteTask,
   onUpdateTaskPriority,
+  onUpdateTaskDate,
   onAddFile,
   onDeleteFile,
   onSelectTool,
@@ -104,6 +109,7 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
   const [copiedCode, setCopiedCode] = useState(false);
   const [taskInput, setTaskInput] = useState('');
   const [desktopTaskPriority, setDesktopTaskPriority] = useState<TaskPriority>('medium');
+  const [desktopTaskViewMode, setDesktopTaskViewMode] = useState<'list' | 'calendar'>('list');
   const [analyticsPeriod, setAnalyticsPeriod] = useState<'weekly' | 'monthly' | 'yearly'>('weekly');
   const [exploreCategory, setExploreCategory] = useState('All');
   const [fileFilter, setFileFilter] = useState<'all' | 'documents' | 'images' | 'others'>('all');
@@ -1088,6 +1094,66 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
         {/* ================= TASKS MANAGEMENT (DESKTOP) ================= */}
         {currentScreen === 'tasks' && (
           <div className="max-w-7xl mx-auto space-y-6">
+            {/* View Switcher Bar */}
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-black text-slate-900 dark:text-white tracking-tight">
+                Task Workspace
+              </h3>
+              <div className="flex items-center gap-1 neu-inset p-1 rounded-xl bg-white dark:bg-[#071329]">
+                <button
+                  onClick={() => {
+                    soundFx.playClick();
+                    setDesktopTaskViewMode('list');
+                  }}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                    desktopTaskViewMode === 'list'
+                      ? 'neu-primary-btn text-white shadow-xs'
+                      : 'text-slate-600 dark:text-[#9AA8C7] hover:text-black dark:hover:text-white'
+                  }`}
+                >
+                  List View
+                </button>
+                <button
+                  onClick={() => {
+                    soundFx.playClick();
+                    setDesktopTaskViewMode('calendar');
+                  }}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                    desktopTaskViewMode === 'calendar'
+                      ? 'neu-primary-btn text-white shadow-xs'
+                      : 'text-slate-600 dark:text-[#9AA8C7] hover:text-black dark:hover:text-white'
+                  }`}
+                >
+                  <Calendar size={14} />
+                  <span>Calendar View</span>
+                </button>
+              </div>
+            </div>
+
+            {desktopTaskViewMode === 'calendar' ? (
+              <TaskCalendarView
+                tasks={tasks}
+                onToggleTask={onToggleTask}
+                onUpdateTaskDate={(id, newDateStr) => {
+                  if (onUpdateTaskDate) {
+                    onUpdateTaskDate(id, newDateStr);
+                  }
+                }}
+                onAddTaskForDate={(dateStr) => {
+                  onAddTask({
+                    title: 'New Scheduled Task',
+                    category: 'Design',
+                    duration: '1 hour',
+                    completed: false,
+                    dueDate: 'today',
+                    scheduledDate: dateStr,
+                    priority: 'medium',
+                  });
+                }}
+                onDeleteTask={onDeleteTask}
+              />
+            ) : (
+              <>
             {/* Top Circular Progress Bar */}
             <TaskProgressRing
               total={tasks.length}
@@ -1194,6 +1260,7 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
                 <div className="space-y-2.5">
                   {pendingTasks.map((t) => {
                     const currentPriority = t.priority || 'medium';
+                    const overdue = isTaskOverdue(t);
                     const nextPriority: Record<TaskPriority, TaskPriority> = {
                       low: 'medium',
                       medium: 'high',
@@ -1202,31 +1269,50 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
                     return (
                       <div
                         key={t.id}
-                        className="neu-card-subtle p-3.5 rounded-xl flex items-center justify-between gap-3 group border border-black/5 dark:border-white/5"
+                        className={`neu-card-subtle p-3.5 rounded-xl flex items-center justify-between gap-3 group border ${
+                          overdue
+                            ? 'border-rose-500/50 bg-rose-500/5 dark:bg-rose-950/20'
+                            : 'border-black/5 dark:border-white/5'
+                        }`}
                       >
                         <button
                           onClick={() => onToggleTask(t.id)}
-                          className="w-6 h-6 rounded-full neu-inset bg-[#F8FAFC] dark:bg-[#060e20] border border-black/10 dark:border-white/10 flex items-center justify-center cursor-pointer hover:border-purple-400 shadow-2xs shrink-0"
+                          className={`w-6 h-6 rounded-full neu-inset border flex items-center justify-center cursor-pointer shadow-2xs shrink-0 ${
+                            overdue
+                              ? 'border-rose-500 hover:bg-rose-500/20'
+                              : 'bg-[#F8FAFC] dark:bg-[#060e20] border-black/10 dark:border-white/10 hover:border-purple-400'
+                          }`}
                         />
                         <div className="flex-1 overflow-hidden">
                           <div className="flex items-center gap-2">
-                            <h5 className="text-xs font-bold text-slate-900 dark:text-white truncate">{t.title}</h5>
-                            <PriorityBadge
-                              priority={currentPriority}
-                              size="sm"
-                              onClick={
-                                onUpdateTaskPriority
-                                  ? (e) => {
-                                      e.stopPropagation();
-                                      soundFx.playClick();
-                                      onUpdateTaskPriority(t.id, nextPriority[currentPriority]);
-                                    }
-                                  : undefined
-                              }
-                            />
+                            <h5 className={`text-xs font-bold truncate ${overdue ? 'text-rose-700 dark:text-rose-200' : 'text-slate-900 dark:text-white'}`}>
+                              {t.title}
+                            </h5>
+                            {overdue ? (
+                              <OverdueBadge label="OVERDUE" size="sm" />
+                            ) : (
+                              <PriorityBadge
+                                priority={currentPriority}
+                                size="sm"
+                                onClick={
+                                  onUpdateTaskPriority
+                                    ? (e) => {
+                                        e.stopPropagation();
+                                        soundFx.playClick();
+                                        onUpdateTaskPriority(t.id, nextPriority[currentPriority]);
+                                      }
+                                    : undefined
+                                }
+                              />
+                            )}
                           </div>
                           <p className="text-[11px] font-medium text-slate-600 dark:text-[#657394] mt-0.5">
                             {t.category} • {t.duration}
+                            {(t.alarmTime || t.scheduledTime) && (
+                              <span className="ml-2 font-mono text-[10px] text-purple-600 dark:text-purple-300 font-bold">
+                                ⏰ {t.alarmTime || t.scheduledTime}
+                              </span>
+                            )}
                           </p>
                         </div>
                         <button
@@ -1284,6 +1370,8 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
                 </div>
               </div>
             </div>
+            </>
+            )}
           </div>
         )}
 
