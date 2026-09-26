@@ -50,6 +50,7 @@ import { QuickAccessSidebar } from './QuickAccessSidebar';
 import { ThemeToggle } from '../common/ThemeToggle';
 import { PWAInstallButton } from '../common/PWAInstallButton';
 import { PriorityBadge } from '../common/PriorityBadge';
+import { TaskProgressRing } from '../common/TaskProgressRing';
 import { useTheme } from '../../utils/ThemeContext';
 import { soundFx } from '../../utils/audio';
 import photoAvatar from '../../assets/photo.png';
@@ -872,6 +873,14 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
         {/* ================= TASKS MANAGEMENT (DESKTOP) ================= */}
         {currentScreen === 'tasks' && (
           <div className="max-w-7xl mx-auto space-y-6">
+            {/* Top Circular Progress Bar */}
+            <TaskProgressRing
+              total={tasks.length}
+              completed={completedTasks.length}
+              highPriorityPending={tasks.filter((t) => !t.completed && t.priority === 'high').length}
+              activeTabLabel="Workspace"
+            />
+
             {/* Metric KPI Banner */}
             <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
               {[

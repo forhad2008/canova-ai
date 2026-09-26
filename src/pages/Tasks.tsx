@@ -20,6 +20,7 @@ import { soundFx } from '../utils/audio';
 import { FocusTimerModal } from '../components/focus/FocusTimerModal';
 import { generateAITaskBreakdown } from '../services/gemini';
 import { PriorityBadge } from '../components/common/PriorityBadge';
+import { TaskProgressRing } from '../components/common/TaskProgressRing';
 
 interface TasksProps {
   tasks: Task[];
@@ -87,6 +88,12 @@ export const Tasks: React.FC<TasksProps> = ({
     const matchesPriority = priorityFilter === 'all' || taskPriority === priorityFilter;
     return matchesTab && matchesPriority;
   });
+
+  // Calculate completion stats for active tab
+  const tabTasks = tasks.filter((t) => activeTab === 'all' || t.dueDate === activeTab);
+  const completedTabTasks = tabTasks.filter((t) => t.completed).length;
+  const highPriorityPendingTabTasks = tabTasks.filter((t) => !t.completed && t.priority === 'high').length;
+  const activeTabLabel = activeTab === 'today' ? 'Today' : activeTab === 'week' ? 'This Week' : 'All';
 
   const handleToggle = (id: string) => {
     const task = tasks.find((t) => t.id === id);
@@ -188,6 +195,14 @@ export const Tasks: React.FC<TasksProps> = ({
           </button>
         </div>
       </div>
+
+      {/* Circular Progress Bar Visualizer */}
+      <TaskProgressRing
+        total={tabTasks.length}
+        completed={completedTabTasks}
+        highPriorityPending={highPriorityPendingTabTasks}
+        activeTabLabel={activeTabLabel}
+      />
 
       {/* 2. Segmented Pill Tabs: [Today] [This Week] [All] */}
       <div className="neu-inset p-1 rounded-full flex items-center gap-1">
