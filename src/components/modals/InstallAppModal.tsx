@@ -50,8 +50,12 @@ export const InstallAppModal: React.FC<InstallAppModalProps> = ({
   const handleInstallClick = async () => {
     soundFx.playClick();
     setInstalling(true);
-    const success = await install();
-    setInstalling(false);
+
+    let success = false;
+    if (isInstallable) {
+      success = await install();
+    }
+
     if (success) {
       soundFx.playSuccess();
       setShowSuccessToast(true);
@@ -59,7 +63,20 @@ export const InstallAppModal: React.FC<InstallAppModalProps> = ({
         setShowSuccessToast(false);
         onClose();
       }, 2500);
+    } else {
+      // Fallback: Launch top-level standalone window and copy URL for installation
+      if (typeof window !== 'undefined') {
+        const currentUrl = window.location.href;
+        navigator.clipboard.writeText(currentUrl);
+        window.open(currentUrl, '_blank', 'width=1280,height=850,resizable=yes,scrollbars=yes');
+      }
+      soundFx.playSuccess();
+      setShowSuccessToast(true);
+      setTimeout(() => {
+        setShowSuccessToast(false);
+      }, 3500);
     }
+    setInstalling(false);
   };
 
   const handleCopyLink = () => {
@@ -207,32 +224,26 @@ export const InstallAppModal: React.FC<InstallAppModalProps> = ({
                   <CheckCircle2 size={16} />
                   <span>Canova AI Desktop is installed and active on this device!</span>
                 </div>
-              ) : isInstallable ? (
-                <button
-                  onClick={handleInstallClick}
-                  disabled={installing}
-                  className="w-full neu-primary-btn py-3 px-4 rounded-xl text-xs font-black text-white tracking-wide cursor-pointer flex items-center justify-center gap-2 shadow-lg hover:scale-[1.01] active:scale-[0.99] transition-transform"
-                >
-                  <Download size={15} />
-                  <span>{installing ? 'Preparing Installation...' : 'Install Canova AI Desktop App Now'}</span>
-                </button>
               ) : (
-                <div className="space-y-2 text-xs font-medium text-slate-700 dark:text-[#9AA8C7]">
-                  <div className="flex items-start gap-2 bg-white/70 dark:bg-white/5 p-2.5 rounded-xl border border-black/5 dark:border-white/5">
-                    <span className="w-5 h-5 rounded-full bg-purple-500/20 text-purple-700 dark:text-purple-300 font-bold flex items-center justify-center shrink-0 text-[11px]">
-                      1
-                    </span>
-                    <span>
-                      Click the <strong>Install / App icon (⊕ or ⬇)</strong> in your browser's top address bar.
-                    </span>
-                  </div>
-                  <div className="flex items-start gap-2 bg-white/70 dark:bg-white/5 p-2.5 rounded-xl border border-black/5 dark:border-white/5">
-                    <span className="w-5 h-5 rounded-full bg-purple-500/20 text-purple-700 dark:text-purple-300 font-bold flex items-center justify-center shrink-0 text-[11px]">
-                      2
-                    </span>
-                    <span>
-                      Click <strong>"Install"</strong> to add Canova AI directly to your Desktop / Dock.
-                    </span>
+                <div className="space-y-3">
+                  <button
+                    onClick={handleInstallClick}
+                    disabled={installing}
+                    className="w-full neu-primary-btn py-3 px-4 rounded-xl text-xs font-black text-white tracking-wide cursor-pointer flex items-center justify-center gap-2 shadow-lg hover:scale-[1.01] active:scale-[0.99] transition-transform"
+                  >
+                    <Download size={15} />
+                    <span>{installing ? 'Preparing Installation...' : 'Install Canova AI App Now'}</span>
+                  </button>
+
+                  <div className="space-y-2 text-xs font-medium text-slate-700 dark:text-[#9AA8C7]">
+                    <div className="flex items-start gap-2 bg-white/70 dark:bg-white/5 p-2 rounded-xl border border-black/5 dark:border-white/5">
+                      <span className="w-5 h-5 rounded-full bg-purple-500/20 text-purple-700 dark:text-purple-300 font-bold flex items-center justify-center shrink-0 text-[11px]">
+                        1
+                      </span>
+                      <span>
+                        Or click the <strong>Install / App icon (⊕ or ⬇)</strong> in your browser's top address bar.
+                      </span>
+                    </div>
                   </div>
                 </div>
               )}
@@ -287,32 +298,26 @@ export const InstallAppModal: React.FC<InstallAppModalProps> = ({
                   <CheckCircle2 size={16} />
                   <span>Canova AI is installed on this device!</span>
                 </div>
-              ) : isInstallable ? (
-                <button
-                  onClick={handleInstallClick}
-                  disabled={installing}
-                  className="w-full neu-primary-btn py-3 px-4 rounded-xl text-xs font-black text-white tracking-wide cursor-pointer flex items-center justify-center gap-2 shadow-lg hover:scale-[1.01] active:scale-[0.99] transition-transform"
-                >
-                  <Download size={15} />
-                  <span>{installing ? 'Installing WebAPK...' : 'Install Canova AI on Android Now'}</span>
-                </button>
               ) : (
-                <div className="space-y-2 text-xs font-medium text-slate-700 dark:text-[#9AA8C7]">
-                  <div className="flex items-start gap-2 bg-white/70 dark:bg-white/5 p-2.5 rounded-xl border border-black/5 dark:border-white/5">
-                    <span className="w-5 h-5 rounded-full bg-cyan-500/20 text-cyan-700 dark:text-cyan-300 font-bold flex items-center justify-center shrink-0 text-[11px]">
-                      1
-                    </span>
-                    <span>
-                      Tap the <strong>three dots menu (⋮)</strong> at the top right of your Chrome / browser window.
-                    </span>
-                  </div>
-                  <div className="flex items-start gap-2 bg-white/70 dark:bg-white/5 p-2.5 rounded-xl border border-black/5 dark:border-white/5">
-                    <span className="w-5 h-5 rounded-full bg-cyan-500/20 text-cyan-700 dark:text-cyan-300 font-bold flex items-center justify-center shrink-0 text-[11px]">
-                      2
-                    </span>
-                    <span>
-                      Select <strong>"Install app"</strong> or <strong>"Add to Home Screen"</strong>.
-                    </span>
+                <div className="space-y-3">
+                  <button
+                    onClick={handleInstallClick}
+                    disabled={installing}
+                    className="w-full neu-primary-btn py-3 px-4 rounded-xl text-xs font-black text-white tracking-wide cursor-pointer flex items-center justify-center gap-2 shadow-lg hover:scale-[1.01] active:scale-[0.99] transition-transform"
+                  >
+                    <Download size={15} />
+                    <span>{installing ? 'Installing WebAPK...' : 'Install Canova AI on Android Now'}</span>
+                  </button>
+
+                  <div className="space-y-2 text-xs font-medium text-slate-700 dark:text-[#9AA8C7]">
+                    <div className="flex items-start gap-2 bg-white/70 dark:bg-white/5 p-2 rounded-xl border border-black/5 dark:border-white/5">
+                      <span className="w-5 h-5 rounded-full bg-cyan-500/20 text-cyan-700 dark:text-cyan-300 font-bold flex items-center justify-center shrink-0 text-[11px]">
+                        1
+                      </span>
+                      <span>
+                        Or tap the <strong>three dots menu (⋮)</strong> and select <strong>"Install app"</strong> or <strong>"Add to Home Screen"</strong>.
+                      </span>
+                    </div>
                   </div>
                 </div>
               )}
