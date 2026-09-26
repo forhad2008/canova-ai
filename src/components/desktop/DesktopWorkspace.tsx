@@ -294,9 +294,9 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
   return (
     <div className="w-full h-full flex flex-col overflow-hidden text-left select-none bg-[#EEF2F9] dark:bg-[#030712] transition-colors duration-200">
       {/* 1. Global Desktop Workspace Header */}
-      <div className="px-4 md:px-6 lg:px-8 py-3.5 border-b border-[#CBD5E1]/60 dark:border-white/8 bg-[#EEF2F9]/90 dark:bg-[#071226]/75 backdrop-blur-2xl flex items-center justify-between gap-3 lg:gap-4 shrink-0 shadow-[0_4px_16px_rgba(166,180,204,0.35)] dark:shadow-md">
+      <div className="relative z-50 px-4 md:px-6 lg:px-8 py-3.5 border-b border-[#CBD5E1]/60 dark:border-white/8 bg-[#EEF2F9]/90 dark:bg-[#071226]/75 backdrop-blur-2xl flex items-center justify-between gap-3 lg:gap-4 shrink-0 shadow-[0_4px_16px_rgba(166,180,204,0.35)] dark:shadow-md">
         {/* Global Upgraded Omnibar Search Bar (⌘K / Ctrl+K) */}
-        <div className="flex-1 max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-4xl relative z-30 mr-2 md:mr-4">
+        <div className="flex-1 max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-4xl relative z-50 mr-2 md:mr-4">
           <div className="relative flex items-center group">
             <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-purple-600 dark:text-[#A978FF] pointer-events-none transition-transform group-focus-within:scale-110" />
             <input
@@ -519,21 +519,19 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
 
           {/* Desktop Global Recent Searches & Quick Actions (when input is empty) */}
           {isGlobalSearchFocused && !globalSearch && (
-            <div className="absolute top-full left-0 right-0 mt-2 z-50">
-              <RecentSearchesList
-                searches={globalRecentSearches}
-                onSelect={(term) => {
-                  setGlobalSearch(term);
-                  addGlobalSearch(term);
-                  setIsGlobalSearchFocused(false);
-                  onQuickPrompt(term);
-                  onNavigate('assistant');
-                }}
-                onRemove={removeGlobalSearch}
-                onClear={clearGlobalSearches}
-                onClose={() => setIsGlobalSearchFocused(false)}
-              />
-            </div>
+            <RecentSearchesList
+              searches={globalRecentSearches}
+              onSelect={(term) => {
+                setGlobalSearch(term);
+                addGlobalSearch(term);
+                setIsGlobalSearchFocused(false);
+                onQuickPrompt(term);
+                onNavigate('assistant');
+              }}
+              onRemove={removeGlobalSearch}
+              onClear={clearGlobalSearches}
+              onClose={() => setIsGlobalSearchFocused(false)}
+            />
           )}
         </div>
 

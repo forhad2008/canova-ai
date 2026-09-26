@@ -12,7 +12,7 @@ export default defineConfig(() => {
       tailwindcss(),
       VitePWA({
         registerType: 'autoUpdate',
-        includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'icon.svg', 'photo.png'],
+        includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'icon.png', 'photo.png'],
         manifest: {
           id: '/',
           name: 'Canova AI - Neumorphic Smart Companion',
