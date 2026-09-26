@@ -10,6 +10,7 @@ import {
   Settings,
   Sparkles,
   ShieldCheck,
+  Download,
 } from 'lucide-react';
 import { ScreenType } from '../../types';
 import { NovaStar } from '../common/NovaStar';
@@ -19,6 +20,7 @@ interface SidebarProps {
   currentScreen: ScreenType;
   onNavigate: (screen: ScreenType) => void;
   onOpenProModal?: () => void;
+  onOpenInstallModal?: (tab?: 'desktop' | 'android') => void;
   pendingTasksCount?: number;
 }
 
@@ -32,6 +34,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   currentScreen,
   onNavigate,
   onOpenProModal,
+  onOpenInstallModal,
   pendingTasksCount = 4,
 }) => {
   const navItems: {
@@ -144,8 +147,29 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </nav>
       </div>
 
-      {/* Storage and Pro Plan Card */}
+      {/* Storage, Install App, and Pro Plan Card */}
       <div className="space-y-2.5">
+        {/* Install Apps Button */}
+        {onOpenInstallModal && (
+          <button
+            onClick={() => onOpenInstallModal('desktop')}
+            title="Install App (PC & Mobile)"
+            aria-label="Install App"
+            className="w-full neu-card-subtle px-3 py-2 rounded-xl flex items-center justify-center lg:justify-between text-xs font-bold text-purple-700 dark:text-purple-300 hover:text-purple-900 dark:hover:text-white border border-purple-500/30 hover:border-purple-500/60 transition-all cursor-pointer shadow-2xs group"
+          >
+            <div className="flex items-center gap-2">
+              <Download size={15} className="text-purple-600 dark:text-[#A978FF] group-hover:scale-110 transition-transform shrink-0" />
+              <span className="hidden lg:inline">Install Apps</span>
+            </div>
+            <div className="hidden lg:flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-[10px] px-1.5 py-0.5 rounded bg-purple-500/15 text-purple-700 dark:text-purple-300 font-extrabold border border-purple-500/30">
+                PC & Mobile
+              </span>
+            </div>
+          </button>
+        )}
+
         {/* Cloud Security Indicator & Theme Quick Switch */}
         <div className="hidden lg:flex px-3 py-2 neu-inset rounded-xl items-center justify-between text-[11px] text-slate-500 dark:text-[#657394] border border-black/5 dark:border-white/5">
           <span className="flex items-center gap-1.5 font-medium">

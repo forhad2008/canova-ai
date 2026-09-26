@@ -18,9 +18,10 @@ import {
   History,
   X,
 } from 'lucide-react';
-import { Task, FileItem, ScreenType } from '../../types';
+import { Task, FileItem, ScreenType, TaskPriority } from '../../types';
 import { soundFx } from '../../utils/audio';
 import { useRecentSearches } from '../../utils/useRecentSearches';
+import { PriorityBadge } from '../common/PriorityBadge';
 
 interface QuickAccessSidebarProps {
   tasks: Task[];
@@ -240,9 +241,12 @@ export const QuickAccessSidebar: React.FC<QuickAccessSidebarProps> = ({
                     }}
                     className="flex-1 overflow-hidden cursor-pointer"
                   >
-                    <h5 className="text-[11.5px] font-bold text-slate-900 dark:text-white truncate group-hover:text-purple-600 dark:group-hover:text-purple-300 transition-colors">
-                      {task.title}
-                    </h5>
+                    <div className="flex items-center gap-1.5 justify-between">
+                      <h5 className="text-[11.5px] font-bold text-slate-900 dark:text-white truncate group-hover:text-purple-600 dark:group-hover:text-purple-300 transition-colors">
+                        {task.title}
+                      </h5>
+                      <PriorityBadge priority={task.priority || 'medium'} size="sm" showIcon={false} />
+                    </div>
                     <div className="flex items-center gap-1.5 text-[9.5px] font-medium text-slate-600 dark:text-[#657394]">
                       <span>{task.category}</span>
                       <span>•</span>

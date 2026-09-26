@@ -40,7 +40,7 @@ import {
   Edit3,
   ChevronLeft,
 } from 'lucide-react';
-import { ScreenType, Task, FileItem, AITool, UserProfile, ChatMessage } from '../../types';
+import { ScreenType, Task, FileItem, AITool, UserProfile, ChatMessage, TaskPriority } from '../../types';
 import { NovaStar } from '../common/NovaStar';
 import { SphereOrb } from '../common/SphereOrb';
 import { sendChatMessage } from '../../services/gemini';
@@ -48,6 +48,8 @@ import { useRecentSearches } from '../../utils/useRecentSearches';
 import { RecentSearchesList } from '../common/RecentSearchesList';
 import { QuickAccessSidebar } from './QuickAccessSidebar';
 import { ThemeToggle } from '../common/ThemeToggle';
+import { PWAInstallButton } from '../common/PWAInstallButton';
+import { PriorityBadge } from '../common/PriorityBadge';
 import { useTheme } from '../../utils/ThemeContext';
 import { soundFx } from '../../utils/audio';
 import photoAvatar from '../../assets/photo.png';
@@ -61,10 +63,12 @@ interface DesktopWorkspaceProps {
   onToggleTask: (id: string) => void;
   onAddTask: (task: Omit<Task, 'id'>) => void;
   onDeleteTask: (id: string) => void;
+  onUpdateTaskPriority?: (id: string, priority: TaskPriority) => void;
   onAddFile: (file: Omit<FileItem, 'id'>) => void;
   onDeleteFile: (id: string) => void;
   onSelectTool: (tool: AITool) => void;
   onOpenProModal: () => void;
+  onOpenInstallModal?: (tab?: 'desktop' | 'android') => void;
   onQuickPrompt: (prompt: string) => void;
   onUpdateUser: (updated: Partial<UserProfile>) => void;
   onClearData: () => void;
@@ -79,10 +83,12 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
   onToggleTask,
   onAddTask,
   onDeleteTask,
+  onUpdateTaskPriority,
   onAddFile,
   onDeleteFile,
   onSelectTool,
   onOpenProModal,
+  onOpenInstallModal,
   onQuickPrompt,
   onUpdateUser,
   onClearData,
@@ -92,6 +98,7 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
   const [isGlobalSearchFocused, setIsGlobalSearchFocused] = useState(false);
   const [copiedCode, setCopiedCode] = useState(false);
   const [taskInput, setTaskInput] = useState('');
+  const [desktopTaskPriority, setDesktopTaskPriority] = useState<TaskPriority>('medium');
   const [analyticsPeriod, setAnalyticsPeriod] = useState<'weekly' | 'monthly' | 'yearly'>('weekly');
   const [exploreCategory, setExploreCategory] = useState('All');
   const [fileFilter, setFileFilter] = useState<'all' | 'documents' | 'images' | 'others'>('all');
@@ -315,6 +322,11 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
             <span className="text-slate-900 dark:text-white font-bold">68% Done</span>
           </div>
 
+          {/* Install App Quick Button */}
+          {onOpenInstallModal && (
+            <PWAInstallButton onOpenModal={(tab) => onOpenInstallModal(tab)} variant="compact" />
+          )}
+
           {/* Theme Mode Toggle (White / Dark Neumorphic) */}
           <ThemeToggle size="sm" />
 
@@ -455,9 +467,14 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
                 </div>
 
                 <div className="neu-inset bg-[#F8FAFC] dark:bg-[#060e20] rounded-2xl p-3.5 space-y-2 border border-black/5 dark:border-white/5">
-                  <span className="text-[10px] font-bold text-purple-700 dark:text-[#A978FF] uppercase tracking-wider block">
-                    Next Priority Task
-                  </span>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-bold text-purple-700 dark:text-[#A978FF] uppercase tracking-wider block">
+                      Next Priority Task
+                    </span>
+                    {pendingTasks[0] && (
+                      <PriorityBadge priority={pendingTasks[0].priority || 'high'} size="sm" />
+                    )}
+                  </div>
                   {pendingTasks[0] ? (
                     <div className="flex items-center justify-between gap-2">
                       <div className="overflow-hidden">
@@ -870,8 +887,8 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
               ))}
             </div>
 
-            {/* Quick Add Bar */}
-            <div className="neu-card rounded-2xl p-3 flex items-center gap-3 border border-black/8 dark:border-white/8">
+            {/* Quick Add Bar with Priority Selector */}
+            <div className="neu-card rounded-2xl p-3 flex flex-wrap items-center gap-3 border border-black/8 dark:border-white/8">
               <input
                 type="text"
                 value={taskInput}
@@ -884,13 +901,40 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
                       duration: '1 hour',
                       completed: false,
                       dueDate: 'today',
+                      priority: desktopTaskPriority,
                     });
                     setTaskInput('');
                   }
                 }}
                 placeholder="Type a new task title and press Enter..."
-                className="flex-1 neu-inset bg-[#F8FAFC] dark:bg-[#060e20] rounded-xl py-2 px-4 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-[#657394] focus:outline-none focus:ring-1 focus:ring-purple-500/50 font-medium"
+                className="flex-1 min-w-[240px] neu-inset bg-[#F8FAFC] dark:bg-[#060e20] rounded-xl py-2 px-4 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-[#657394] focus:outline-none focus:ring-1 focus:ring-purple-500/50 font-medium"
               />
+
+              {/* Desktop Priority Selector */}
+              <div className="flex items-center gap-1 neu-inset bg-[#F8FAFC] dark:bg-[#060e20] p-1 rounded-xl shrink-0">
+                {(['low', 'medium', 'high'] as const).map((p) => {
+                  const isActive = desktopTaskPriority === p;
+                  const colors = {
+                    low: isActive ? 'bg-emerald-500 text-white shadow-xs' : 'text-emerald-700 dark:text-emerald-300 hover:bg-emerald-500/10',
+                    medium: isActive ? 'bg-amber-500 text-white shadow-xs' : 'text-amber-700 dark:text-amber-300 hover:bg-amber-500/10',
+                    high: isActive ? 'bg-rose-500 text-white shadow-xs' : 'text-rose-700 dark:text-rose-300 hover:bg-rose-500/10',
+                  };
+                  return (
+                    <button
+                      key={p}
+                      type="button"
+                      onClick={() => {
+                        soundFx.playClick();
+                        setDesktopTaskPriority(p);
+                      }}
+                      className={`px-2.5 py-1 rounded-lg text-xs font-bold capitalize transition-all cursor-pointer ${colors[p]}`}
+                    >
+                      {p}
+                    </button>
+                  );
+                })}
+              </div>
+
               <button
                 onClick={() => {
                   if (taskInput.trim()) {
@@ -900,6 +944,7 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
                       duration: '1 hour',
                       completed: false,
                       dueDate: 'today',
+                      priority: desktopTaskPriority,
                     });
                     setTaskInput('');
                   }
@@ -923,29 +968,52 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
                 </div>
 
                 <div className="space-y-2.5">
-                  {pendingTasks.map((t) => (
-                    <div
-                      key={t.id}
-                      className="neu-card-subtle p-3.5 rounded-xl flex items-center justify-between gap-3 group border border-black/5 dark:border-white/5"
-                    >
-                      <button
-                        onClick={() => onToggleTask(t.id)}
-                        className="w-6 h-6 rounded-full neu-inset bg-[#F8FAFC] dark:bg-[#060e20] border border-black/10 dark:border-white/10 flex items-center justify-center cursor-pointer hover:border-purple-400 shadow-2xs"
-                      />
-                      <div className="flex-1 overflow-hidden">
-                        <h5 className="text-xs font-bold text-slate-900 dark:text-white truncate">{t.title}</h5>
-                        <p className="text-[11px] font-medium text-slate-600 dark:text-[#657394]">
-                          {t.category} • {t.duration}
-                        </p>
-                      </div>
-                      <button
-                        onClick={() => onDeleteTask(t.id)}
-                        className="opacity-0 group-hover:opacity-100 text-slate-500 hover:text-red-500 text-xs px-2 py-1 font-semibold cursor-pointer transition-opacity"
+                  {pendingTasks.map((t) => {
+                    const currentPriority = t.priority || 'medium';
+                    const nextPriority: Record<TaskPriority, TaskPriority> = {
+                      low: 'medium',
+                      medium: 'high',
+                      high: 'low',
+                    };
+                    return (
+                      <div
+                        key={t.id}
+                        className="neu-card-subtle p-3.5 rounded-xl flex items-center justify-between gap-3 group border border-black/5 dark:border-white/5"
                       >
-                        Remove
-                      </button>
-                    </div>
-                  ))}
+                        <button
+                          onClick={() => onToggleTask(t.id)}
+                          className="w-6 h-6 rounded-full neu-inset bg-[#F8FAFC] dark:bg-[#060e20] border border-black/10 dark:border-white/10 flex items-center justify-center cursor-pointer hover:border-purple-400 shadow-2xs shrink-0"
+                        />
+                        <div className="flex-1 overflow-hidden">
+                          <div className="flex items-center gap-2">
+                            <h5 className="text-xs font-bold text-slate-900 dark:text-white truncate">{t.title}</h5>
+                            <PriorityBadge
+                              priority={currentPriority}
+                              size="sm"
+                              onClick={
+                                onUpdateTaskPriority
+                                  ? (e) => {
+                                      e.stopPropagation();
+                                      soundFx.playClick();
+                                      onUpdateTaskPriority(t.id, nextPriority[currentPriority]);
+                                    }
+                                  : undefined
+                              }
+                            />
+                          </div>
+                          <p className="text-[11px] font-medium text-slate-600 dark:text-[#657394] mt-0.5">
+                            {t.category} • {t.duration}
+                          </p>
+                        </div>
+                        <button
+                          onClick={() => onDeleteTask(t.id)}
+                          className="opacity-0 group-hover:opacity-100 text-slate-500 hover:text-red-500 text-xs px-2 py-1 font-semibold cursor-pointer transition-opacity shrink-0"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
 
@@ -971,15 +1039,18 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
                       >
                         <button
                           onClick={() => onToggleTask(t.id)}
-                          className="w-6 h-6 rounded-full bg-gradient-to-tr from-[#7C4DFF] to-[#35C9FF] text-white flex items-center justify-center cursor-pointer shadow-xs"
+                          className="w-6 h-6 rounded-full bg-gradient-to-tr from-[#7C4DFF] to-[#35C9FF] text-white flex items-center justify-center cursor-pointer shadow-xs shrink-0"
                         >
                           <Check size={13} className="stroke-[3]" />
                         </button>
                         <div className="flex-1 overflow-hidden">
-                          <h5 className="text-xs font-bold text-slate-900 dark:text-white line-through truncate">
-                            {t.title}
-                          </h5>
-                          <p className="text-[11px] font-medium text-slate-600 dark:text-[#657394]">
+                          <div className="flex items-center gap-2">
+                            <h5 className="text-xs font-bold text-slate-900 dark:text-white line-through truncate">
+                              {t.title}
+                            </h5>
+                            <PriorityBadge priority={t.priority || 'medium'} size="sm" showIcon={false} />
+                          </div>
+                          <p className="text-[11px] font-medium text-slate-600 dark:text-[#657394] mt-0.5">
                             {t.category} • Completed
                           </p>
                         </div>
@@ -1454,6 +1525,25 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
                   </button>
                 </div>
               </div>
+            </div>
+
+            {/* Native Applications (Desktop & Android) */}
+            <div className="neu-card rounded-3xl p-6 space-y-4 border border-purple-500/20">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                    <Download size={16} className="text-purple-600 dark:text-[#8B5CFF]" />
+                    <span>Native Applications (Desktop & Android)</span>
+                  </h4>
+                  <p className="text-xs font-medium text-slate-600 dark:text-[#9AA8C7]">
+                    Install Canova AI as a standalone native app on your PC or mobile device.
+                  </p>
+                </div>
+              </div>
+
+              {onOpenInstallModal && (
+                <PWAInstallButton onOpenModal={(tab) => onOpenInstallModal(tab)} variant="full" />
+              )}
             </div>
 
             {/* Clear workspace data */}

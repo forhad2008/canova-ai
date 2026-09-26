@@ -254,14 +254,14 @@ export const Files: React.FC<FilesProps> = ({
                 </button>
 
                 {activeMenuId === file.id && (
-                  <div className="absolute right-0 mt-1 w-36 rounded-xl neu-card py-1.5 shadow-2xl z-50 border border-white/10 text-xs">
+                  <div className="absolute right-0 mt-1 w-36 rounded-xl neu-card py-1.5 shadow-2xl z-50 border border-black/8 dark:border-white/10 text-xs bg-white dark:bg-[#071329]">
                     <button
                       onClick={() => {
                         soundFx.playClick();
                         setPreviewFile(file);
                         setActiveMenuId(null);
                       }}
-                      className="w-full px-3 py-1.5 text-left text-[#F7F8FF] hover:bg-white/5 flex items-center gap-2 cursor-pointer"
+                      className="w-full px-3 py-1.5 text-left text-slate-800 dark:text-[#F7F8FF] hover:bg-black/5 dark:hover:bg-white/5 flex items-center gap-2 cursor-pointer font-medium"
                     >
                       <Eye size={13} /> Preview
                     </button>
@@ -272,9 +272,9 @@ export const Files: React.FC<FilesProps> = ({
                         setTimeout(() => setCopiedId(null), 1500);
                         setActiveMenuId(null);
                       }}
-                      className="w-full px-3 py-1.5 text-left text-[#F7F8FF] hover:bg-white/5 flex items-center gap-2 cursor-pointer"
+                      className="w-full px-3 py-1.5 text-left text-slate-800 dark:text-[#F7F8FF] hover:bg-black/5 dark:hover:bg-white/5 flex items-center gap-2 cursor-pointer font-medium"
                     >
-                      {copiedId === file.id ? <Check size={13} className="text-emerald-400" /> : <Download size={13} />}
+                      {copiedId === file.id ? <Check size={13} className="text-emerald-500" /> : <Download size={13} />}
                       {copiedId === file.id ? 'Downloaded' : 'Download'}
                     </button>
                     <button
@@ -283,7 +283,7 @@ export const Files: React.FC<FilesProps> = ({
                         onDeleteFile(file.id);
                         setActiveMenuId(null);
                       }}
-                      className="w-full px-3 py-1.5 text-left text-red-400 hover:bg-white/5 flex items-center gap-2 cursor-pointer"
+                      className="w-full px-3 py-1.5 text-left text-red-500 hover:bg-black/5 dark:hover:bg-white/5 flex items-center gap-2 cursor-pointer font-semibold"
                     >
                       <Trash2 size={13} /> Delete
                     </button>
@@ -298,24 +298,24 @@ export const Files: React.FC<FilesProps> = ({
       {/* File Preview Modal */}
       {previewFile && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="neu-card rounded-3xl p-6 w-full max-w-sm border border-purple-500/30 bg-[#071226] text-left">
+          <div className="neu-card rounded-3xl p-6 w-full max-w-sm border border-black/10 dark:border-purple-500/30 bg-white dark:bg-[#071226] text-left shadow-2xl">
             <div className="flex items-center gap-3 mb-4">
               {getFileIcon(previewFile)}
               <div>
-                <h3 className="text-sm font-bold text-white truncate max-w-[200px]">
+                <h3 className="text-sm font-bold text-slate-900 dark:text-white truncate max-w-[200px]">
                   {previewFile.name}
                 </h3>
-                <p className="text-xs text-[#9AA8C7]">
+                <p className="text-xs font-semibold text-slate-600 dark:text-[#9AA8C7]">
                   {previewFile.size} • {previewFile.date}
                 </p>
               </div>
             </div>
 
-            <div className="neu-inset rounded-xl p-4 text-xs text-[#9AA8C7] mb-4 space-y-2 leading-relaxed">
-              <p className="text-white font-medium">Asset Inspection Details:</p>
+            <div className="neu-inset bg-[#F8FAFC] dark:bg-[#060e20] rounded-xl p-4 text-xs text-slate-800 dark:text-[#9AA8C7] mb-4 space-y-2 leading-relaxed border border-black/5 dark:border-white/5">
+              <p className="text-slate-900 dark:text-white font-bold">Asset Inspection Details:</p>
               <p>Extension: {previewFile.extension.toUpperCase()}</p>
               <p>Storage Security: AES-256 Cloud Encrypted</p>
-              <p>Synced with Google Workspace Vault</p>
+              <p>Synced with Canova Cloud Vault</p>
             </div>
 
             <div className="flex items-center justify-end gap-2">
@@ -324,7 +324,7 @@ export const Files: React.FC<FilesProps> = ({
                   soundFx.playClick();
                   setPreviewFile(null);
                 }}
-                className="px-4 py-2 rounded-xl neu-button text-xs text-[#9AA8C7] hover:text-white cursor-pointer"
+                className="px-4 py-2 rounded-xl neu-button text-xs font-bold text-slate-700 dark:text-[#9AA8C7] hover:text-slate-900 dark:hover:text-white cursor-pointer shadow-xs"
               >
                 Close
               </button>
@@ -337,7 +337,7 @@ export const Files: React.FC<FilesProps> = ({
                     setPreviewFile(null);
                   }, 1200);
                 }}
-                className="px-4 py-2 rounded-xl neu-primary-btn text-xs font-semibold text-white flex items-center gap-1.5 cursor-pointer"
+                className="px-4 py-2 rounded-xl neu-primary-btn text-xs font-bold text-white flex items-center gap-1.5 cursor-pointer shadow-md"
               >
                 <Download size={14} /> Download File
               </button>
@@ -349,15 +349,15 @@ export const Files: React.FC<FilesProps> = ({
       {/* Upload Modal */}
       {isUploadModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="neu-card rounded-3xl p-6 w-full max-w-sm border border-purple-500/30 bg-[#071226] text-left">
-            <h3 className="text-base font-bold text-white mb-1">Add New File</h3>
-            <p className="text-xs text-[#9AA8C7] mb-4">
+          <div className="neu-card rounded-3xl p-6 w-full max-w-sm border border-black/10 dark:border-purple-500/30 bg-white dark:bg-[#071226] text-left shadow-2xl">
+            <h3 className="text-base font-bold text-slate-900 dark:text-white mb-1">Add New File</h3>
+            <p className="text-xs font-medium text-slate-600 dark:text-[#9AA8C7] mb-4">
               Register an asset into your encrypted vault
             </p>
 
             <form onSubmit={handleUploadSubmit} className="space-y-4">
               <div>
-                <label className="text-xs font-semibold text-[#9AA8C7] block mb-1.5">
+                <label className="text-xs font-bold text-slate-800 dark:text-[#9AA8C7] block mb-1.5">
                   File Name
                 </label>
                 <input
@@ -366,12 +366,12 @@ export const Files: React.FC<FilesProps> = ({
                   value={newFileName}
                   onChange={(e) => setNewFileName(e.target.value)}
                   placeholder="e.g. Portfolio_Design_2026.fig"
-                  className="w-full neu-inset rounded-xl py-2.5 px-3.5 text-xs text-white placeholder-[#657394] focus:outline-none focus:ring-1 focus:ring-purple-500/50"
+                  className="w-full neu-inset bg-[#F8FAFC] dark:bg-[#060e20] rounded-xl py-2.5 px-3.5 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-[#657394] focus:outline-none focus:ring-1 focus:ring-purple-500/50 font-medium border border-black/5 dark:border-white/5"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-[#9AA8C7] block mb-1.5">
+                <label className="text-xs font-bold text-slate-800 dark:text-[#9AA8C7] block mb-1.5">
                   Category
                 </label>
                 <select
@@ -379,7 +379,7 @@ export const Files: React.FC<FilesProps> = ({
                   onChange={(e) =>
                     setNewFileType(e.target.value as 'documents' | 'images' | 'others')
                   }
-                  className="w-full neu-inset rounded-xl py-2.5 px-3 text-xs text-white bg-[#060e20] focus:outline-none"
+                  className="w-full neu-inset rounded-xl py-2.5 px-3 text-xs font-bold text-slate-900 dark:text-white bg-[#F8FAFC] dark:bg-[#060e20] focus:outline-none border border-black/5 dark:border-white/5"
                 >
                   <option value="documents">Documents (PDF, TXT, DOCX)</option>
                   <option value="images">Images (PNG, JPG, FIG)</option>
@@ -391,13 +391,13 @@ export const Files: React.FC<FilesProps> = ({
                 <button
                   type="button"
                   onClick={() => setIsUploadModalOpen(false)}
-                  className="px-4 py-2 rounded-xl neu-button text-xs text-[#9AA8C7] hover:text-white cursor-pointer"
+                  className="px-4 py-2 rounded-xl neu-button text-xs font-bold text-slate-700 dark:text-[#9AA8C7] hover:text-slate-900 dark:hover:text-white cursor-pointer shadow-xs"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl neu-primary-btn text-xs font-semibold text-white cursor-pointer"
+                  className="px-5 py-2 rounded-xl neu-primary-btn text-xs font-bold text-white cursor-pointer shadow-md"
                 >
                   Save File
                 </button>

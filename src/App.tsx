@@ -26,6 +26,8 @@ import { Settings } from './pages/Settings';
 // Modals
 import { ToolModal } from './components/modals/ToolModal';
 import { ProModal } from './components/modals/ProModal';
+import { InstallAppModal } from './components/modals/InstallAppModal';
+import { OfflineIndicator } from './components/common/OfflineIndicator';
 
 import photoAvatar from './assets/photo.png';
 
@@ -48,6 +50,7 @@ const DEFAULT_TASKS: Task[] = [
     duration: '2 hours',
     completed: true,
     dueDate: 'today',
+    priority: 'high',
   },
   {
     id: 't2',
@@ -56,6 +59,7 @@ const DEFAULT_TASKS: Task[] = [
     duration: '1 hour',
     completed: false,
     dueDate: 'today',
+    priority: 'medium',
   },
   {
     id: 't3',
@@ -64,6 +68,7 @@ const DEFAULT_TASKS: Task[] = [
     duration: '2 hours',
     completed: false,
     dueDate: 'today',
+    priority: 'high',
   },
   {
     id: 't4',
@@ -72,6 +77,7 @@ const DEFAULT_TASKS: Task[] = [
     duration: '1 hour',
     completed: false,
     dueDate: 'week',
+    priority: 'medium',
   },
   {
     id: 't5',
@@ -80,6 +86,7 @@ const DEFAULT_TASKS: Task[] = [
     duration: '30 min',
     completed: false,
     dueDate: 'week',
+    priority: 'low',
   },
 ];
 
@@ -135,7 +142,14 @@ export default function App() {
   const [currentScreen, setCurrentScreen] = useState<ScreenType>('home');
   const [activeTool, setActiveTool] = useState<AITool | null>(null);
   const [isProModalOpen, setIsProModalOpen] = useState(false);
+  const [isInstallModalOpen, setIsInstallModalOpen] = useState(false);
+  const [installModalTab, setInstallModalTab] = useState<'desktop' | 'android'>('desktop');
   const [assistantPrompt, setAssistantPrompt] = useState<string | undefined>(undefined);
+
+  const handleOpenInstallModal = (tab: 'desktop' | 'android' = 'desktop') => {
+    setInstallModalTab(tab);
+    setIsInstallModalOpen(true);
+  };
 
   // Local storage state with initial fallbacks
   const [user, setUser] = useState<UserProfile>(() => {
@@ -206,6 +220,12 @@ export default function App() {
     setTasks((prev) => prev.filter((t) => t.id !== id));
   };
 
+  const handleUpdateTaskPriority = (id: string, priority: 'low' | 'medium' | 'high') => {
+    setTasks((prev) =>
+      prev.map((t) => (t.id === id ? { ...t, priority } : t))
+    );
+  };
+
   // File actions
   const handleAddFile = (newFile: Omit<FileItem, 'id'>) => {
     setFiles((prev) => [{ ...newFile, id: `f-${Date.now()}` }, ...prev]);
@@ -245,6 +265,7 @@ export default function App() {
             user={user}
             onNavigate={(screen) => setCurrentScreen(screen)}
             onQuickPrompt={handleQuickPrompt}
+            onOpenInstallModal={handleOpenInstallModal}
           />
         );
       case 'assistant':
@@ -261,6 +282,7 @@ export default function App() {
             onToggleTask={handleToggleTask}
             onAddTask={handleAddTask}
             onDeleteTask={handleDeleteTask}
+            onUpdateTaskPriority={handleUpdateTaskPriority}
           />
         );
       case 'analytics':
@@ -282,6 +304,7 @@ export default function App() {
             onUpdateUser={(updated) => setUser((prev) => ({ ...prev, ...updated }))}
             onNavigate={(screen) => setCurrentScreen(screen)}
             onOpenProModal={() => setIsProModalOpen(true)}
+            onOpenInstallModal={handleOpenInstallModal}
             onLogOut={() => setCurrentScreen('splash')}
           />
         );
@@ -290,6 +313,7 @@ export default function App() {
           <Settings
             onBack={() => setCurrentScreen('profile')}
             onClearData={handleClearAllData}
+            onOpenInstallModal={handleOpenInstallModal}
           />
         );
       default:
@@ -298,6 +322,7 @@ export default function App() {
             user={user}
             onNavigate={(screen) => setCurrentScreen(screen)}
             onQuickPrompt={handleQuickPrompt}
+            onOpenInstallModal={handleOpenInstallModal}
           />
         );
     }
@@ -318,6 +343,7 @@ export default function App() {
           currentScreen={currentScreen}
           onNavigate={(screen) => setCurrentScreen(screen)}
           onOpenProModal={() => setIsProModalOpen(true)}
+          onOpenInstallModal={handleOpenInstallModal}
           pendingTasksCount={tasks.filter((t) => !t.completed).length}
         />
 
@@ -332,10 +358,12 @@ export default function App() {
             onToggleTask={handleToggleTask}
             onAddTask={handleAddTask}
             onDeleteTask={handleDeleteTask}
+            onUpdateTaskPriority={handleUpdateTaskPriority}
             onAddFile={handleAddFile}
             onDeleteFile={handleDeleteFile}
             onSelectTool={(tool) => setActiveTool(tool)}
             onOpenProModal={() => setIsProModalOpen(true)}
+            onOpenInstallModal={handleOpenInstallModal}
             onQuickPrompt={handleQuickPrompt}
             onUpdateUser={(updated) => setUser((prev) => ({ ...prev, ...updated }))}
             onClearData={handleClearAllData}
@@ -380,6 +408,14 @@ export default function App() {
         onClose={() => setIsProModalOpen(false)}
         onUpgrade={handleUpgradeToPro}
       />
+
+      <InstallAppModal
+        isOpen={isInstallModalOpen}
+        onClose={() => setIsInstallModalOpen(false)}
+        defaultTab={installModalTab}
+      />
+
+      <OfflineIndicator />
     </div>
   );
 }

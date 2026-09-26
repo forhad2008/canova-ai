@@ -9,6 +9,7 @@ import {
   Camera,
   Check,
   Edit3,
+  Download,
 } from 'lucide-react';
 import { UserProfile, ScreenType } from '../types';
 import { soundFx } from '../utils/audio';
@@ -19,6 +20,7 @@ interface ProfileProps {
   onUpdateUser: (updated: Partial<UserProfile>) => void;
   onNavigate: (screen: ScreenType) => void;
   onOpenProModal: () => void;
+  onOpenInstallModal?: (tab?: 'desktop' | 'android') => void;
   onLogOut: () => void;
 }
 
@@ -27,6 +29,7 @@ export const Profile: React.FC<ProfileProps> = ({
   onUpdateUser,
   onNavigate,
   onOpenProModal,
+  onOpenInstallModal,
   onLogOut,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -197,6 +200,37 @@ export const Profile: React.FC<ProfileProps> = ({
           </div>
           <ChevronRight size={16} className="text-slate-600 dark:text-[#657394]" />
         </button>
+
+        {/* Install Native App */}
+        {onOpenInstallModal && (
+          <button
+            onClick={() => {
+              soundFx.playClick();
+              onOpenInstallModal('desktop');
+            }}
+            className="w-full px-4 py-3.5 flex items-center justify-between hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer group"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-xl bg-purple-500/15 text-purple-700 dark:text-[#A978FF] flex items-center justify-center">
+                <Download size={16} />
+              </div>
+              <div className="text-left">
+                <span className="text-xs font-bold text-black dark:text-white group-hover:text-purple-700 dark:group-hover:text-purple-300 block">
+                  Install Canova AI App
+                </span>
+                <span className="text-[10px] text-slate-500 dark:text-[#657394] font-medium">
+                  Desktop (PC/Mac) & Android WebAPK
+                </span>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-500/15 text-purple-700 dark:text-purple-300 border border-purple-500/30">
+                PWA
+              </span>
+              <ChevronRight size={16} className="text-slate-600 dark:text-[#657394]" />
+            </div>
+          </button>
+        )}
 
         {/* Settings */}
         <button

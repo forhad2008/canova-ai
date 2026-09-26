@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @layer base {
   :root {
     --bg-primary: #EEF2F9;
@@ -897,3 +899,112 @@ html:not(.dark) .border-white\/10,
 html:not(.dark) .border-white\/20 {
   border-color: rgba(0, 0, 0, 0.08) !important;
 }
+
+/* =========================================================================
+   DARK THEME SPECIFIC CLASS OVERRIDES - DEEP OBSIDIAN NEUMORPHISM & CRISP CONTRAST
+   ========================================================================= */
+
+html.dark {
+  color: #F7F8FF !important;
+}
+
+html.dark body {
+  background-color: #030712 !important;
+  color: #F7F8FF !important;
+}
+
+/* Headings in dark mode */
+html.dark h1:not([class*="bg-clip-text"]),
+html.dark h2:not([class*="bg-clip-text"]),
+html.dark h3:not([class*="bg-clip-text"]),
+html.dark h4:not([class*="bg-clip-text"]),
+html.dark h5:not([class*="bg-clip-text"]),
+html.dark h6:not([class*="bg-clip-text"]) {
+  color: #F7F8FF !important;
+}
+
+/* Inputs, textareas, and controls in dark mode */
+html.dark input,
+html.dark textarea,
+html.dark select {
+  background-color: #050d1e !important;
+  color: #F7F8FF !important;
+  border-color: rgba(255, 255, 255, 0.09) !important;
+}
+
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+  color: #526385 !important;
+}
+
+/* Dark mode text contrast alignment */
+html.dark .text-black,
+html.dark .text-slate-900,
+html.dark .text-slate-800 {
+  color: #F7F8FF !important;
+}
+
+html.dark .text-slate-700,
+html.dark .text-slate-600 {
+  color: #9AA8C7 !important;
+}
+
+html.dark .text-slate-500,
+html.dark .text-slate-400 {
+  color: #657394 !important;
+}
+
+html.dark .text-white {
+  color: #FFFFFF !important;
+}
+
+html.dark .text-\[\#F7F8FF\] {
+  color: #F7F8FF !important;
+}
+
+html.dark .text-\[\#9AA8C7\] {
+  color: #9AA8C7 !important;
+}
+
+html.dark .text-\[\#657394\] {
+  color: #657394 !important;
+}
+
+/* Background conversions in dark mode */
+html.dark .bg-white:not(img):not(.keep-white) {
+  background-color: #071329 !important;
+}
+
+html.dark .bg-\[\#EEF2F9\] {
+  background-color: #030712 !important;
+}
+
+html.dark .bg-\[\#F8FAFC\] {
+  background-color: #050d1e !important;
+}
+
+html.dark .bg-\[\#F0F4FA\] {
+  background-color: #071226 !important;
+}
+
+html.dark .bg-\[\#E4ECF7\] {
+  background-color: #071329 !important;
+}
+
+/* Border conversions in dark mode */
+html.dark .border-black\/5,
+html.dark .border-black\/8,
+html.dark .border-black\/10,
+html.dark .border-black\/20 {
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Specific button and badge text preservation in dark mode */
+html.dark .neu-primary-btn,
+html.dark .neu-primary-btn *,
+html.dark [class*="bg-gradient-to"] .text-white,
+html.dark [class*="from-[#7C4DFF]"] .text-white,
+html.dark [class*="from-[#8B5CFF]"] .text-white {
+  color: #FFFFFF !important;
+}
+

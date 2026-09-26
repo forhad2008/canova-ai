@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <rect width="512" height="512" rx="128" fill="#071226"/>
+  <defs>
+    <radialGradient id="starGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#8B5CFF" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#35C9FF" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="starGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#A978FF"/>
+      <stop offset="50%" stop-color="#4C7DFF"/>
+      <stop offset="100%" stop-color="#35C9FF"/>
+    </linearGradient>
+  </defs>
+  <circle cx="256" cy="256" r="200" fill="url(#starGlow)"/>
+  <path d="M256 96 C256 180, 200 236, 116 256 C200 276, 256 332, 256 416 C256 332, 312 276, 396 256 C312 236, 256 180, 256 96 Z" fill="url(#starGrad)"/>
+  <circle cx="256" cy="256" r="16" fill="#FFFFFF"/>
+</svg>

@@ -9,6 +9,8 @@ export type ScreenType =
   | 'profile'
   | 'settings';
 
+export type TaskPriority = 'low' | 'medium' | 'high';
+
 export interface Task {
   id: string;
   title: string;
@@ -16,6 +18,7 @@ export interface Task {
   duration: string;
   completed: boolean;
   dueDate: 'today' | 'week' | 'all';
+  priority?: TaskPriority;
 }
 
 export interface FileItem {

@@ -21,18 +21,21 @@ import { soundFx } from '../utils/audio';
 import { useRecentSearches } from '../utils/useRecentSearches';
 import { RecentSearchChips } from '../components/common/RecentSearchChips';
 import { ThemeToggle } from '../components/common/ThemeToggle';
+import { PWAInstallButton } from '../components/common/PWAInstallButton';
 import photoAvatar from '../assets/photo.png';
 
 interface HomeProps {
   user: UserProfile;
   onNavigate: (screen: ScreenType) => void;
   onQuickPrompt?: (prompt: string) => void;
+  onOpenInstallModal?: (tab?: 'desktop' | 'android') => void;
 }
 
 export const Home: React.FC<HomeProps> = ({
   user,
   onNavigate,
   onQuickPrompt,
+  onOpenInstallModal,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
@@ -143,6 +146,11 @@ export const Home: React.FC<HomeProps> = ({
         </div>
 
         <div className="flex items-center gap-2.5">
+          {/* Install App Quick Button */}
+          {onOpenInstallModal && (
+            <PWAInstallButton onOpenModal={(tab) => onOpenInstallModal(tab)} variant="icon" />
+          )}
+
           <ThemeToggle size="sm" />
 
           {/* Profile Avatar with glowing rim */}
@@ -385,7 +393,12 @@ export const Home: React.FC<HomeProps> = ({
         })}
       </div>
 
-      {/* 5. Overview Shortcut Banner (Links to Screen 5 Overview) */}
+      {/* 5. Install App Smart Banner (Desktop & Mobile 1-click access) */}
+      {onOpenInstallModal && (
+        <PWAInstallButton onOpenModal={(tab) => onOpenInstallModal(tab)} variant="banner" />
+      )}
+
+      {/* 6. Overview Shortcut Banner (Links to Screen 5 Overview) */}
       <button
         onClick={() => {
           soundFx.playClick();
@@ -407,7 +420,7 @@ export const Home: React.FC<HomeProps> = ({
         </div>
       </button>
 
-      {/* 6. Recommended Quick Starters */}
+      {/* 7. Recommended Quick Starters */}
       <div className="pt-0.5">
         <div className="flex items-center gap-1.5 text-xs text-slate-900 dark:text-[#9AA8C7] mb-2 px-1">
           <Sparkles size={13} className="text-cyan-600 dark:text-[#35C9FF]" />

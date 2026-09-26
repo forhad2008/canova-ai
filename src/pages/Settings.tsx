@@ -10,17 +10,24 @@ import {
   Trash2,
   Check,
   Sparkles,
+  Download,
 } from 'lucide-react';
 import { ScreenType } from '../types';
 import { soundFx } from '../utils/audio';
 import { useTheme } from '../utils/ThemeContext';
+import { PWAInstallButton } from '../components/common/PWAInstallButton';
 
 interface SettingsProps {
   onBack: () => void;
   onClearData: () => void;
+  onOpenInstallModal?: (tab?: 'desktop' | 'android') => void;
 }
 
-export const Settings: React.FC<SettingsProps> = ({ onBack, onClearData }) => {
+export const Settings: React.FC<SettingsProps> = ({
+  onBack,
+  onClearData,
+  onOpenInstallModal,
+}) => {
   const { theme, setTheme } = useTheme();
   const [haptics, setHaptics] = useState(true);
   const [notifications, setNotifications] = useState(true);
@@ -226,7 +233,21 @@ export const Settings: React.FC<SettingsProps> = ({ onBack, onClearData }) => {
         </div>
       </div>
 
-      {/* 5. Clear Local Data */}
+      {/* 5. Native Applications Installation */}
+      {onOpenInstallModal && (
+        <div className="neu-card rounded-2xl p-4 space-y-3.5 border border-purple-500/20">
+          <div className="flex items-center gap-2 text-xs font-bold text-purple-700 dark:text-purple-300">
+            <Download size={16} className="text-purple-600 dark:text-[#8B5CFF]" />
+            <span>Install Applications (Desktop & Android)</span>
+          </div>
+          <p className="text-[11px] font-medium text-slate-600 dark:text-[#9AA8C7]">
+            Get the full standalone experience on your PC or Android smartphone.
+          </p>
+          <PWAInstallButton onOpenModal={(tab) => onOpenInstallModal(tab)} variant="full" />
+        </div>
+      )}
+
+      {/* 6. Clear Local Data */}
       <div className="neu-card rounded-2xl p-4 border border-red-500/20 space-y-2">
         <div className="flex items-center justify-between">
           <div>
