@@ -68,7 +68,7 @@ export async function sendChatMessage(
           })),
           { role: 'user', content: newMessage },
         ],
-        model: model || 'gemini-3.8-flash',
+        model: model || 'gemini-2.5-flash',
         customApiKey,
       }),
     });

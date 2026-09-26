@@ -164,15 +164,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
             onClick={() => onOpenInstallModal('desktop')}
             title="Install App (PC & Mobile)"
             aria-label="Install App"
-            className="w-full neu-card-subtle px-3 py-2 rounded-xl flex items-center justify-center lg:justify-between text-xs font-bold text-purple-700 dark:text-purple-300 hover:text-purple-900 dark:hover:text-white border border-purple-500/30 hover:border-purple-500/60 transition-all cursor-pointer shadow-2xs group"
+            style={{ backgroundColor: '#340ec4' }}
+            className="w-full px-3 py-2 rounded-xl flex items-center justify-center lg:justify-between text-xs font-bold text-[#f2f0f4] border border-purple-500/30 hover:border-purple-500/60 transition-all cursor-pointer shadow-2xs group"
           >
             <div className="flex items-center gap-2">
-              <Download size={15} className="text-purple-600 dark:text-[#A978FF] group-hover:scale-110 transition-transform shrink-0" />
-              <span className="hidden lg:inline">Install Apps</span>
+              <Download size={15} style={{ color: '#f2f0f4' }} className="group-hover:scale-110 transition-transform shrink-0" />
+              <span className="hidden lg:inline text-[#f2f0f4]">Install Apps</span>
             </div>
             <div className="hidden lg:flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-[10px] px-1.5 py-0.5 rounded bg-purple-500/15 text-purple-700 dark:text-purple-300 font-extrabold border border-purple-500/30">
+              <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/20 text-[#f2f0f4] font-extrabold border border-white/30">
                 PC & Mobile
               </span>
             </div>

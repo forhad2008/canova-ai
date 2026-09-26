@@ -44,7 +44,7 @@ app.post('/api/chat', async (req, res) => {
     }));
 
     const response = await ai.models.generateContent({
-      model: model || 'gemini-3.8-flash',
+      model: model || 'gemini-2.5-flash',
       contents,
       config: {
         systemInstruction:
@@ -78,14 +78,14 @@ app.post('/api/ai/tool-execute', async (req, res) => {
     }
 
     let systemInstruction = 'You are an expert AI work assistant.';
-    let model = 'gemini-3.8-flash';
+    let model = 'gemini-2.5-flash';
     let userPrompt = prompt;
 
     switch (toolId) {
       case 'code-assistant':
         systemInstruction =
           'You are a senior full-stack software engineer and system architect. Write clean, production-ready, type-safe code with comments, edge-case analysis, and performance considerations. Return formatted markdown with code blocks.';
-        model = 'gemini-3.8-flash';
+        model = 'gemini-2.5-flash';
         break;
       case 'translator':
         systemInstruction = `You are a professional executive translator. Translate the text into ${targetLang || 'Japanese'} with natural business cadence, idiomatic accuracy, and contextual nuance. Provide phonetic pronunciation guide (e.g. Romaji/Pinyin) and cultural context if beneficial.`;
@@ -157,7 +157,7 @@ Return ONLY a valid JSON array of objects with the keys:
 Do not enclose in markdown code fences if possible, or return parseable JSON.`;
 
     const response = await ai.models.generateContent({
-      model: 'gemini-3.8-flash',
+      model: 'gemini-2.5-flash',
       contents: prompt,
       config: {
         responseMimeType: 'application/json',
@@ -205,7 +205,7 @@ app.post('/api/ai/verify-key', async (req, res) => {
     });
 
     const response = await ai.models.generateContent({
-      model: 'gemini-3.8-flash',
+      model: 'gemini-2.5-flash',
       contents: 'Respond with exactly the single word "VERIFIED".',
     });
 
