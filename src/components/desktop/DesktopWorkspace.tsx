@@ -39,6 +39,8 @@ import {
   Camera,
   Edit3,
   ChevronLeft,
+  X,
+  FileText,
 } from 'lucide-react';
 import { ScreenType, Task, FileItem, AITool, UserProfile, ChatMessage, TaskPriority } from '../../types';
 import { NovaStar } from '../common/NovaStar';
@@ -97,6 +99,8 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
   const { theme, setTheme } = useTheme();
   const [globalSearch, setGlobalSearch] = useState('');
   const [isGlobalSearchFocused, setIsGlobalSearchFocused] = useState(false);
+  const [searchCategoryFilter, setSearchCategoryFilter] = useState<'all' | 'ai' | 'tasks' | 'files' | 'tools'>('all');
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const [copiedCode, setCopiedCode] = useState(false);
   const [taskInput, setTaskInput] = useState('');
   const [desktopTaskPriority, setDesktopTaskPriority] = useState<TaskPriority>('medium');
@@ -111,6 +115,26 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
     return true;
   });
 
+  // Global Keyboard Shortcuts (⌘K, Ctrl+K, '/', Esc)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+        setIsGlobalSearchFocused(true);
+      } else if (e.key === '/' && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+        setIsGlobalSearchFocused(true);
+      } else if (e.key === 'Escape' && isGlobalSearchFocused) {
+        setIsGlobalSearchFocused(false);
+        searchInputRef.current?.blur();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isGlobalSearchFocused]);
+
   const {
     recentSearches: globalRecentSearches,
     addSearch: addGlobalSearch,
@@ -122,7 +146,30 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
     'Finish website design',
   ]);
   
-  // Desktop AI Assistant chat state
+  const ALL_DESKTOP_TOOLS: AITool[] = [
+    { id: 'image-gen', title: 'Image Generator', description: 'Create stunning images with AI', category: 'Design', accentColor: '#D66BFF' },
+    { id: 'code-assistant', title: 'Code Assistant', description: 'Write TypeScript & algorithms', category: 'Development', accentColor: '#35C9FF' },
+    { id: 'note-maker', title: 'Note Maker', description: 'Capture thoughts & notes', category: 'Productivity', accentColor: '#8B5CFF' },
+    { id: 'translator', title: 'Translator', description: 'Real-time multilingual translation', category: 'Productivity', accentColor: '#35C9FF' },
+    { id: 'video-editor', title: 'Video Editor', description: 'Motion & video storyboards', category: 'Design', accentColor: '#D66BFF' },
+    { id: 'web-search', title: 'Web Search', description: 'Verified intelligent research', category: 'Search', accentColor: '#35C9FF' },
+  ];
+
+  const trimmedGlobalSearch = globalSearch.trim().toLowerCase();
+  const rawMatchingTasks = trimmedGlobalSearch
+    ? tasks.filter((t) => t.title.toLowerCase().includes(trimmedGlobalSearch) || t.category.toLowerCase().includes(trimmedGlobalSearch))
+    : [];
+  const rawMatchingFiles = trimmedGlobalSearch
+    ? files.filter((f) => f.name.toLowerCase().includes(trimmedGlobalSearch) || f.category.toLowerCase().includes(trimmedGlobalSearch))
+    : [];
+  const rawMatchingTools = trimmedGlobalSearch
+    ? ALL_DESKTOP_TOOLS.filter((tool) => tool.title.toLowerCase().includes(trimmedGlobalSearch) || tool.description.toLowerCase().includes(trimmedGlobalSearch) || tool.category.toLowerCase().includes(trimmedGlobalSearch))
+    : [];
+
+  const searchMatchingTasks = (searchCategoryFilter === 'all' || searchCategoryFilter === 'tasks') ? rawMatchingTasks.slice(0, 4) : [];
+  const searchMatchingFiles = (searchCategoryFilter === 'all' || searchCategoryFilter === 'files') ? rawMatchingFiles.slice(0, 4) : [];
+  const searchMatchingTools = (searchCategoryFilter === 'all' || searchCategoryFilter === 'tools') ? rawMatchingTools.slice(0, 4) : [];
+  const hasLiveResults = rawMatchingTasks.length > 0 || rawMatchingFiles.length > 0 || rawMatchingTools.length > 0;
   const [desktopMessages, setDesktopMessages] = useState<ChatMessage[]>([
     {
       id: 'd-m1',
@@ -273,45 +320,245 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
           </div>
         </div>
 
-        {/* Global Search Bar (⌘K) */}
-        <div className="flex-1 max-w-md relative hidden md:block z-30">
-          <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-[#657394]" />
-          <input
-            type="text"
-            value={globalSearch}
-            onFocus={() => setIsGlobalSearchFocused(true)}
-            onChange={(e) => setGlobalSearch(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && globalSearch.trim()) {
-                addGlobalSearch(globalSearch.trim());
-                setIsGlobalSearchFocused(false);
-                onQuickPrompt(globalSearch.trim());
-                onNavigate('assistant');
-              }
-            }}
-            placeholder="Search across files, tasks, or ask Canova AI (Press Enter)..."
-            className="w-full neu-inset rounded-xl py-2 pl-9 pr-14 text-xs text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-[#657394] focus:outline-none focus:ring-1 focus:ring-purple-500/50"
-          />
-          <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center gap-0.5 text-[10px] text-slate-500 dark:text-[#657394] bg-black/5 dark:bg-white/5 px-1.5 py-0.5 rounded border border-black/5 dark:border-white/8 pointer-events-none font-semibold">
-            <Command size={10} />
-            <span>K</span>
+        {/* Global Upgraded Omnibar Search Bar (⌘K / Ctrl+K) */}
+        <div className="flex-1 max-w-sm sm:max-w-md md:max-w-xl lg:max-w-2xl xl:max-w-3xl relative z-30 mx-1 md:mx-3">
+          <div className="relative flex items-center group">
+            <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-purple-600 dark:text-[#A978FF] pointer-events-none transition-transform group-focus-within:scale-110" />
+            <input
+              ref={searchInputRef}
+              type="text"
+              value={globalSearch}
+              onFocus={() => setIsGlobalSearchFocused(true)}
+              onChange={(e) => setGlobalSearch(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && globalSearch.trim()) {
+                  addGlobalSearch(globalSearch.trim());
+                  setIsGlobalSearchFocused(false);
+                  onQuickPrompt(globalSearch.trim());
+                  onNavigate('assistant');
+                }
+              }}
+              placeholder="Search tasks, files, AI tools, or ask Gemini anything... (⌘K)"
+              className="w-full neu-inset rounded-xl py-2 pl-9 pr-24 text-xs font-semibold text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-[#657394] focus:outline-none focus:ring-2 focus:ring-purple-500/50 shadow-inner transition-all duration-200"
+            />
+
+            <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
+              {globalSearch && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    soundFx.playClick();
+                    setGlobalSearch('');
+                  }}
+                  aria-label="Clear search"
+                  className="w-5 h-5 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors cursor-pointer"
+                >
+                  <X size={12} />
+                </button>
+              )}
+              <div className="flex items-center gap-0.5 text-[10px] text-purple-700 dark:text-purple-300 bg-purple-500/10 px-1.5 py-0.5 rounded border border-purple-500/20 pointer-events-none font-bold">
+                <Command size={10} />
+                <span>K</span>
+              </div>
+            </div>
           </div>
 
-          {/* Desktop Global Recent Searches */}
-          {isGlobalSearchFocused && globalRecentSearches.length > 0 && (
-            <RecentSearchesList
-              searches={globalRecentSearches}
-              onSelect={(term) => {
-                setGlobalSearch(term);
-                addGlobalSearch(term);
-                setIsGlobalSearchFocused(false);
-                onQuickPrompt(term);
-                onNavigate('assistant');
-              }}
-              onRemove={removeGlobalSearch}
-              onClear={clearGlobalSearches}
-              onClose={() => setIsGlobalSearchFocused(false)}
-            />
+          {/* Desktop Live Search Results Dropdown when typing */}
+          {isGlobalSearchFocused && globalSearch.trim().length > 0 && (
+            <div className="absolute top-full left-0 right-0 mt-2 z-50 neu-card rounded-2xl p-3 border border-black/10 dark:border-purple-500/25 bg-white/95 dark:bg-[#081226]/95 backdrop-blur-xl shadow-2xl text-left space-y-2.5 animate-fadeIn max-h-[480px] overflow-y-auto no-scrollbar">
+              {/* Category Filter Pills */}
+              <div className="flex items-center gap-1.5 pb-2 border-b border-black/5 dark:border-white/6 overflow-x-auto no-scrollbar">
+                {(['all', 'ai', 'tasks', 'files', 'tools'] as const).map((cat) => (
+                  <button
+                    key={cat}
+                    type="button"
+                    onClick={() => {
+                      soundFx.playClick();
+                      setSearchCategoryFilter(cat);
+                    }}
+                    className={`px-2.5 py-1 rounded-lg text-[11px] font-bold capitalize transition-all cursor-pointer shrink-0 ${
+                      searchCategoryFilter === cat
+                        ? 'neu-primary-btn text-white shadow-xs'
+                        : 'text-slate-600 dark:text-[#9AA8C7] hover:text-slate-900 dark:hover:text-white bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/5'
+                    }`}
+                  >
+                    {cat === 'ai' ? '⚡ AI Actions' : cat}
+                  </button>
+                ))}
+              </div>
+
+              {/* Ask AI Command Bar */}
+              {(searchCategoryFilter === 'all' || searchCategoryFilter === 'ai') && (
+                <div
+                  onClick={() => {
+                    soundFx.playClick();
+                    addGlobalSearch(globalSearch.trim());
+                    setIsGlobalSearchFocused(false);
+                    onQuickPrompt(globalSearch.trim());
+                    onNavigate('assistant');
+                  }}
+                  className="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-700 dark:text-purple-300 font-bold text-xs cursor-pointer transition-all group border border-purple-500/20"
+                >
+                  <Sparkles size={14} className="text-purple-600 dark:text-[#A978FF] shrink-0" />
+                  <span className="truncate flex-1">
+                    Ask Canova AI: <span className="text-slate-900 dark:text-white font-semibold">"{globalSearch.trim()}"</span>
+                  </span>
+                  <span className="text-[10px] font-semibold text-purple-600 dark:text-purple-400 opacity-80 flex items-center gap-0.5">
+                    Enter ↵
+                  </span>
+                </div>
+              )}
+
+              {/* Tasks Results */}
+              {searchMatchingTasks.length > 0 && (
+                <div className="space-y-1 pt-1 border-t border-black/5 dark:border-white/5">
+                  <div className="flex items-center justify-between px-2">
+                    <span className="text-[10px] font-bold text-slate-500 dark:text-[#9AA8C7] uppercase tracking-wider block">
+                      Matching Tasks ({searchMatchingTasks.length})
+                    </span>
+                    <button
+                      onClick={() => {
+                        setIsGlobalSearchFocused(false);
+                        onNavigate('tasks');
+                      }}
+                      className="text-[10px] font-semibold text-purple-600 dark:text-purple-400 hover:underline cursor-pointer"
+                    >
+                      View in Tasks →
+                    </button>
+                  </div>
+                  {searchMatchingTasks.map((t) => (
+                    <div
+                      key={t.id}
+                      onClick={() => {
+                        soundFx.playClick();
+                        setIsGlobalSearchFocused(false);
+                        onNavigate('tasks');
+                      }}
+                      className="flex items-center justify-between px-2.5 py-1.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer group transition-colors"
+                    >
+                      <div className="flex items-center gap-2 truncate">
+                        <CheckCircle2 size={13} className={t.completed ? 'text-emerald-500' : 'text-slate-400'} />
+                        <span className={`text-xs font-semibold truncate ${t.completed ? 'line-through text-slate-400' : 'text-slate-800 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-300'}`}>
+                          {t.title}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-black/5 dark:bg-white/5 text-slate-500 dark:text-[#8F9FBC] font-medium">
+                          {t.category}
+                        </span>
+                        <PriorityBadge priority={t.priority || 'medium'} size="sm" showIcon={false} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Files Results */}
+              {searchMatchingFiles.length > 0 && (
+                <div className="space-y-1 pt-1 border-t border-black/5 dark:border-white/5">
+                  <div className="flex items-center justify-between px-2">
+                    <span className="text-[10px] font-bold text-slate-500 dark:text-[#9AA8C7] uppercase tracking-wider block">
+                      Matching Files ({searchMatchingFiles.length})
+                    </span>
+                    <button
+                      onClick={() => {
+                        setIsGlobalSearchFocused(false);
+                        onNavigate('files');
+                      }}
+                      className="text-[10px] font-semibold text-blue-600 dark:text-blue-400 hover:underline cursor-pointer"
+                    >
+                      View in Files →
+                    </button>
+                  </div>
+                  {searchMatchingFiles.map((f) => (
+                    <div
+                      key={f.id}
+                      onClick={() => {
+                        soundFx.playClick();
+                        setIsGlobalSearchFocused(false);
+                        onNavigate('files');
+                      }}
+                      className="flex items-center justify-between px-2.5 py-1.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer group transition-colors"
+                    >
+                      <div className="flex items-center gap-2 truncate">
+                        <FileText size={13} className="text-blue-500" />
+                        <span className="text-xs font-semibold text-slate-800 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-300 truncate">
+                          {f.name}
+                        </span>
+                      </div>
+                      <span className="text-[10px] text-slate-500 dark:text-[#657394] font-medium">{f.size}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Tools Results */}
+              {searchMatchingTools.length > 0 && (
+                <div className="space-y-1 pt-1 border-t border-black/5 dark:border-white/5">
+                  <div className="flex items-center justify-between px-2">
+                    <span className="text-[10px] font-bold text-slate-500 dark:text-[#9AA8C7] uppercase tracking-wider block">
+                      AI Tools ({searchMatchingTools.length})
+                    </span>
+                    <button
+                      onClick={() => {
+                        setIsGlobalSearchFocused(false);
+                        onNavigate('explore');
+                      }}
+                      className="text-[10px] font-semibold text-purple-600 dark:text-purple-400 hover:underline cursor-pointer"
+                    >
+                      All Tools →
+                    </button>
+                  </div>
+                  {searchMatchingTools.map((tool) => (
+                    <div
+                      key={tool.id}
+                      onClick={() => {
+                        soundFx.playClick();
+                        setIsGlobalSearchFocused(false);
+                        onSelectTool(tool);
+                      }}
+                      className="flex items-center justify-between px-2.5 py-1.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer group transition-colors"
+                    >
+                      <div className="flex items-center gap-2 truncate">
+                        <Zap size={13} style={{ color: tool.accentColor }} />
+                        <span className="text-xs font-semibold text-slate-800 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-300 truncate">
+                          {tool.title}
+                        </span>
+                      </div>
+                      <span className="text-[10px] text-slate-500 dark:text-[#657394] font-medium">{tool.category}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {!hasLiveResults && (
+                <div className="py-3 text-center text-xs text-slate-500 dark:text-[#657394] space-y-1">
+                  <p>No workspace items matching "{globalSearch.trim()}"</p>
+                  <p className="text-[11px] text-purple-600 dark:text-purple-400 font-semibold">
+                    Press Enter to generate an intelligent answer with Canova AI.
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Desktop Global Recent Searches & Quick Actions (when input is empty) */}
+          {isGlobalSearchFocused && !globalSearch && (
+            <div className="absolute top-full left-0 right-0 mt-2 z-50">
+              <RecentSearchesList
+                searches={globalRecentSearches}
+                onSelect={(term) => {
+                  setGlobalSearch(term);
+                  addGlobalSearch(term);
+                  setIsGlobalSearchFocused(false);
+                  onQuickPrompt(term);
+                  onNavigate('assistant');
+                }}
+                onRemove={removeGlobalSearch}
+                onClear={clearGlobalSearches}
+                onClose={() => setIsGlobalSearchFocused(false)}
+              />
+            </div>
           )}
         </div>
 
@@ -322,11 +569,6 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
             <span className="text-slate-600 dark:text-[#9AA8C7]">Focus Sprint:</span>
             <span className="text-slate-900 dark:text-white font-bold">68% Done</span>
           </div>
-
-          {/* Install App Quick Button */}
-          {onOpenInstallModal && (
-            <PWAInstallButton onOpenModal={(tab) => onOpenInstallModal(tab)} variant="compact" />
-          )}
 
           {/* Theme Mode Toggle (White / Dark Neumorphic) */}
           <ThemeToggle size="sm" />

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useId } from 'react';
 import { CheckCircle2, Sparkles, Flame, Trophy, TrendingUp } from 'lucide-react';
 
 interface TaskProgressRingProps {
@@ -14,6 +14,11 @@ export const TaskProgressRing: React.FC<TaskProgressRingProps> = ({
   highPriorityPending = 0,
   activeTabLabel = 'Tasks',
 }) => {
+  const uniqueId = useId().replace(/:/g, '_');
+  const gradientId = `taskCompletionGradient_${uniqueId}`;
+  const successGradientId = `taskSuccessGradient_${uniqueId}`;
+  const glowId = `progressGlow_${uniqueId}`;
+
   const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
   const radius = 38;
   const circumference = 2 * Math.PI * radius; // ~238.76
@@ -92,17 +97,17 @@ export const TaskProgressRing: React.FC<TaskProgressRingProps> = ({
           <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
             <defs>
               {/* Vibrant dynamic gradient */}
-              <linearGradient id="taskCompletionGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" stopColor="#8B5CF6" />
                 <stop offset="60%" stopColor="#6366F1" />
                 <stop offset="100%" stopColor="#38BDF8" />
               </linearGradient>
-              <linearGradient id="taskSuccessGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <linearGradient id={successGradientId} x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" stopColor="#10B981" />
                 <stop offset="100%" stopColor="#34D399" />
               </linearGradient>
               {/* Drop shadow for glow on stroke */}
-              <filter id="progressGlow" x="-20%" y="-20%" width="140%" height="140%">
+              <filter id={glowId} x="-20%" y="-20%" width="140%" height="140%">
                 <feDropShadow dx="0" dy="0" stdDeviation="2" floodColor={isComplete ? '#10B981' : '#8B5CF6'} floodOpacity="0.4" />
               </filter>
             </defs>
@@ -123,13 +128,13 @@ export const TaskProgressRing: React.FC<TaskProgressRingProps> = ({
               cx="50"
               cy="50"
               r={radius}
-              stroke={isComplete ? 'url(#taskSuccessGradient)' : 'url(#taskCompletionGradient)'}
+              stroke={isComplete ? `url(#${successGradientId})` : `url(#${gradientId})`}
               strokeWidth="8"
               strokeDasharray={circumference}
               strokeDashoffset={strokeDashoffset}
               strokeLinecap="round"
               fill="transparent"
-              filter="url(#progressGlow)"
+              filter={`url(#${glowId})`}
               className="transition-all duration-700 ease-out"
             />
           </svg>

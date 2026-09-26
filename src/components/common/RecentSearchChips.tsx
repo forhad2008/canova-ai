@@ -42,11 +42,11 @@ export const RecentSearchChips: React.FC<RecentSearchChipsProps> = ({
   return (
     <div
       ref={containerRef}
-      className={`w-full pt-2 pb-1 space-y-1.5 animate-fadeIn select-none ${className}`}
+      className={`w-full pt-2.5 pb-1 space-y-2 animate-fadeIn select-none ${className}`}
     >
-      <div className="flex items-center justify-between px-1 text-[11px] text-[#9AA8C7]">
-        <span className="flex items-center gap-1.5 font-medium">
-          <History size={12} className="text-[#8B5CFF]" />
+      <div className="flex items-center justify-between px-1 text-[11px] text-slate-700 dark:text-[#9AA8C7]">
+        <span className="flex items-center gap-1.5 font-bold">
+          <History size={12} className="text-purple-600 dark:text-[#8B5CFF]" />
           Recent searches:
         </span>
         <button
@@ -57,14 +57,14 @@ export const RecentSearchChips: React.FC<RecentSearchChipsProps> = ({
             soundFx.playClick();
             onClear();
           }}
-          className="text-[10px] text-[#657394] hover:text-red-300 transition-colors cursor-pointer"
+          className="text-[11px] font-semibold text-slate-600 dark:text-[#657394] hover:text-rose-600 dark:hover:text-rose-400 transition-colors cursor-pointer"
         >
           Clear all
         </button>
       </div>
 
       {/* List of chips */}
-      <div className="flex flex-wrap items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
+      <div className="flex flex-wrap items-center gap-2 overflow-x-auto no-scrollbar py-0.5">
         {searches.map((item, idx) => (
           <div
             key={idx}
@@ -73,9 +73,9 @@ export const RecentSearchChips: React.FC<RecentSearchChipsProps> = ({
               soundFx.playClick();
               onSelect(item);
             }}
-            className="neu-card-subtle group hover:border-purple-500/40 rounded-full pl-3 pr-1.5 py-1 flex items-center gap-1.5 text-xs text-white border border-white/8 cursor-pointer transition-all hover:bg-purple-900/25 active:scale-95 shadow-sm"
+            className="neu-card rounded-full pl-3 pr-2 py-1.5 flex items-center gap-2 text-xs text-slate-900 dark:text-white border border-black/8 dark:border-white/10 cursor-pointer transition-all hover:border-purple-500/50 hover:bg-purple-500/10 active:scale-95 shadow-xs"
           >
-            <span className="truncate max-w-[150px] text-[#E0E7FF] group-hover:text-white font-normal">
+            <span className="truncate max-w-[180px] font-semibold text-slate-800 dark:text-[#E0E7FF]">
               {item}
             </span>
             <button
@@ -87,9 +87,9 @@ export const RecentSearchChips: React.FC<RecentSearchChipsProps> = ({
                 onRemove(item);
               }}
               aria-label={`Remove ${item}`}
-              className="w-4 h-4 rounded-full flex items-center justify-center text-[#657394] hover:text-red-300 hover:bg-white/10 transition-colors cursor-pointer"
+              className="w-4 h-4 rounded-full flex items-center justify-center text-slate-600 dark:text-[#657394] hover:text-rose-600 dark:hover:text-rose-400 hover:bg-black/5 dark:hover:bg-white/10 transition-colors cursor-pointer"
             >
-              <X size={10} />
+              <X size={11} />
             </button>
           </div>
         ))}

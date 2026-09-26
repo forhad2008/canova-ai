@@ -13,6 +13,7 @@ import {
   Check,
   UploadCloud,
   File,
+  X,
 } from 'lucide-react';
 import { FileItem } from '../types';
 import { soundFx } from '../utils/audio';
@@ -160,15 +161,28 @@ export const Files: React.FC<FilesProps> = ({
         <div className="relative flex-1">
           <Search
             size={16}
-            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-700 dark:text-[#657394] pointer-events-none"
+            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-purple-600 dark:text-[#A978FF] pointer-events-none"
           />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search files..."
-            className="w-full neu-inset rounded-full py-2.5 pl-10 pr-4 text-xs font-medium text-black dark:text-white placeholder-slate-600 dark:placeholder-[#657394] focus:outline-none focus:ring-1 focus:ring-purple-500/50"
+            placeholder="Search files by name..."
+            className="w-full neu-inset rounded-full py-2.5 pl-10 pr-10 text-xs font-semibold text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-[#657394] focus:outline-none focus:ring-1 focus:ring-purple-500/50 transition-all shadow-[inset_2px_2px_5px_rgba(166,180,204,0.4),inset_-2px_-2px_5px_rgba(255,255,255,0.9)] dark:shadow-none"
           />
+          {searchQuery && (
+            <button
+              type="button"
+              onClick={() => {
+                soundFx.playClick();
+                setSearchQuery('');
+              }}
+              aria-label="Clear search"
+              className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors cursor-pointer"
+            >
+              <X size={12} />
+            </button>
+          )}
         </div>
 
         {/* (+) Button matching Screen 7 */}

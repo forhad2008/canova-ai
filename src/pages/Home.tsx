@@ -13,6 +13,9 @@ import {
   Activity,
   Wind,
   Palette,
+  X,
+  FileText,
+  CheckSquare,
 } from 'lucide-react';
 import { ScreenType, UserProfile } from '../types';
 import { SphereOrb, SmokePattern, SmokeColor } from '../components/common/SphereOrb';
@@ -177,27 +180,106 @@ export const Home: React.FC<HomeProps> = ({
         </div>
       </div>
 
-      {/* 2. Neumorphic Capsule Search Input with Recent Searches Dropdown */}
+      {/* 2. Neumorphic Capsule Search Input with Recent Searches & Live Suggestions */}
       <div className="relative w-full z-30">
         <form onSubmit={handleSearchSubmit} className="relative w-full">
           <div className="relative flex items-center">
             <Search
-              size={18}
-              className="absolute left-4 text-slate-700 dark:text-[#657394] pointer-events-none"
+              size={17}
+              className="absolute left-4 text-purple-600 dark:text-[#A978FF] pointer-events-none"
             />
             <input
               type="text"
               value={searchQuery}
               onFocus={() => setIsSearchFocused(true)}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search anything..."
-              className="w-full bg-[#EEF2F9] dark:bg-[#050d1e] neu-inset rounded-full py-3 pl-11 pr-4 text-xs font-semibold text-black dark:text-white placeholder-slate-500 dark:placeholder-[#657394] focus:outline-none focus:ring-2 focus:ring-purple-500/40 transition-all shadow-[inset_3px_3px_6px_rgba(166,180,204,0.5),inset_-3px_-3px_6px_rgba(255,255,255,0.9)] dark:shadow-none"
+              placeholder="Search anything, ask AI, or find tools..."
+              className="w-full bg-[#EEF2F9] dark:bg-[#050d1e] neu-inset rounded-full py-3.5 pl-11 pr-20 text-xs font-semibold text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-[#657394] focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-all shadow-[inset_3px_3px_6px_rgba(166,180,204,0.4),inset_-3px_-3px_6px_rgba(255,255,255,0.9)] dark:shadow-none"
             />
+
+            <div className="absolute right-2.5 flex items-center gap-1">
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    soundFx.playClick();
+                    setSearchQuery('');
+                  }}
+                  aria-label="Clear search"
+                  className="w-6 h-6 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors cursor-pointer"
+                >
+                  <X size={13} />
+                </button>
+              )}
+
+              <button
+                type="submit"
+                aria-label="Submit search"
+                className="w-7 h-7 rounded-full neu-primary-btn flex items-center justify-center text-white cursor-pointer hover:scale-105 active:scale-95 transition-all shadow-xs"
+              >
+                <ArrowRight size={13} />
+              </button>
+            </div>
           </div>
         </form>
 
-        {/* Recent Searches Chips below search bar */}
-        {isSearchFocused && recentSearches.length > 0 && (
+        {/* Live Search Suggestions Dropdown when typing */}
+        {isSearchFocused && searchQuery.trim().length > 0 && (
+          <div className="w-full mt-2 neu-card rounded-2xl p-2.5 border border-black/10 dark:border-purple-500/25 bg-white/95 dark:bg-[#081226]/95 backdrop-blur-xl shadow-xl space-y-1 animate-fadeIn">
+            {/* Direct Ask AI Option */}
+            <div
+              onClick={() => executeSearch(searchQuery)}
+              className="flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-purple-500/10 cursor-pointer text-purple-700 dark:text-purple-300 font-bold text-xs transition-colors group"
+            >
+              <Sparkles size={14} className="text-purple-600 dark:text-[#A978FF] shrink-0" />
+              <span className="truncate flex-1">
+                Ask Canova AI: <span className="text-slate-900 dark:text-white font-semibold">"{searchQuery}"</span>
+              </span>
+              <ArrowRight size={13} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+            </div>
+
+            {/* Quick Filter Shortcuts */}
+            <div className="pt-1 border-t border-black/5 dark:border-white/5 flex items-center gap-2 px-1">
+              <span className="text-[10px] font-bold text-slate-500 dark:text-[#657394]">Filter by:</span>
+              <button
+                type="button"
+                onClick={() => {
+                  soundFx.playClick();
+                  onNavigate('tasks');
+                }}
+                className="neu-card-subtle px-2 py-0.5 rounded-lg text-[10px] font-bold text-cyan-700 dark:text-cyan-300 flex items-center gap-1 cursor-pointer hover:bg-cyan-500/10"
+              >
+                <CheckSquare size={10} />
+                <span>Tasks</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  soundFx.playClick();
+                  onNavigate('files');
+                }}
+                className="neu-card-subtle px-2 py-0.5 rounded-lg text-[10px] font-bold text-blue-700 dark:text-blue-300 flex items-center gap-1 cursor-pointer hover:bg-blue-500/10"
+              >
+                <FileText size={10} />
+                <span>Files</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  soundFx.playClick();
+                  onNavigate('explore');
+                }}
+                className="neu-card-subtle px-2 py-0.5 rounded-lg text-[10px] font-bold text-purple-700 dark:text-purple-300 flex items-center gap-1 cursor-pointer hover:bg-purple-500/10"
+              >
+                <LayoutGrid size={10} />
+                <span>Tools</span>
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Recent Searches Chips below search bar (when empty) */}
+        {isSearchFocused && !searchQuery && recentSearches.length > 0 && (
           <RecentSearchChips
             searches={recentSearches}
             onSelect={(item) => {
