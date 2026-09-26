@@ -370,24 +370,24 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
             {/* Top Row: AI Hero Banner (2/3) + Focus Sprint Widget (1/3) */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* AI Hero Banner */}
-              <div className="lg:col-span-2 neu-card rounded-3xl p-7 relative overflow-hidden bg-gradient-to-br from-[#101e40] via-[#09152e] to-[#050c1c] border border-purple-500/25 flex flex-col justify-between">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/15 rounded-full blur-3xl pointer-events-none" />
+              <div className="lg:col-span-2 neu-card rounded-3xl p-7 relative overflow-hidden bg-white dark:bg-gradient-to-br dark:from-[#101e40] dark:via-[#09152e] dark:to-[#050c1c] border border-black/8 dark:border-purple-500/25 flex flex-col justify-between">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/10 dark:bg-purple-500/15 rounded-full blur-3xl pointer-events-none" />
 
                 <div className="flex items-start justify-between gap-6 relative z-10">
                   <div className="space-y-3 max-w-lg">
                     <div className="flex items-center gap-2">
-                      <span className="text-[11px] font-bold text-[#A978FF] uppercase tracking-wider bg-purple-500/15 px-2.5 py-1 rounded-md border border-purple-500/30">
+                      <span className="text-[11px] font-bold text-purple-700 dark:text-[#A978FF] uppercase tracking-wider bg-purple-500/15 px-2.5 py-1 rounded-md border border-purple-500/30">
                         AI Companion Studio
                       </span>
-                      <span className="text-xs text-[#9AA8C7]">Good Morning, {user.name}</span>
+                      <span className="text-xs font-semibold text-slate-700 dark:text-[#9AA8C7]">Good Morning, {user.name}</span>
                     </div>
 
-                    <h2 className="text-2xl lg:text-3xl font-extrabold text-white leading-tight">
+                    <h2 className="text-2xl lg:text-3xl font-extrabold text-slate-900 dark:text-white leading-tight">
                       Ready to help you build, design & plan today?
                     </h2>
 
-                    <p className="text-xs text-[#9AA8C7] leading-relaxed">
-                      Ask anything, create visual moodboards, optimize code architectures, or manage your daily sprints with seamless dark neumorphic fluidity.
+                    <p className="text-xs font-medium text-slate-700 dark:text-[#9AA8C7] leading-relaxed">
+                      Ask anything, create visual moodboards, optimize code architectures, or manage your daily sprints with seamless soft-white neumorphic fluidity.
                     </p>
                   </div>
 
@@ -396,7 +396,7 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
                   </div>
                 </div>
 
-                <div className="pt-6 flex flex-wrap items-center justify-between gap-3 relative z-10 border-t border-white/5 mt-4">
+                <div className="pt-6 flex flex-wrap items-center justify-between gap-3 relative z-10 border-t border-black/5 dark:border-white/5 mt-4">
                   <div className="flex flex-wrap items-center gap-2">
                     {[
                       'Brainstorm creative brand concept',
@@ -409,7 +409,7 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
                           onQuickPrompt(prompt);
                           onNavigate('assistant');
                         }}
-                        className="neu-card-subtle px-3 py-1.5 rounded-lg text-xs text-[#9AA8C7] hover:text-white hover:border-purple-500/40 transition-all cursor-pointer"
+                        className="neu-card-subtle px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-800 dark:text-[#9AA8C7] hover:text-purple-700 dark:hover:text-white hover:border-purple-500/40 transition-all cursor-pointer shadow-2xs"
                       >
                         {prompt}
                       </button>
@@ -418,7 +418,7 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
 
                   <button
                     onClick={() => onNavigate('assistant')}
-                    className="neu-primary-btn px-4 py-2 rounded-xl text-xs font-semibold text-white flex items-center gap-2 cursor-pointer"
+                    className="neu-primary-btn px-4 py-2 rounded-xl text-xs font-bold text-white flex items-center gap-2 cursor-pointer shadow-md"
                   >
                     <span>Launch AI Assistant</span>
                     <ArrowRight size={14} />
@@ -427,62 +427,62 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
               </div>
 
               {/* Focus Sprint & Next Up Widget */}
-              <div className="neu-card rounded-3xl p-6 flex flex-col justify-between border border-white/8 space-y-4">
-                <div className="flex items-center justify-between pb-3 border-b border-white/6">
+              <div className="neu-card rounded-3xl p-6 flex flex-col justify-between border border-black/8 dark:border-white/8 space-y-4">
+                <div className="flex items-center justify-between pb-3 border-b border-black/5 dark:border-white/6">
                   <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-xl bg-cyan-500/20 text-[#35C9FF] flex items-center justify-center border border-cyan-500/30">
+                    <div className="w-8 h-8 rounded-xl bg-cyan-500/20 text-cyan-700 dark:text-[#35C9FF] flex items-center justify-center border border-cyan-500/30">
                       <Clock size={16} />
                     </div>
                     <div>
-                      <h4 className="text-xs font-bold text-white">Daily Focus Sprint</h4>
-                      <p className="text-[11px] text-[#657394]">3 of 5 goals completed</p>
+                      <h4 className="text-xs font-bold text-slate-900 dark:text-white">Daily Focus Sprint</h4>
+                      <p className="text-[11px] font-medium text-slate-600 dark:text-[#657394]">3 of 5 goals completed</p>
                     </div>
                   </div>
-                  <span className="text-sm font-extrabold text-emerald-400">68%</span>
+                  <span className="text-sm font-extrabold text-emerald-600 dark:text-emerald-400">68%</span>
                 </div>
 
                 <div className="space-y-1.5">
-                  <div className="flex justify-between text-[11px] text-[#9AA8C7]">
+                  <div className="flex justify-between text-[11px] font-semibold text-slate-700 dark:text-[#9AA8C7]">
                     <span>Sprint Progress</span>
                     <span>3.5h / 5.0h</span>
                   </div>
-                  <div className="w-full h-2 rounded-full neu-inset overflow-hidden p-0.5">
+                  <div className="w-full h-2.5 rounded-full neu-inset overflow-hidden p-0.5 bg-[#F8FAFC] dark:bg-[#050d1e]">
                     <div
-                      className="h-full rounded-full bg-gradient-to-r from-[#8B5CFF] to-[#35C9FF] transition-all duration-500"
+                      className="h-full rounded-full bg-gradient-to-r from-[#7C4DFF] to-[#3B72FF] dark:from-[#8B5CFF] dark:to-[#35C9FF] transition-all duration-500"
                       style={{ width: '68%' }}
                     />
                   </div>
                 </div>
 
-                <div className="neu-inset rounded-2xl p-3.5 space-y-2 border border-white/5">
-                  <span className="text-[10px] font-semibold text-[#A978FF] uppercase tracking-wider block">
+                <div className="neu-inset bg-[#F8FAFC] dark:bg-[#060e20] rounded-2xl p-3.5 space-y-2 border border-black/5 dark:border-white/5">
+                  <span className="text-[10px] font-bold text-purple-700 dark:text-[#A978FF] uppercase tracking-wider block">
                     Next Priority Task
                   </span>
                   {pendingTasks[0] ? (
                     <div className="flex items-center justify-between gap-2">
                       <div className="overflow-hidden">
-                        <h5 className="text-xs font-bold text-white truncate">
+                        <h5 className="text-xs font-bold text-slate-900 dark:text-white truncate">
                           {pendingTasks[0].title}
                         </h5>
-                        <p className="text-[11px] text-[#657394]">
+                        <p className="text-[11px] font-medium text-slate-600 dark:text-[#657394]">
                           {pendingTasks[0].category} • {pendingTasks[0].duration}
                         </p>
                       </div>
                       <button
                         onClick={() => onToggleTask(pendingTasks[0].id)}
-                        className="neu-button px-3 py-1.5 rounded-lg text-xs font-medium text-emerald-400 hover:text-emerald-300 shrink-0 cursor-pointer"
+                        className="neu-button px-3 py-1.5 rounded-lg text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 shrink-0 cursor-pointer shadow-xs"
                       >
                         Done
                       </button>
                     </div>
                   ) : (
-                    <p className="text-xs text-emerald-400">All tasks completed! 🎉</p>
+                    <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">All tasks completed! 🎉</p>
                   )}
                 </div>
 
                 <button
                   onClick={() => onNavigate('tasks')}
-                  className="w-full neu-button py-2 rounded-xl text-xs font-semibold text-[#9AA8C7] hover:text-white cursor-pointer"
+                  className="w-full neu-button py-2 rounded-xl text-xs font-bold text-slate-700 dark:text-[#9AA8C7] hover:text-purple-700 dark:hover:text-white cursor-pointer shadow-xs"
                 >
                   Manage All Tasks
                 </button>
@@ -492,11 +492,11 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
             {/* 4 Large Neumorphic Workspace Hubs */}
             <div>
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                  <Layers size={16} className="text-[#8B5CFF]" />
+                <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
+                  <Layers size={16} className="text-purple-600 dark:text-[#8B5CFF]" />
                   <span>Workspace Hubs</span>
                 </h3>
-                <span className="text-xs text-[#657394]">4 Modules Active</span>
+                <span className="text-xs font-semibold text-slate-600 dark:text-[#657394]">4 Modules Active</span>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -506,18 +506,18 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
                   className="neu-card rounded-2xl p-5 text-left flex flex-col justify-between space-y-4 group cursor-pointer hover:border-purple-500/40"
                 >
                   <div className="flex items-center justify-between">
-                    <div className="w-10 h-10 rounded-xl bg-purple-500/20 text-[#A978FF] flex items-center justify-center border border-purple-500/30 group-hover:scale-105 transition-transform">
+                    <div className="w-10 h-10 rounded-xl bg-purple-500/15 text-purple-700 dark:text-[#A978FF] flex items-center justify-center border border-purple-500/30 group-hover:scale-105 transition-transform">
                       <MessageSquare size={18} />
                     </div>
-                    <span className="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20 font-medium">
+                    <span className="text-[10px] text-emerald-700 dark:text-emerald-400 bg-emerald-500/15 px-2 py-0.5 rounded border border-emerald-500/30 font-bold">
                       Live
                     </span>
                   </div>
                   <div>
-                    <h4 className="text-sm font-bold text-white group-hover:text-purple-300">
+                    <h4 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-300">
                       AI Assistant Studio
                     </h4>
-                    <p className="text-xs text-[#657394] mt-0.5">
+                    <p className="text-xs font-medium text-slate-600 dark:text-[#657394] mt-0.5">
                       Chat with Gemini 3.8 reasoning engine
                     </p>
                   </div>
@@ -529,18 +529,18 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
                   className="neu-card rounded-2xl p-5 text-left flex flex-col justify-between space-y-4 group cursor-pointer hover:border-cyan-500/40"
                 >
                   <div className="flex items-center justify-between">
-                    <div className="w-10 h-10 rounded-xl bg-cyan-500/20 text-[#35C9FF] flex items-center justify-center border border-cyan-500/30 group-hover:scale-105 transition-transform">
+                    <div className="w-10 h-10 rounded-xl bg-cyan-500/15 text-cyan-700 dark:text-[#35C9FF] flex items-center justify-center border border-cyan-500/30 group-hover:scale-105 transition-transform">
                       <CheckCircle2 size={18} />
                     </div>
-                    <span className="text-xs font-bold text-white">
+                    <span className="text-xs font-bold text-slate-900 dark:text-white">
                       {pendingTasks.length} pending
                     </span>
                   </div>
                   <div>
-                    <h4 className="text-sm font-bold text-white group-hover:text-cyan-300">
+                    <h4 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-300">
                       Task Cadence
                     </h4>
-                    <p className="text-xs text-[#657394] mt-0.5">
+                    <p className="text-xs font-medium text-slate-600 dark:text-[#657394] mt-0.5">
                       Stay productive and hit daily milestones
                     </p>
                   </div>
@@ -552,18 +552,18 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
                   className="neu-card rounded-2xl p-5 text-left flex flex-col justify-between space-y-4 group cursor-pointer hover:border-blue-500/40"
                 >
                   <div className="flex items-center justify-between">
-                    <div className="w-10 h-10 rounded-xl bg-blue-500/20 text-[#8B5CFF] flex items-center justify-center border border-blue-500/30 group-hover:scale-105 transition-transform">
+                    <div className="w-10 h-10 rounded-xl bg-blue-500/15 text-blue-700 dark:text-[#8B5CFF] flex items-center justify-center border border-blue-500/30 group-hover:scale-105 transition-transform">
                       <FolderOpen size={18} />
                     </div>
-                    <span className="text-xs font-bold text-white">
+                    <span className="text-xs font-bold text-slate-900 dark:text-white">
                       {files.length} assets
                     </span>
                   </div>
                   <div>
-                    <h4 className="text-sm font-bold text-white group-hover:text-purple-300">
+                    <h4 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-purple-300">
                       Cloud Vault
                     </h4>
-                    <p className="text-xs text-[#657394] mt-0.5">
+                    <p className="text-xs font-medium text-slate-600 dark:text-[#657394] mt-0.5">
                       Secure encrypted storage for project files
                     </p>
                   </div>
@@ -575,16 +575,16 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
                   className="neu-card rounded-2xl p-5 text-left flex flex-col justify-between space-y-4 group cursor-pointer hover:border-fuchsia-500/40"
                 >
                   <div className="flex items-center justify-between">
-                    <div className="w-10 h-10 rounded-xl bg-fuchsia-500/20 text-[#D66BFF] flex items-center justify-center border border-fuchsia-500/30 group-hover:scale-105 transition-transform">
+                    <div className="w-10 h-10 rounded-xl bg-fuchsia-500/15 text-fuchsia-700 dark:text-[#D66BFF] flex items-center justify-center border border-fuchsia-500/30 group-hover:scale-105 transition-transform">
                       <Zap size={18} />
                     </div>
-                    <span className="text-xs font-bold text-white">6 tools</span>
+                    <span className="text-xs font-bold text-slate-900 dark:text-white">6 tools</span>
                   </div>
                   <div>
-                    <h4 className="text-sm font-bold text-white group-hover:text-pink-300">
+                    <h4 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-pink-600 dark:group-hover:text-pink-300">
                       Tool Studio
                     </h4>
-                    <p className="text-xs text-[#657394] mt-0.5">
+                    <p className="text-xs font-medium text-slate-600 dark:text-[#657394] mt-0.5">
                       Image generator, code helper & translator
                     </p>
                   </div>
@@ -598,10 +598,10 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
         {currentScreen === 'assistant' && (
           <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 min-h-[78vh] lg:h-[78vh]">
             {/* Left: Chat history & Presets (3 cols on desktop, compact on tablet) */}
-            <div className="lg:col-span-3 neu-card rounded-3xl p-4 lg:p-5 flex flex-col justify-between border border-white/8 space-y-4">
+            <div className="lg:col-span-3 neu-card rounded-3xl p-4 lg:p-5 flex flex-col justify-between border border-black/8 dark:border-white/8 space-y-4">
               <div className="space-y-4">
-                <div className="flex items-center justify-between pb-3 border-b border-white/6">
-                  <h4 className="text-xs font-bold text-white uppercase tracking-wider">
+                <div className="flex items-center justify-between pb-3 border-b border-black/5 dark:border-white/6">
+                  <h4 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">
                     Conversations
                   </h4>
                   <button
@@ -615,7 +615,7 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
                         },
                       ]);
                     }}
-                    className="neu-button px-2.5 py-1 rounded-lg text-xs text-purple-300 flex items-center gap-1 cursor-pointer"
+                    className="neu-button px-2.5 py-1 rounded-lg text-xs font-bold text-purple-700 dark:text-purple-300 flex items-center gap-1 cursor-pointer shadow-2xs"
                   >
                     <Plus size={13} />
                     <span>New Chat</span>
@@ -634,12 +634,12 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
                       onClick={() => handleSendChat(`Review ${conv.title}`)}
                       className={`w-full text-left p-3 rounded-xl transition-all cursor-pointer ${
                         conv.active
-                          ? 'neu-inset border border-purple-500/30 text-white'
-                          : 'neu-card-subtle text-[#9AA8C7] hover:text-white'
+                          ? 'neu-inset border border-purple-500/40 text-purple-700 dark:text-white font-bold bg-[#F8FAFC] dark:bg-[#060e20]'
+                          : 'neu-card-subtle text-slate-700 dark:text-[#9AA8C7] hover:text-slate-900 dark:hover:text-white font-medium'
                       }`}
                     >
                       <h5 className="text-xs font-bold truncate">{conv.title}</h5>
-                      <span className="text-[10px] text-purple-400 mt-1 inline-block">
+                      <span className="text-[10px] text-purple-700 dark:text-purple-400 font-bold mt-1 inline-block">
                         #{conv.tag}
                       </span>
                     </button>
@@ -648,29 +648,29 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
               </div>
 
               {/* AI Model Spec */}
-              <div className="neu-inset rounded-2xl p-3.5 border border-white/5 space-y-1.5 text-xs text-[#9AA8C7]">
-                <div className="flex items-center gap-2 text-white font-semibold">
-                  <Cpu size={14} className="text-[#8B5CFF]" />
+              <div className="neu-inset bg-[#F8FAFC] dark:bg-[#060e20] rounded-2xl p-3.5 border border-black/5 dark:border-white/5 space-y-1.5 text-xs text-slate-700 dark:text-[#9AA8C7]">
+                <div className="flex items-center gap-2 text-slate-900 dark:text-white font-bold">
+                  <Cpu size={14} className="text-purple-600 dark:text-[#8B5CFF]" />
                   <span>Model: Gemini 3.8 Flash</span>
                 </div>
-                <p className="text-[11px] text-[#657394]">
+                <p className="text-[11px] font-medium text-slate-600 dark:text-[#657394]">
                   Tuned for structured cards, speed & multimodal creative synthesis.
                 </p>
               </div>
             </div>
 
             {/* Middle: Interactive Chat Stream & Composer (5 cols on desktop, responsive height) */}
-            <div className="lg:col-span-5 neu-card rounded-3xl p-4 border border-white/8 flex flex-col justify-between overflow-hidden min-h-[420px] lg:min-h-0">
-              <div className="flex items-center justify-between pb-3 border-b border-white/6 mb-2">
+            <div className="lg:col-span-5 neu-card rounded-3xl p-4 border border-black/8 dark:border-white/8 flex flex-col justify-between overflow-hidden min-h-[420px] lg:min-h-0">
+              <div className="flex items-center justify-between pb-3 border-b border-black/5 dark:border-white/6 mb-2">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#8B5CFF] to-[#35C9FF] p-[1.5px]">
-                    <div className="w-full h-full bg-[#071226] rounded-full flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#7C4DFF] to-[#35C9FF] p-[1.5px]">
+                    <div className="w-full h-full bg-white dark:bg-[#071226] rounded-full flex items-center justify-center">
                       <NovaStar size={16} glow={false} />
                     </div>
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold text-white">Canova AI Studio</h4>
-                    <span className="text-[10px] text-emerald-400 font-medium">Online • Real-time</span>
+                    <h4 className="text-xs font-bold text-slate-900 dark:text-white">Canova AI Studio</h4>
+                    <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">Online • Real-time</span>
                   </div>
                 </div>
               </div>
@@ -687,25 +687,25 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
                       <div
                         className={`max-w-[90%] p-3.5 rounded-2xl text-xs leading-relaxed ${
                           isUser
-                            ? 'bg-gradient-to-r from-[#8B5CFF] to-[#4C7DFF] text-white rounded-tr-xs shadow-md'
-                            : 'neu-inset text-[#F7F8FF] rounded-tl-xs border border-white/8'
+                            ? 'bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 text-white rounded-tr-xs shadow-md font-medium'
+                            : 'neu-inset bg-[#F8FAFC] dark:bg-[#060e20] text-slate-900 dark:text-[#F7F8FF] rounded-tl-xs border border-black/8 dark:border-white/8 font-medium'
                         }`}
                       >
                         <p className="whitespace-pre-line">{msg.text}</p>
                         {msg.structuredCard && (
-                          <div className="mt-2.5 neu-card-subtle p-3 rounded-xl border border-purple-500/25">
-                            <span className="text-[10px] text-[#A978FF] font-bold uppercase tracking-wider block">
+                          <div className="mt-2.5 neu-card-subtle bg-white dark:bg-[#0b1834] p-3 rounded-xl border border-purple-500/30 text-slate-900 dark:text-white">
+                            <span className="text-[10px] text-purple-700 dark:text-[#A978FF] font-extrabold uppercase tracking-wider block">
                               {msg.structuredCard.kicker}
                             </span>
-                            <h5 className="text-xs font-bold text-white mt-0.5">
+                            <h5 className="text-xs font-bold text-slate-900 dark:text-white mt-0.5">
                               {msg.structuredCard.title}
                             </h5>
-                            <p className="text-[11px] text-[#9AA8C7] mt-1">
+                            <p className="text-[11px] font-medium text-slate-700 dark:text-[#9AA8C7] mt-1">
                               {msg.structuredCard.description}
                             </p>
                           </div>
                         )}
-                        <span className="text-[9px] opacity-70 block text-right mt-1">
+                        <span className="text-[9px] opacity-70 block text-right mt-1 font-semibold">
                           {msg.timestamp}
                         </span>
                       </div>
@@ -717,7 +717,7 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
                             <button
                               key={i}
                               onClick={() => handleSendChat(chip)}
-                              className="text-[10px] font-medium px-2.5 py-1 rounded-full neu-button text-[#9AA8C7] hover:text-white cursor-pointer"
+                              className="text-[10px] font-bold px-2.5 py-1 rounded-full neu-button text-slate-800 dark:text-[#9AA8C7] hover:text-purple-700 dark:hover:text-white cursor-pointer shadow-2xs"
                             >
                               {chip}
                             </button>
@@ -728,10 +728,10 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
                   );
                 })}
                 {isTyping && (
-                  <div className="text-xs text-[#9AA8C7] flex items-center gap-1.5 p-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-bounce" />
-                    <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-bounce [animation-delay:0.2s]" />
-                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-bounce [animation-delay:0.4s]" />
+                  <div className="text-xs text-purple-700 dark:text-[#9AA8C7] font-semibold flex items-center gap-1.5 p-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-bounce" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-bounce [animation-delay:0.2s]" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 animate-bounce [animation-delay:0.4s]" />
                   </div>
                 )}
                 <div ref={chatEndRef} />
@@ -743,19 +743,19 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
                   e.preventDefault();
                   handleSendChat();
                 }}
-                className="flex items-center gap-2 pt-2 border-t border-white/6"
+                className="flex items-center gap-2 pt-2 border-t border-black/5 dark:border-white/6"
               >
                 <input
                   type="text"
                   value={chatInput}
                   onChange={(e) => setChatInput(e.target.value)}
                   placeholder="Ask Canova AI anything..."
-                  className="flex-1 neu-inset rounded-xl py-2 px-3.5 text-xs text-white placeholder-[#657394] focus:outline-none focus:ring-1 focus:ring-purple-500/50"
+                  className="flex-1 neu-inset bg-[#F8FAFC] dark:bg-[#060e20] rounded-xl py-2 px-3.5 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-[#657394] focus:outline-none focus:ring-1 focus:ring-purple-500/50 font-medium"
                 />
                 <button
                   type="submit"
                   disabled={!chatInput.trim() || isTyping}
-                  className="neu-primary-btn w-9 h-9 rounded-xl flex items-center justify-center text-white cursor-pointer disabled:opacity-50"
+                  className="neu-primary-btn w-9 h-9 rounded-xl flex items-center justify-center text-white cursor-pointer disabled:opacity-50 shadow-md"
                 >
                   <Send size={14} />
                 </button>
@@ -763,10 +763,10 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
             </div>
 
             {/* Right: Live Concept & Artifact Inspector (4 cols) */}
-            <div className="lg:col-span-4 neu-card rounded-3xl p-6 border border-white/8 flex flex-col justify-between bg-gradient-to-br from-[#0c1836] to-[#060d1e]">
+            <div className="lg:col-span-4 neu-card rounded-3xl p-6 border border-black/8 dark:border-white/8 flex flex-col justify-between bg-white dark:bg-gradient-to-br dark:from-[#0c1836] dark:to-[#060d1e]">
               <div className="space-y-4">
-                <div className="flex items-center justify-between pb-3 border-b border-white/8">
-                  <h4 className="text-xs font-bold text-white uppercase tracking-wider">
+                <div className="flex items-center justify-between pb-3 border-b border-black/5 dark:border-white/8">
+                  <h4 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">
                     Concept Inspector
                   </h4>
                   <button
@@ -774,28 +774,28 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
                       setCopiedCode(true);
                       setTimeout(() => setCopiedCode(false), 1500);
                     }}
-                    className="neu-button px-2.5 py-1 rounded-lg text-xs text-[#9AA8C7] hover:text-white flex items-center gap-1.5 cursor-pointer"
+                    className="neu-button px-2.5 py-1 rounded-lg text-xs font-bold text-slate-700 dark:text-[#9AA8C7] hover:text-purple-700 dark:hover:text-white flex items-center gap-1.5 cursor-pointer shadow-2xs"
                   >
-                    {copiedCode ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}
+                    {copiedCode ? <Check size={12} className="text-emerald-500" /> : <Copy size={12} />}
                     <span>{copiedCode ? 'Copied' : 'Copy'}</span>
                   </button>
                 </div>
 
                 {/* Structured Brand Concept Card */}
-                <div className="neu-inset rounded-2xl p-5 border border-purple-500/30 bg-[#060e20] space-y-3">
-                  <span className="text-xs font-bold text-[#A978FF] uppercase tracking-wider block">
+                <div className="neu-inset rounded-2xl p-5 border border-purple-500/25 bg-[#F8FAFC] dark:bg-[#060e20] space-y-3">
+                  <span className="text-xs font-extrabold text-purple-700 dark:text-[#A978FF] uppercase tracking-wider block">
                     Brand Concept Specification
                   </span>
-                  <h3 className="text-base font-bold text-white">Identity in Every Detail</h3>
-                  <p className="text-xs text-[#9AA8C7] leading-relaxed">
+                  <h3 className="text-base font-extrabold text-slate-900 dark:text-white">Identity in Every Detail</h3>
+                  <p className="text-xs font-medium text-slate-700 dark:text-[#9AA8C7] leading-relaxed">
                     Your brand isn't just about products, it's about an authentic lifestyle. Focus on minimal, premium, and authentic designs that speak to your individuality.
                   </p>
 
                   <div className="flex flex-wrap gap-1.5 pt-1">
-                    {['Minimal', 'Premium', 'Creative', 'Dark Neumorphic'].map((tag, i) => (
+                    {['Minimal', 'Premium', 'Creative', 'White Neumorphic'].map((tag, i) => (
                       <span
                         key={i}
-                        className="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-purple-500/15 text-purple-300 border border-purple-500/30"
+                        className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-purple-500/15 text-purple-700 dark:text-purple-300 border border-purple-500/30"
                       >
                         {tag}
                       </span>
@@ -803,24 +803,24 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
                   </div>
 
                   {/* Palette Swatches */}
-                  <div className="pt-3 border-t border-white/5 space-y-1.5">
-                    <span className="text-[11px] font-semibold text-[#657394]">
+                  <div className="pt-3 border-t border-black/5 dark:border-white/5 space-y-1.5">
+                    <span className="text-[11px] font-bold text-slate-700 dark:text-[#657394]">
                       Brand Color Scale
                     </span>
                     <div className="grid grid-cols-2 gap-2">
                       {[
-                        { name: 'Obsidian', hex: '#030712' },
-                        { name: 'Luminescent', hex: '#8B5CFF' },
-                        { name: 'Cyber Blue', hex: '#4C7DFF' },
-                        { name: 'Electric Cyan', hex: '#35C9FF' },
+                        { name: 'Canvas Clay', hex: '#EEF2F9' },
+                        { name: 'Pure White', hex: '#FFFFFF' },
+                        { name: 'Royal Purple', hex: '#7C4DFF' },
+                        { name: 'Electric Cyan', hex: '#0284C7' },
                       ].map((c, i) => (
-                        <div key={i} className="neu-card-subtle p-2 rounded-xl text-center">
+                        <div key={i} className="neu-card-subtle p-2 rounded-xl text-center bg-white dark:bg-[#0b1834] border border-black/5 dark:border-white/10">
                           <div
-                            className="w-full h-5 rounded-lg mb-1 border border-white/10"
+                            className="w-full h-5 rounded-lg mb-1 border border-black/10 dark:border-white/10"
                             style={{ backgroundColor: c.hex }}
                           />
-                          <p className="text-[10px] text-white font-medium truncate">{c.name}</p>
-                          <p className="text-[9px] text-[#657394] font-mono">{c.hex}</p>
+                          <p className="text-[10px] text-slate-900 dark:text-white font-bold truncate">{c.name}</p>
+                          <p className="text-[9px] text-slate-600 dark:text-[#657394] font-mono">{c.hex}</p>
                         </div>
                       ))}
                     </div>
@@ -829,8 +829,8 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
               </div>
 
               {/* Bottom Quick Action */}
-              <div className="pt-4 border-t border-white/8 flex items-center justify-between">
-                <p className="text-xs text-[#9AA8C7]">Export concept to files</p>
+              <div className="pt-4 border-t border-black/5 dark:border-white/8 flex items-center justify-between">
+                <p className="text-xs font-semibold text-slate-700 dark:text-[#9AA8C7]">Export concept to files</p>
                 <button
                   onClick={() => {
                     onAddFile({
@@ -843,7 +843,7 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
                     });
                     onNavigate('files');
                   }}
-                  className="neu-primary-btn px-4 py-2 rounded-xl text-xs font-semibold text-white cursor-pointer"
+                  className="neu-primary-btn px-4 py-2 rounded-xl text-xs font-bold text-white cursor-pointer shadow-md"
                 >
                   Save to Vault
                 </button>
@@ -858,20 +858,20 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
             {/* Metric KPI Banner */}
             <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
               {[
-                { label: 'Total Tasks', value: tasks.length, color: 'text-white' },
-                { label: 'Completed', value: completedTasks.length, color: 'text-emerald-400' },
-                { label: 'Pending Queue', value: pendingTasks.length, color: 'text-[#35C9FF]' },
-                { label: 'Estimated Work', value: '6.5 Hours', color: 'text-[#A978FF]' },
+                { label: 'Total Tasks', value: tasks.length, color: 'text-slate-900 dark:text-white' },
+                { label: 'Completed', value: completedTasks.length, color: 'text-emerald-600 dark:text-emerald-400' },
+                { label: 'Pending Queue', value: pendingTasks.length, color: 'text-cyan-600 dark:text-[#35C9FF]' },
+                { label: 'Estimated Work', value: '6.5 Hours', color: 'text-purple-600 dark:text-[#A978FF]' },
               ].map((kpi, i) => (
-                <div key={i} className="neu-card rounded-2xl p-4 flex flex-col justify-between">
-                  <span className="text-xs text-[#9AA8C7]">{kpi.label}</span>
+                <div key={i} className="neu-card rounded-2xl p-4 flex flex-col justify-between border border-black/8 dark:border-white/8">
+                  <span className="text-xs font-semibold text-slate-700 dark:text-[#9AA8C7]">{kpi.label}</span>
                   <span className={`text-2xl font-black mt-1 ${kpi.color}`}>{kpi.value}</span>
                 </div>
               ))}
             </div>
 
             {/* Quick Add Bar */}
-            <div className="neu-card rounded-2xl p-3 flex items-center gap-3">
+            <div className="neu-card rounded-2xl p-3 flex items-center gap-3 border border-black/8 dark:border-white/8">
               <input
                 type="text"
                 value={taskInput}
@@ -889,7 +889,7 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
                   }
                 }}
                 placeholder="Type a new task title and press Enter..."
-                className="flex-1 neu-inset rounded-xl py-2 px-4 text-xs text-white placeholder-[#657394] focus:outline-none focus:ring-1 focus:ring-purple-500/50"
+                className="flex-1 neu-inset bg-[#F8FAFC] dark:bg-[#060e20] rounded-xl py-2 px-4 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-[#657394] focus:outline-none focus:ring-1 focus:ring-purple-500/50 font-medium"
               />
               <button
                 onClick={() => {
@@ -904,7 +904,7 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
                     setTaskInput('');
                   }
                 }}
-                className="neu-primary-btn px-4 py-2 rounded-xl text-xs font-semibold text-white flex items-center gap-1.5 cursor-pointer shrink-0"
+                className="neu-primary-btn px-4 py-2 rounded-xl text-xs font-bold text-white flex items-center gap-1.5 cursor-pointer shrink-0 shadow-md"
               >
                 <Plus size={14} />
                 <span>Add Task</span>
@@ -914,10 +914,10 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
             {/* 2-Column Task Grid: In-Progress vs Completed */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* In-Progress Column */}
-              <div className="neu-card rounded-3xl p-5 space-y-3">
-                <div className="flex items-center justify-between pb-2 border-b border-white/6">
-                  <h4 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-[#35C9FF]" />
+              <div className="neu-card rounded-3xl p-5 space-y-3 border border-black/8 dark:border-white/8">
+                <div className="flex items-center justify-between pb-2 border-b border-black/5 dark:border-white/6">
+                  <h4 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-cyan-500" />
                     <span>In-Progress Queue ({pendingTasks.length})</span>
                   </h4>
                 </div>
@@ -926,21 +926,21 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
                   {pendingTasks.map((t) => (
                     <div
                       key={t.id}
-                      className="neu-card-subtle p-3.5 rounded-xl flex items-center justify-between gap-3 group"
+                      className="neu-card-subtle p-3.5 rounded-xl flex items-center justify-between gap-3 group border border-black/5 dark:border-white/5"
                     >
                       <button
                         onClick={() => onToggleTask(t.id)}
-                        className="w-6 h-6 rounded-full neu-inset border border-white/10 flex items-center justify-center cursor-pointer hover:border-purple-400"
+                        className="w-6 h-6 rounded-full neu-inset bg-[#F8FAFC] dark:bg-[#060e20] border border-black/10 dark:border-white/10 flex items-center justify-center cursor-pointer hover:border-purple-400 shadow-2xs"
                       />
                       <div className="flex-1 overflow-hidden">
-                        <h5 className="text-xs font-bold text-white truncate">{t.title}</h5>
-                        <p className="text-[11px] text-[#657394]">
+                        <h5 className="text-xs font-bold text-slate-900 dark:text-white truncate">{t.title}</h5>
+                        <p className="text-[11px] font-medium text-slate-600 dark:text-[#657394]">
                           {t.category} • {t.duration}
                         </p>
                       </div>
                       <button
                         onClick={() => onDeleteTask(t.id)}
-                        className="opacity-0 group-hover:opacity-100 text-[#657394] hover:text-red-400 text-xs px-2 py-1"
+                        className="opacity-0 group-hover:opacity-100 text-slate-500 hover:text-red-500 text-xs px-2 py-1 font-semibold cursor-pointer transition-opacity"
                       >
                         Remove
                       </button>
@@ -950,36 +950,36 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
               </div>
 
               {/* Completed Column */}
-              <div className="neu-card rounded-3xl p-5 space-y-3">
-                <div className="flex items-center justify-between pb-2 border-b border-white/6">
-                  <h4 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400" />
+              <div className="neu-card rounded-3xl p-5 space-y-3 border border-black/8 dark:border-white/8">
+                <div className="flex items-center justify-between pb-2 border-b border-black/5 dark:border-white/6">
+                  <h4 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500" />
                     <span>Completed Milestones ({completedTasks.length})</span>
                   </h4>
                 </div>
 
                 <div className="space-y-2.5">
                   {completedTasks.length === 0 ? (
-                    <p className="text-xs text-[#657394] py-8 text-center">
+                    <p className="text-xs font-medium text-slate-500 dark:text-[#657394] py-8 text-center">
                       No completed tasks yet. Check off an item from the queue!
                     </p>
                   ) : (
                     completedTasks.map((t) => (
                       <div
                         key={t.id}
-                        className="neu-card-subtle p-3.5 rounded-xl flex items-center justify-between gap-3 opacity-60"
+                        className="neu-card-subtle p-3.5 rounded-xl flex items-center justify-between gap-3 opacity-75 border border-black/5 dark:border-white/5"
                       >
                         <button
                           onClick={() => onToggleTask(t.id)}
-                          className="w-6 h-6 rounded-full bg-gradient-to-tr from-[#8B5CFF] to-[#35C9FF] text-white flex items-center justify-center cursor-pointer shadow-sm"
+                          className="w-6 h-6 rounded-full bg-gradient-to-tr from-[#7C4DFF] to-[#35C9FF] text-white flex items-center justify-center cursor-pointer shadow-xs"
                         >
                           <Check size={13} className="stroke-[3]" />
                         </button>
                         <div className="flex-1 overflow-hidden">
-                          <h5 className="text-xs font-bold text-white line-through truncate">
+                          <h5 className="text-xs font-bold text-slate-900 dark:text-white line-through truncate">
                             {t.title}
                           </h5>
-                          <p className="text-[11px] text-[#657394]">
+                          <p className="text-[11px] font-medium text-slate-600 dark:text-[#657394]">
                             {t.category} • Completed
                           </p>
                         </div>
@@ -998,17 +998,17 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
             {/* Header + Period Selector */}
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-xl font-extrabold text-white">Performance Analytics & Insights</h3>
-                <p className="text-xs text-[#9AA8C7]">Deep productivity metrics and milestone cadence</p>
+                <h3 className="text-xl font-extrabold text-slate-900 dark:text-white">Performance Analytics & Insights</h3>
+                <p className="text-xs font-medium text-slate-700 dark:text-[#9AA8C7]">Deep productivity metrics and milestone cadence</p>
               </div>
 
-              <div className="neu-inset p-1 rounded-full flex items-center gap-1">
+              <div className="neu-inset bg-[#F8FAFC] dark:bg-[#060e20] p-1 rounded-full flex items-center gap-1 border border-black/5 dark:border-white/5">
                 {(['weekly', 'monthly', 'yearly'] as const).map((p) => (
                   <button
                     key={p}
                     onClick={() => setAnalyticsPeriod(p)}
-                    className={`px-4 py-1.5 rounded-full text-xs font-semibold capitalize transition-all cursor-pointer ${
-                      analyticsPeriod === p ? 'neu-primary-btn text-white' : 'text-[#657394] hover:text-[#9AA8C7]'
+                    className={`px-4 py-1.5 rounded-full text-xs font-bold capitalize transition-all cursor-pointer ${
+                      analyticsPeriod === p ? 'neu-primary-btn text-white shadow-xs' : 'text-slate-600 dark:text-[#657394] hover:text-slate-900 dark:hover:text-[#9AA8C7]'
                     }`}
                   >
                     {p}
@@ -1018,21 +1018,21 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
             </div>
 
             {/* Total Progress Widescreen Card */}
-            <div className="neu-card rounded-3xl p-6 relative overflow-hidden bg-gradient-to-b from-[#0e1d3d] to-[#060e20] border border-white/10">
+            <div className="neu-card rounded-3xl p-6 relative overflow-hidden bg-white dark:bg-gradient-to-b dark:from-[#0e1d3d] dark:to-[#060e20] border border-black/8 dark:border-white/10">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-bold text-[#9AA8C7] uppercase tracking-wider">
+                <span className="text-xs font-bold text-slate-700 dark:text-[#9AA8C7] uppercase tracking-wider">
                   Total Productivity Output
                 </span>
-                <span className="flex items-center gap-1 text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
+                <span className="flex items-center gap-1 text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/15 px-2.5 py-0.5 rounded-full border border-emerald-500/30">
                   <TrendingUp size={13} /> {analyticsPeriod === 'weekly' ? '+12% this week' : '+24% this period'}
                 </span>
               </div>
 
               <div className="flex items-baseline gap-3 mb-4">
-                <span className="text-4xl font-black text-white">
+                <span className="text-4xl font-black text-slate-900 dark:text-white">
                   {analyticsPeriod === 'weekly' ? '68%' : analyticsPeriod === 'monthly' ? '84%' : '92%'}
                 </span>
-                <span className="text-xs text-[#9AA8C7]">Completion Velocity</span>
+                <span className="text-xs font-semibold text-slate-600 dark:text-[#9AA8C7]">Completion Velocity</span>
               </div>
 
               {/* Dynamic Widescreen SVG Wave Chart */}
@@ -1040,13 +1040,13 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
                 <svg viewBox="0 0 800 120" className="w-full h-full" preserveAspectRatio="none">
                   <defs>
                     <linearGradient id="deskChartGlow" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stopColor="#4C7DFF" />
-                      <stop offset="50%" stopColor="#8B5CFF" />
-                      <stop offset="100%" stopColor="#35C9FF" />
+                      <stop offset="0%" stopColor="#3B72FF" />
+                      <stop offset="50%" stopColor="#7C4DFF" />
+                      <stop offset="100%" stopColor="#0284C7" />
                     </linearGradient>
                     <linearGradient id="deskChartFill" x1="0%" y1="0%" x2="0%" y2="100%">
-                      <stop offset="0%" stopColor="#8B5CFF" stopOpacity="0.35" />
-                      <stop offset="100%" stopColor="#0B1730" stopOpacity="0" />
+                      <stop offset="0%" stopColor="#7C4DFF" stopOpacity="0.25" />
+                      <stop offset="100%" stopColor="#EEF2F9" stopOpacity="0" />
                     </linearGradient>
                   </defs>
 
@@ -1060,12 +1060,12 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
                     stroke="url(#deskChartGlow)"
                     strokeWidth="4"
                     strokeLinecap="round"
-                    className="drop-shadow-[0_4px_16px_rgba(139,92,255,0.7)]"
+                    className="drop-shadow-[0_4px_12px_rgba(124,77,255,0.4)]"
                   />
                 </svg>
               </div>
 
-              <div className="flex justify-between text-xs text-[#657394] pt-2 border-t border-white/5">
+              <div className="flex justify-between text-xs font-bold text-slate-600 dark:text-[#657394] pt-2 border-t border-black/5 dark:border-white/5">
                 <span>Mon</span>
                 <span>Tue</span>
                 <span>Wed</span>
@@ -1078,32 +1078,32 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
 
             {/* 4 Stat Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-              <div className="neu-card rounded-2xl p-4 space-y-1">
-                <span className="text-xs text-[#9AA8C7] flex items-center gap-1.5">
-                  <CheckCircle2 size={14} className="text-[#8B5CFF]" /> Tasks Done
+              <div className="neu-card rounded-2xl p-4 space-y-1 border border-black/8 dark:border-white/8">
+                <span className="text-xs font-bold text-slate-700 dark:text-[#9AA8C7] flex items-center gap-1.5">
+                  <CheckCircle2 size={14} className="text-purple-600 dark:text-[#8B5CFF]" /> Tasks Done
                 </span>
-                <span className="text-2xl font-black text-white">14</span>
+                <span className="text-2xl font-black text-slate-900 dark:text-white">14</span>
               </div>
 
-              <div className="neu-card rounded-2xl p-4 space-y-1">
-                <span className="text-xs text-[#9AA8C7] flex items-center gap-1.5">
-                  <BookOpen size={14} className="text-[#35C9FF]" /> Study Time
+              <div className="neu-card rounded-2xl p-4 space-y-1 border border-black/8 dark:border-white/8">
+                <span className="text-xs font-bold text-slate-700 dark:text-[#9AA8C7] flex items-center gap-1.5">
+                  <BookOpen size={14} className="text-cyan-600 dark:text-[#35C9FF]" /> Study Time
                 </span>
-                <span className="text-2xl font-black text-white">12h</span>
+                <span className="text-2xl font-black text-slate-900 dark:text-white">12h</span>
               </div>
 
-              <div className="neu-card rounded-2xl p-4 space-y-1">
-                <span className="text-xs text-[#9AA8C7] flex items-center gap-1.5">
-                  <Clock size={14} className="text-[#D66BFF]" /> Focus Time
+              <div className="neu-card rounded-2xl p-4 space-y-1 border border-black/8 dark:border-white/8">
+                <span className="text-xs font-bold text-slate-700 dark:text-[#9AA8C7] flex items-center gap-1.5">
+                  <Clock size={14} className="text-fuchsia-600 dark:text-[#D66BFF]" /> Focus Time
                 </span>
-                <span className="text-2xl font-black text-white">8h</span>
+                <span className="text-2xl font-black text-slate-900 dark:text-white">8h</span>
               </div>
 
-              <div className="neu-card rounded-2xl p-4 space-y-1">
-                <span className="text-xs text-[#9AA8C7] flex items-center gap-1.5">
-                  <Target size={14} className="text-[#4C7DFF]" /> Goals Achieved
+              <div className="neu-card rounded-2xl p-4 space-y-1 border border-black/8 dark:border-white/8">
+                <span className="text-xs font-bold text-slate-700 dark:text-[#9AA8C7] flex items-center gap-1.5">
+                  <Target size={14} className="text-blue-600 dark:text-[#4C7DFF]" /> Goals Achieved
                 </span>
-                <span className="text-2xl font-black text-white">3</span>
+                <span className="text-2xl font-black text-slate-900 dark:text-white">3</span>
               </div>
             </div>
           </div>
@@ -1114,8 +1114,8 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
           <div className="max-w-7xl mx-auto space-y-6">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-xl font-extrabold text-white">Creative & Developer Tool Suite</h3>
-                <p className="text-xs text-[#9AA8C7]">Launch specialized AI tools with high-throughput models</p>
+                <h3 className="text-xl font-extrabold text-slate-900 dark:text-white">Creative & Developer Tool Suite</h3>
+                <p className="text-xs font-medium text-slate-700 dark:text-[#9AA8C7]">Launch specialized AI tools with high-throughput models</p>
               </div>
 
               <div className="flex gap-2">
@@ -1123,10 +1123,10 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
                   <button
                     key={cat}
                     onClick={() => setExploreCategory(cat)}
-                    className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
+                    className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
                       exploreCategory === cat
-                        ? 'neu-primary-btn text-white'
-                        : 'neu-card-subtle text-[#9AA8C7] hover:text-white'
+                        ? 'neu-primary-btn text-white shadow-xs'
+                        : 'neu-card-subtle text-slate-700 dark:text-[#9AA8C7] hover:text-slate-900 dark:hover:text-white'
                     }`}
                   >
                     {cat}
@@ -1147,30 +1147,30 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
                   <div
                     key={tool.id}
                     onClick={() => onSelectTool(tool)}
-                    className="neu-card rounded-3xl p-6 flex flex-col justify-between space-y-5 cursor-pointer group hover:border-purple-500/40 transition-all"
+                    className="neu-card rounded-3xl p-6 flex flex-col justify-between space-y-5 cursor-pointer group hover:border-purple-500/40 transition-all border border-black/8 dark:border-white/8"
                   >
                     <div className="flex items-center justify-between">
                       <div
-                        className="w-12 h-12 rounded-2xl neu-inset flex items-center justify-center border border-white/10 group-hover:scale-105 transition-transform"
+                        className="w-12 h-12 rounded-2xl neu-inset bg-[#F8FAFC] dark:bg-[#060e20] flex items-center justify-center border border-black/5 dark:border-white/10 group-hover:scale-105 transition-transform"
                         style={{ color: tool.accentColor }}
                       >
                         <Sparkles size={22} />
                       </div>
-                      <span className="text-[10px] font-semibold text-[#9AA8C7] bg-white/5 px-2.5 py-1 rounded-md border border-white/6">
+                      <span className="text-[10px] font-bold text-slate-700 dark:text-[#9AA8C7] bg-black/5 dark:bg-white/5 px-2.5 py-1 rounded-md border border-black/5 dark:border-white/6">
                         {tool.category}
                       </span>
                     </div>
 
                     <div>
-                      <h4 className="text-base font-bold text-white group-hover:text-purple-300 transition-colors">
+                      <h4 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-300 transition-colors">
                         {tool.title}
                       </h4>
-                      <p className="text-xs text-[#9AA8C7] mt-1 leading-relaxed">
+                      <p className="text-xs font-medium text-slate-600 dark:text-[#9AA8C7] mt-1 leading-relaxed">
                         {tool.description}
                       </p>
                     </div>
 
-                    <div className="pt-2 border-t border-white/6 flex items-center justify-between text-xs text-purple-300 font-semibold group-hover:text-white">
+                    <div className="pt-2 border-t border-black/5 dark:border-white/6 flex items-center justify-between text-xs text-purple-700 dark:text-purple-300 font-bold group-hover:text-purple-900 dark:group-hover:text-white">
                       <span>Launch Studio</span>
                       <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                     </div>
@@ -1183,25 +1183,25 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
         {/* ================= FILES VAULT (DESKTOP) ================= */}
         {currentScreen === 'files' && (
           <div className="max-w-7xl mx-auto space-y-6">
-            <div className="neu-card rounded-3xl p-6 flex flex-col md:flex-row items-center justify-between gap-6 border border-white/8">
+            <div className="neu-card rounded-3xl p-6 flex flex-col md:flex-row items-center justify-between gap-6 border border-black/8 dark:border-white/8">
               <div className="space-y-1 max-w-sm">
                 <div className="flex items-center gap-2">
-                  <FolderOpen size={18} className="text-[#8B5CFF]" />
-                  <h4 className="text-base font-bold text-white">Cloud Workspace Storage</h4>
+                  <FolderOpen size={18} className="text-purple-600 dark:text-[#8B5CFF]" />
+                  <h4 className="text-base font-bold text-slate-900 dark:text-white">Cloud Workspace Storage</h4>
                 </div>
-                <p className="text-xs text-[#9AA8C7]">
+                <p className="text-xs font-medium text-slate-600 dark:text-[#9AA8C7]">
                   18.4 GB used of 50 GB encrypted cloud storage.
                 </p>
               </div>
 
               <div className="flex-1 w-full max-w-md space-y-1">
-                <div className="w-full h-3 rounded-full neu-inset overflow-hidden p-0.5">
+                <div className="w-full h-3 rounded-full neu-inset bg-[#F8FAFC] dark:bg-[#060e20] overflow-hidden p-0.5">
                   <div
-                    className="h-full rounded-full bg-gradient-to-r from-[#8B5CFF] via-[#4C7DFF] to-[#35C9FF]"
+                    className="h-full rounded-full bg-gradient-to-r from-[#7C4DFF] via-[#3B72FF] to-[#0284C7] dark:from-[#8B5CFF] dark:via-[#4C7DFF] dark:to-[#35C9FF]"
                     style={{ width: '36.8%' }}
                   />
                 </div>
-                <div className="flex justify-between text-[11px] text-[#657394]">
+                <div className="flex justify-between text-[11px] font-semibold text-slate-600 dark:text-[#657394]">
                   <span>36.8% Used</span>
                   <span>31.6 GB Remaining</span>
                 </div>
@@ -1218,7 +1218,7 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
                     color: '#f59e0b',
                   });
                 }}
-                className="neu-primary-btn px-4 py-2 rounded-xl text-xs font-semibold text-white flex items-center gap-1.5 cursor-pointer shrink-0"
+                className="neu-primary-btn px-4 py-2 rounded-xl text-xs font-bold text-white flex items-center gap-1.5 cursor-pointer shrink-0 shadow-md"
               >
                 <Plus size={14} />
                 <span>Upload File</span>
@@ -1230,20 +1230,20 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
               {files.map((file) => (
                 <div
                   key={file.id}
-                  className="neu-card rounded-2xl p-4 flex items-center justify-between gap-3 group"
+                  className="neu-card rounded-2xl p-4 flex items-center justify-between gap-3 group border border-black/8 dark:border-white/8"
                 >
-                  <div className="w-10 h-10 rounded-xl bg-purple-500/15 border border-purple-500/30 text-[#A978FF] flex items-center justify-center shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-purple-500/15 border border-purple-500/30 text-purple-700 dark:text-[#A978FF] flex items-center justify-center shrink-0">
                     <FileCode size={18} />
                   </div>
                   <div className="flex-1 overflow-hidden">
-                    <h5 className="text-xs font-bold text-white truncate">{file.name}</h5>
-                    <p className="text-[11px] text-[#657394]">
+                    <h5 className="text-xs font-bold text-slate-900 dark:text-white truncate">{file.name}</h5>
+                    <p className="text-[11px] font-medium text-slate-600 dark:text-[#657394]">
                       {file.size} • {file.date}
                     </p>
                   </div>
                   <button
                     onClick={() => onDeleteFile(file.id)}
-                    className="opacity-0 group-hover:opacity-100 text-xs text-red-400 hover:text-red-300 px-2 py-1 cursor-pointer"
+                    className="opacity-0 group-hover:opacity-100 text-xs font-semibold text-red-500 hover:text-red-700 px-2 py-1 cursor-pointer transition-opacity"
                   >
                     Delete
                   </button>
@@ -1257,57 +1257,57 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
         {currentScreen === 'profile' && (
           <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Left Card: Avatar & Stats */}
-            <div className="neu-card rounded-3xl p-6 flex flex-col items-center text-center space-y-4 border border-white/8">
-              <div className="w-28 h-28 rounded-full p-[3px] bg-gradient-to-tr from-[#8B5CFF] via-[#4C7DFF] to-[#35C9FF] shadow-[0_0_25px_rgba(139,92,255,0.5)]">
+            <div className="neu-card rounded-3xl p-6 flex flex-col items-center text-center space-y-4 border border-black/8 dark:border-white/8">
+              <div className="w-28 h-28 rounded-full p-[3px] bg-gradient-to-tr from-[#7C4DFF] via-[#3B72FF] to-[#0284C7] dark:from-[#8B5CFF] dark:via-[#4C7DFF] dark:to-[#35C9FF] shadow-[0_4px_20px_rgba(124,77,255,0.4)] dark:shadow-[0_0_25px_rgba(139,92,255,0.5)]">
                 <img
                   src={user.avatar || photoAvatar}
                   alt={user.name}
                   onError={(e) => {
                     (e.currentTarget as HTMLImageElement).src = photoAvatar;
                   }}
-                  className="w-full h-full object-cover rounded-full border-2 border-[#0B1730]"
+                  className="w-full h-full object-cover rounded-full border-2 border-white dark:border-[#0B1730]"
                 />
               </div>
 
               <div>
-                <h3 className="text-lg font-bold text-white">{user.name}</h3>
-                <p className="text-xs text-[#9AA8C7]">{user.username}</p>
-                <p className="text-xs text-[#657394] mt-1">{user.headline}</p>
+                <h3 className="text-lg font-black text-slate-900 dark:text-white">{user.name}</h3>
+                <p className="text-xs font-bold text-purple-700 dark:text-[#9AA8C7]">{user.username}</p>
+                <p className="text-xs font-medium text-slate-600 dark:text-[#657394] mt-1">{user.headline}</p>
               </div>
 
               {/* Stats */}
-              <div className="w-full neu-inset rounded-2xl p-3 flex justify-around text-center border border-white/5">
+              <div className="w-full neu-inset bg-[#F8FAFC] dark:bg-[#060e20] rounded-2xl p-3 flex justify-around text-center border border-black/5 dark:border-white/5">
                 <div>
-                  <span className="text-base font-bold text-white block">{user.projectsCount}</span>
-                  <span className="text-[10px] text-[#657394]">Projects</span>
+                  <span className="text-base font-black text-slate-900 dark:text-white block">{user.projectsCount}</span>
+                  <span className="text-[10px] font-bold text-slate-600 dark:text-[#657394]">Projects</span>
                 </div>
-                <div className="w-[1px] h-6 bg-white/10" />
+                <div className="w-[1px] h-6 bg-slate-300 dark:bg-white/10" />
                 <div>
-                  <span className="text-base font-bold text-white block">{user.followersCount}</span>
-                  <span className="text-[10px] text-[#657394]">Followers</span>
+                  <span className="text-base font-black text-slate-900 dark:text-white block">{user.followersCount}</span>
+                  <span className="text-[10px] font-bold text-slate-600 dark:text-[#657394]">Followers</span>
                 </div>
-                <div className="w-[1px] h-6 bg-white/10" />
+                <div className="w-[1px] h-6 bg-slate-300 dark:bg-white/10" />
                 <div>
-                  <span className="text-base font-bold text-white block">{user.followingCount}</span>
-                  <span className="text-[10px] text-[#657394]">Following</span>
+                  <span className="text-base font-black text-slate-900 dark:text-white block">{user.followingCount}</span>
+                  <span className="text-[10px] font-bold text-slate-600 dark:text-[#657394]">Following</span>
                 </div>
               </div>
 
               <button
                 onClick={onOpenProModal}
-                className="w-full neu-primary-btn py-2.5 rounded-xl text-xs font-semibold text-white cursor-pointer"
+                className="w-full neu-primary-btn py-2.5 rounded-xl text-xs font-bold text-white cursor-pointer shadow-md"
               >
-                {user.plan === 'Pro' ? 'Pro Member Activated' : 'Upgrade to Nova Pro'}
+                {user.plan === 'Pro' ? 'Pro Member Activated' : 'Upgrade to Canova Pro'}
               </button>
             </div>
 
             {/* Right Card: Profile details & actions */}
-            <div className="lg:col-span-2 neu-card rounded-3xl p-6 space-y-5 border border-white/8">
-              <div className="flex items-center justify-between pb-3 border-b border-white/6">
-                <h4 className="text-sm font-bold text-white">Profile Details</h4>
+            <div className="lg:col-span-2 neu-card rounded-3xl p-6 space-y-5 border border-black/8 dark:border-white/8">
+              <div className="flex items-center justify-between pb-3 border-b border-black/5 dark:border-white/6">
+                <h4 className="text-sm font-bold text-slate-900 dark:text-white">Profile Details</h4>
                 <button
                   onClick={() => setIsEditingProfile(!isEditingProfile)}
-                  className="neu-button px-3 py-1.5 rounded-xl text-xs text-[#9AA8C7] hover:text-white flex items-center gap-1.5 cursor-pointer"
+                  className="neu-button px-3 py-1.5 rounded-xl text-xs font-bold text-slate-700 dark:text-[#9AA8C7] hover:text-purple-700 dark:hover:text-white flex items-center gap-1.5 cursor-pointer shadow-2xs"
                 >
                   <Edit3 size={13} />
                   <span>{isEditingProfile ? 'Cancel' : 'Edit Profile'}</span>
@@ -1317,21 +1317,21 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
               {isEditingProfile ? (
                 <div className="space-y-4">
                   <div>
-                    <label className="text-xs font-semibold text-[#9AA8C7] block mb-1">Full Name</label>
+                    <label className="text-xs font-bold text-slate-800 dark:text-[#9AA8C7] block mb-1">Full Name</label>
                     <input
                       type="text"
                       value={profileName}
                       onChange={(e) => setProfileName(e.target.value)}
-                      className="w-full neu-inset rounded-xl py-2 px-3 text-xs text-white"
+                      className="w-full neu-inset bg-[#F8FAFC] dark:bg-[#060e20] rounded-xl py-2 px-3 text-xs text-slate-900 dark:text-white font-medium"
                     />
                   </div>
                   <div>
-                    <label className="text-xs font-semibold text-[#9AA8C7] block mb-1">Headline</label>
+                    <label className="text-xs font-bold text-slate-800 dark:text-[#9AA8C7] block mb-1">Headline</label>
                     <input
                       type="text"
                       value={profileHeadline}
                       onChange={(e) => setProfileHeadline(e.target.value)}
-                      className="w-full neu-inset rounded-xl py-2 px-3 text-xs text-white"
+                      className="w-full neu-inset bg-[#F8FAFC] dark:bg-[#060e20] rounded-xl py-2 px-3 text-xs text-slate-900 dark:text-white font-medium"
                     />
                   </div>
                   <button
@@ -1339,20 +1339,20 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
                       onUpdateUser({ name: profileName, headline: profileHeadline });
                       setIsEditingProfile(false);
                     }}
-                    className="neu-primary-btn px-4 py-2 rounded-xl text-xs font-semibold text-white cursor-pointer"
+                    className="neu-primary-btn px-4 py-2 rounded-xl text-xs font-bold text-white cursor-pointer shadow-md"
                   >
                     Save Changes
                   </button>
                 </div>
               ) : (
                 <div className="space-y-4 text-xs">
-                  <div className="neu-card-subtle p-4 rounded-2xl space-y-1">
-                    <span className="text-[#657394] block">Professional Specialization</span>
-                    <p className="text-white font-medium">{user.headline}</p>
+                  <div className="neu-card-subtle p-4 rounded-2xl space-y-1 border border-black/5 dark:border-white/5">
+                    <span className="text-slate-600 dark:text-[#657394] font-bold block">Professional Specialization</span>
+                    <p className="text-slate-900 dark:text-white font-bold">{user.headline}</p>
                   </div>
-                  <div className="neu-card-subtle p-4 rounded-2xl space-y-1">
-                    <span className="text-[#657394] block">Membership Status</span>
-                    <p className="text-purple-300 font-semibold">{user.plan} Tier Active</p>
+                  <div className="neu-card-subtle p-4 rounded-2xl space-y-1 border border-black/5 dark:border-white/5">
+                    <span className="text-slate-600 dark:text-[#657394] font-bold block">Membership Status</span>
+                    <p className="text-purple-700 dark:text-purple-300 font-extrabold">{user.plan} Tier Active</p>
                   </div>
                 </div>
               )}
@@ -1363,23 +1363,23 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
         {/* ================= SETTINGS (DESKTOP) ================= */}
         {currentScreen === 'settings' && (
           <div className="max-w-5xl mx-auto space-y-6">
-            <h3 className="text-xl font-extrabold text-white">System Settings & Preferences</h3>
+            <h3 className="text-xl font-extrabold text-slate-900 dark:text-white">System Settings & Preferences</h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* AI Config */}
               <div className="neu-card rounded-3xl p-6 space-y-4 border border-purple-500/20">
-                <div className="flex items-center gap-2 text-xs font-bold text-purple-300">
-                  <Cpu size={16} className="text-[#8B5CFF]" />
+                <div className="flex items-center gap-2 text-xs font-bold text-purple-700 dark:text-purple-300">
+                  <Cpu size={16} className="text-purple-600 dark:text-[#8B5CFF]" />
                   <span>AI Engine Configuration</span>
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-[#9AA8C7] block mb-1.5">
+                  <label className="text-xs font-bold text-slate-800 dark:text-[#9AA8C7] block mb-1.5">
                     Gemini Reasoning Model
                   </label>
                   <select
                     value={aiModel}
                     onChange={(e) => setAiModel(e.target.value)}
-                    className="w-full neu-inset rounded-xl py-2 px-3 text-xs text-white bg-[#060e20] focus:outline-none"
+                    className="w-full neu-inset rounded-xl py-2 px-3 text-xs font-bold text-slate-900 dark:text-white bg-[#F8FAFC] dark:bg-[#060e20] focus:outline-none"
                   >
                     <option value="gemini-3.8-flash">Gemini 3.8 Flash (High Speed & Creative)</option>
                     <option value="gemini-3.1-pro-preview">Gemini 3.1 Pro (Deep STEM & Code)</option>
@@ -1389,30 +1389,30 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
               </div>
 
               {/* Interface Lighting & Neumorphic Color Palette */}
-              <div className="neu-card rounded-3xl p-6 space-y-4 border border-white/8">
-                <div className="flex items-center gap-2 text-xs font-bold text-white">
-                  <Moon size={16} className="text-[#35C9FF]" />
+              <div className="neu-card rounded-3xl p-6 space-y-4 border border-black/8 dark:border-white/8">
+                <div className="flex items-center gap-2 text-xs font-bold text-slate-900 dark:text-white">
+                  <Moon size={16} className="text-cyan-600 dark:text-[#35C9FF]" />
                   <span>Interface Aesthetics</span>
                 </div>
 
                 {/* Neumorphic Scheme Toggle */}
                 <div className="flex items-center justify-between pb-3 border-b border-black/5 dark:border-white/6">
                   <div>
-                    <h5 className="text-xs font-medium text-white">Neumorphic Color Scheme</h5>
-                    <p className="text-[11px] text-[#657394]">
+                    <h5 className="text-xs font-bold text-slate-900 dark:text-white">Neumorphic Color Scheme</h5>
+                    <p className="text-[11px] font-medium text-slate-600 dark:text-[#657394]">
                       {theme === 'light' ? 'Soft White Clay Edition' : 'Deep Space Dark Edition'}
                     </p>
                   </div>
-                  <div className="flex items-center gap-1 neu-inset p-1 rounded-xl">
+                  <div className="flex items-center gap-1 neu-inset bg-[#F8FAFC] dark:bg-[#060e20] p-1 rounded-xl">
                     <button
                       onClick={() => {
                         soundFx.playClick();
                         setTheme('light');
                       }}
-                      className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                      className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                         theme === 'light'
-                          ? 'neu-primary-btn text-white'
-                          : 'text-[#657394] hover:text-white'
+                          ? 'neu-primary-btn text-white shadow-xs'
+                          : 'text-slate-600 dark:text-[#657394] hover:text-slate-900 dark:hover:text-white'
                       }`}
                     >
                       <Sun size={13} />
@@ -1423,10 +1423,10 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
                         soundFx.playClick();
                         setTheme('dark');
                       }}
-                      className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                      className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                         theme === 'dark'
-                          ? 'neu-primary-btn text-white'
-                          : 'text-[#657394] hover:text-white'
+                          ? 'neu-primary-btn text-white shadow-xs'
+                          : 'text-slate-600 dark:text-[#657394] hover:text-slate-900 dark:hover:text-white'
                       }`}
                     >
                       <Moon size={13} />
@@ -1437,17 +1437,17 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
 
                 <div className="flex items-center justify-between">
                   <div>
-                    <h5 className="text-xs font-medium text-white">Soft Neumorphic Glow</h5>
-                    <p className="text-[11px] text-[#657394]">Ambient directional lighting</p>
+                    <h5 className="text-xs font-bold text-slate-900 dark:text-white">Soft Neumorphic Glow</h5>
+                    <p className="text-[11px] font-medium text-slate-600 dark:text-[#657394]">Ambient directional lighting</p>
                   </div>
                   <button
                     onClick={() => setAmbientGlow(!ambientGlow)}
-                    className={`w-11 h-6 rounded-full relative p-0.5 cursor-pointer ${
-                      ambientGlow ? 'bg-gradient-to-r from-purple-600 to-indigo-600' : 'bg-slate-800'
+                    className={`w-11 h-6 rounded-full relative p-0.5 cursor-pointer transition-colors ${
+                      ambientGlow ? 'bg-gradient-to-r from-purple-600 to-indigo-600' : 'bg-slate-300 dark:bg-slate-800'
                     }`}
                   >
                     <div
-                      className={`w-5 h-5 rounded-full bg-white transition-transform ${
+                      className={`w-5 h-5 rounded-full bg-white transition-transform shadow-xs ${
                         ambientGlow ? 'translate-x-5' : 'translate-x-0'
                       }`}
                     />
@@ -1459,8 +1459,8 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
             {/* Clear workspace data */}
             <div className="neu-card rounded-3xl p-5 border border-red-500/20 flex items-center justify-between">
               <div>
-                <h5 className="text-xs font-bold text-white">Reset Local Workspace</h5>
-                <p className="text-[11px] text-[#657394]">Clear local cache, tasks, and files</p>
+                <h5 className="text-xs font-bold text-slate-900 dark:text-white">Reset Local Workspace</h5>
+                <p className="text-[11px] font-medium text-slate-600 dark:text-[#657394]">Clear local cache, tasks, and files</p>
               </div>
               <button
                 onClick={() => {
@@ -1468,7 +1468,7 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
                   setClearedNotice(true);
                   setTimeout(() => setClearedNotice(false), 2000);
                 }}
-                className="neu-button px-4 py-2 rounded-xl text-xs text-red-400 hover:text-red-300 cursor-pointer"
+                className="neu-button px-4 py-2 rounded-xl text-xs font-bold text-red-500 hover:text-red-700 cursor-pointer shadow-xs"
               >
                 {clearedNotice ? 'Reset!' : 'Reset Data'}
               </button>
