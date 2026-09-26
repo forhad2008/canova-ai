@@ -15,6 +15,7 @@ import {
 import { ScreenType } from '../../types';
 import { NovaStar } from '../common/NovaStar';
 import { ThemeToggle } from '../common/ThemeToggle';
+import logo7Img from '../../assets/logo7.png';
 
 interface SidebarProps {
   currentScreen: ScreenType;
@@ -68,17 +69,25 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <aside className="w-18 md:w-20 lg:w-60 xl:w-64 bg-[#EEF2F9] dark:bg-[#071226]/95 border-r border-[#CBD5E1]/60 dark:border-white/8 backdrop-blur-2xl h-full flex flex-col justify-between p-3 md:p-3.5 lg:p-4 shrink-0 select-none transition-all duration-300 shadow-[6px_0_20px_rgba(166,180,204,0.35)] dark:shadow-none">
-      {/* Brand logo & status */}
+      {/* Brand logo & status (Click to return to Home Dashboard) */}
       <div>
-        <div className="flex items-center justify-center lg:justify-start gap-3 px-1 lg:px-2 py-2.5 mb-4 lg:mb-5 border-b border-black/5 dark:border-white/6 pb-3 lg:pb-4">
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#8B5CFF] to-[#35C9FF] p-[1.5px] shadow-[0_4px_16px_rgba(139,92,255,0.4)] flex items-center justify-center shrink-0">
-            <div className="w-full h-full bg-[#EEF2F9] dark:bg-[#071226] rounded-[14px] flex items-center justify-center shadow-inner">
-              <NovaStar size={22} glow={false} />
-            </div>
+        <button
+          type="button"
+          onClick={() => onNavigate('home')}
+          title="Return to Home Dashboard"
+          aria-label="Return to Home Dashboard"
+          className="w-full flex items-center justify-center lg:justify-start gap-3 px-1 lg:px-2 py-2 mb-4 lg:mb-5 border-b border-black/5 dark:border-white/6 pb-3 lg:pb-4 rounded-2xl hover:bg-black/5 dark:hover:bg-white/5 active:scale-[0.98] transition-all duration-200 cursor-pointer text-left group"
+        >
+          <div className="w-10 h-10 lg:w-11 lg:h-11 rounded-2xl overflow-hidden shadow-[0_4px_16px_rgba(139,92,255,0.35)] shrink-0 flex items-center justify-center bg-white/5 dark:bg-black/20 border border-purple-500/20 group-hover:border-purple-500/50 group-hover:shadow-[0_4px_20px_rgba(139,92,255,0.5)] transition-all duration-200">
+            <img
+              src={logo7Img}
+              alt="Canova AI Logo"
+              className="w-full h-full object-contain p-0.5 rounded-2xl transition-transform group-hover:scale-105 duration-200"
+            />
           </div>
           <div className="hidden lg:block overflow-hidden">
             <h1 className="text-base font-black tracking-tight flex items-center gap-1.5 leading-none">
-              <span className="bg-gradient-to-r from-slate-900 via-indigo-950 to-purple-700 dark:from-white dark:via-[#E0E7FF] dark:to-[#A978FF] bg-clip-text text-transparent drop-shadow-sm dark:drop-shadow-[0_2px_10px_rgba(139,92,255,0.45)]">
+              <span className="bg-gradient-to-r from-slate-900 via-indigo-950 to-purple-700 dark:from-white dark:via-[#E0E7FF] dark:to-[#A978FF] bg-clip-text text-transparent drop-shadow-sm dark:drop-shadow-[0_2px_10px_rgba(139,92,255,0.45)] group-hover:opacity-90 transition-opacity">
                 Canova
               </span>
               <span className="text-[10.5px] font-mono font-extrabold tracking-wide px-2 py-0.5 rounded-md bg-purple-500/15 dark:bg-gradient-to-r dark:from-purple-500/25 dark:to-cyan-500/20 text-purple-700 dark:text-[#38BDF8] border border-purple-500/30 dark:border-cyan-400/40 shadow-sm dark:shadow-[0_0_12px_rgba(56,189,248,0.25)]">
@@ -93,7 +102,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <span className="tracking-wide">Smart Companion</span>
             </p>
           </div>
-        </div>
+        </button>
 
         {/* Section title (Visible on desktop, hidden on compact tablet) */}
         <span className="hidden lg:block text-[10px] font-bold text-slate-400 dark:text-[#657394] uppercase tracking-wider px-3 mb-2">
