@@ -1,0 +1,51 @@
+{
+  "entities": {
+    "UserProfile": {
+      "collection": "users",
+      "fields": {
+        "email": { "type": "string" },
+        "name": { "type": "string" },
+        "avatar": { "type": "string" },
+        "plan": { "type": "string" },
+        "role": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      }
+    },
+    "Task": {
+      "collection": "tasks",
+      "fields": {
+        "userId": { "type": "string" },
+        "title": { "type": "string" },
+        "category": { "type": "string" },
+        "duration": { "type": "string" },
+        "completed": { "type": "boolean" },
+        "dueDate": { "type": "string" },
+        "createdAt": { "type": "string" }
+      }
+    },
+    "FileItem": {
+      "collection": "files",
+      "fields": {
+        "userId": { "type": "string" },
+        "name": { "type": "string" },
+        "size": { "type": "string" },
+        "date": { "type": "string" },
+        "category": { "type": "string" },
+        "extension": { "type": "string" },
+        "color": { "type": "string" },
+        "createdAt": { "type": "string" }
+      }
+    },
+    "ChatMessage": {
+      "collection": "chat_messages",
+      "fields": {
+        "userId": { "type": "string" },
+        "text": { "type": "string" },
+        "sender": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "model": { "type": "string" },
+        "groundingSources": { "type": "array" }
+      }
+    }
+  }
+}
