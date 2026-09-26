@@ -1,5 +1,5 @@
 {
-  "name": "Nova AI - Neumorphic Smart Companion",
+  "name": "Canova AI - Neumorphic Smart Companion",
   "description": "A premium mobile-first AI companion featuring dark neumorphism, productivity tasks, real-time analytics, creative tools, file workspace, and interactive intelligence.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]

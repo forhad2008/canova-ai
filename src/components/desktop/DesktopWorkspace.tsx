@@ -295,33 +295,8 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
     <div className="w-full h-full flex flex-col overflow-hidden text-left select-none bg-[#EEF2F9] dark:bg-[#030712] transition-colors duration-200">
       {/* 1. Global Desktop Workspace Header */}
       <div className="px-4 md:px-6 lg:px-8 py-3.5 border-b border-[#CBD5E1]/60 dark:border-white/8 bg-[#EEF2F9]/90 dark:bg-[#071226]/75 backdrop-blur-2xl flex items-center justify-between gap-3 lg:gap-4 shrink-0 shadow-[0_4px_16px_rgba(166,180,204,0.35)] dark:shadow-md">
-        {/* Breadcrumb / Title */}
-        <div className="flex items-center gap-2 lg:gap-3">
-          <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-[#657394]">
-            <span className="hidden sm:inline">Workspace</span>
-            <span className="hidden sm:inline">/</span>
-            <span className="text-slate-900 dark:text-white font-bold capitalize truncate max-w-[140px] md:max-w-none">
-              {currentScreen === 'assistant'
-                ? 'AI Assistant Studio'
-                : currentScreen === 'home'
-                ? 'Executive Dashboard'
-                : currentScreen}
-            </span>
-          </div>
-
-          <div className="hidden xl:flex items-center gap-2 pl-4 border-l border-slate-300 dark:border-white/8">
-            <span className="flex items-center gap-1.5 text-[11px] text-emerald-700 dark:text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/30 font-semibold shadow-xs">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              Gemini 3.8 Flash Online
-            </span>
-            <span className="text-[11px] text-slate-600 dark:text-[#9AA8C7] neu-card-subtle px-2.5 py-0.5 rounded-full border border-black/5 dark:border-white/5 font-medium">
-              Sync: Encrypted
-            </span>
-          </div>
-        </div>
-
         {/* Global Upgraded Omnibar Search Bar (⌘K / Ctrl+K) */}
-        <div className="flex-1 max-w-sm sm:max-w-md md:max-w-xl lg:max-w-2xl xl:max-w-3xl relative z-30 mx-1 md:mx-3">
+        <div className="flex-1 max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-4xl relative z-30 mr-2 md:mr-4">
           <div className="relative flex items-center group">
             <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-purple-600 dark:text-[#A978FF] pointer-events-none transition-transform group-focus-within:scale-110" />
             <input
