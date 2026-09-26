@@ -26,6 +26,7 @@ import { useRecentSearches } from '../utils/useRecentSearches';
 import { RecentSearchChips } from '../components/common/RecentSearchChips';
 import { ThemeToggle } from '../components/common/ThemeToggle';
 import { PWAInstallButton } from '../components/common/PWAInstallButton';
+import { getTimeBasedGreeting } from '../utils/greeting';
 import photoAvatar from '../assets/photo.png';
 
 interface HomeProps {
@@ -150,7 +151,7 @@ export const Home: React.FC<HomeProps> = ({
       <div className="flex items-center justify-between pt-1">
         <div>
           <span className="text-xs font-semibold text-slate-800 dark:text-[#9AA8C7] tracking-wide block">
-            Good Morning,
+            {getTimeBasedGreeting()},
           </span>
           <h2 className="text-xl font-black text-black dark:text-white tracking-tight flex items-center gap-1.5 mt-0.5">
             {user.name} <span className="text-lg">👋</span>

@@ -58,6 +58,7 @@ import { isTaskOverdue } from '../../utils/alarmService';
 import { TaskProgressRing } from '../common/TaskProgressRing';
 import { useTheme } from '../../utils/ThemeContext';
 import { soundFx } from '../../utils/audio';
+import { getTimeBasedGreeting } from '../../utils/greeting';
 import photoAvatar from '../../assets/photo.png';
 
 interface DesktopWorkspaceProps {
@@ -613,7 +614,7 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
                       <span className="text-[11px] font-bold text-purple-700 dark:text-[#A978FF] uppercase tracking-wider bg-purple-500/15 px-2.5 py-1 rounded-md border border-purple-500/30">
                         AI Companion Studio
                       </span>
-                      <span className="text-xs font-semibold text-slate-700 dark:text-[#9AA8C7]">Good Morning, {user.name}</span>
+                      <span className="text-xs font-semibold text-slate-700 dark:text-[#9AA8C7]">{getTimeBasedGreeting()}, {user.name}</span>
                     </div>
 
                     <h2 className="text-2xl lg:text-3xl font-extrabold text-slate-900 dark:text-white leading-tight">
