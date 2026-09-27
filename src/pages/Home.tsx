@@ -346,8 +346,8 @@ export const Home: React.FC<HomeProps> = ({
           </div>
         </div>
 
-        {/* Smokey Vape Controls: Color Palette + Pattern Selector + Opacity Slider */}
-        <div className="mt-4 pt-3 border-t border-black/5 dark:border-white/5 relative z-10 space-y-3 bg-[#F1F5F9] dark:bg-black/25 -mx-1 px-3.5 py-3 rounded-2xl border border-white/70 dark:border-white/5 shadow-[inset_3px_3px_8px_rgba(166,180,204,0.35),inset_-3px_-3px_8px_rgba(255,255,255,0.95)] dark:shadow-none">
+        {/* Smokey Vape Controls: Color Palette + Pattern Selector + Opacity Slider (Hidden on mobile) */}
+        <div className="hidden md:block mt-4 pt-3 border-t border-black/5 dark:border-white/5 relative z-10 space-y-3 bg-[#F1F5F9] dark:bg-black/25 -mx-1 px-3.5 py-3 rounded-2xl border border-white/70 dark:border-white/5 shadow-[inset_3px_3px_8px_rgba(166,180,204,0.35),inset_-3px_-3px_8px_rgba(255,255,255,0.95)] dark:shadow-none">
           {/* Color Palette Selector: Standard White, Neon Purple, Deep Blue, Cyan */}
           <div className="flex items-center justify-between gap-2">
             <span className="text-[11px] font-black text-black dark:text-[#9AA8C7] flex items-center gap-1.5 shrink-0">
