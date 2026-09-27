@@ -163,8 +163,9 @@ function checkTaskAlarmsAndCheckins(
 
     // Check if task alarm time is reached or past
     if (taskDateStr === currentDateStr && taskTimeStr === currentTimeStr) {
-      sendBrowserNotification(`⏰ Task Alarm: ${task.title}`, {
-        body: `Priority: ${task.priority || 'medium'} • Category: ${task.category}`,
+      soundFx.playPiratesTheme();
+      sendBrowserNotification(`🏴‍☠️ Task Alarm: ${task.title}`, {
+        body: `Priority: ${task.priority || 'medium'} • Category: ${task.category} (Note: Will automatically reset 24h later after completion)`,
         tag: task.id,
       });
 

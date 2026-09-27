@@ -17,6 +17,7 @@ import { LiquidGlass } from '../components/common/LiquidGlass';
 import { SmartSuggestCard } from '../components/common/SmartSuggestCard';
 import { TaskProgressRing } from '../components/common/TaskProgressRing';
 import { DailyFocusAndTaskRings } from '../components/common/DailyFocusAndTaskRings';
+import { DeepWorkTimerModule } from '../components/focus/DeepWorkTimerModule';
 import { WeeklyGoalCard } from '../components/common/WeeklyGoalCard';
 import { soundFx } from '../utils/audio';
 import { useRecentSearches } from '../utils/useRecentSearches';
@@ -32,6 +33,7 @@ interface HomeProps {
   onNavigate: (screen: ScreenType) => void;
   onQuickPrompt?: (prompt: string) => void;
   onOpenInstallModal?: (tab?: 'desktop' | 'android') => void;
+  onToggleTask?: (id: string) => void;
 }
 
 export const Home: React.FC<HomeProps> = ({
@@ -40,6 +42,7 @@ export const Home: React.FC<HomeProps> = ({
   onNavigate,
   onQuickPrompt,
   onOpenInstallModal,
+  onToggleTask,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
@@ -318,6 +321,9 @@ export const Home: React.FC<HomeProps> = ({
       <div className="space-y-4">
         {/* Circular SVG Rings for Daily Focus & Tasks Completed */}
         <DailyFocusAndTaskRings tasks={tasks} onNavigate={onNavigate} />
+
+        {/* Deep Work Pomodoro Block Module */}
+        <DeepWorkTimerModule tasks={tasks} onToggleTask={onToggleTask} />
 
         <div
           onClick={() => {

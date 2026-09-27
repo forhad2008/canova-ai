@@ -526,6 +526,7 @@ export default function App() {
             onNavigate={(screen) => setCurrentScreen(screen)}
             onQuickPrompt={handleQuickPrompt}
             onOpenInstallModal={handleOpenInstallModal}
+            onToggleTask={handleToggleTask}
           />
         );
       case 'assistant':

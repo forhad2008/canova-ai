@@ -307,6 +307,33 @@ export const Tasks: React.FC<TasksProps> = ({
       ) : (
         <>
 
+      {/* Pirates Alarm & 24h Reset Warning Banner */}
+      <div className="p-3.5 rounded-2xl bg-gradient-to-r from-amber-950/60 via-purple-950/60 to-indigo-950/60 border border-amber-500/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-amber-100 shadow-md">
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center border border-amber-500/30 shrink-0">
+            <Volume2 size={16} />
+          </div>
+          <div>
+            <p className="font-extrabold text-white flex items-center gap-1.5">
+              <span>🏴‍☠️ Alarm Tune: Pirates of the Caribbean</span>
+            </p>
+            <p className="text-[11px] text-amber-200/90 font-medium leading-tight mt-0.5">
+              ⚠️ Warning: Completing a scheduled task automatically resets its alarm & schedule for 24 hours later.
+            </p>
+          </div>
+        </div>
+
+        <button
+          onClick={() => {
+            soundFx.playPiratesTheme();
+          }}
+          className="neu-primary-btn px-3 py-1.5 rounded-xl text-[11px] font-extrabold text-white shrink-0 cursor-pointer shadow-sm self-end sm:self-auto flex items-center gap-1.5"
+        >
+          <Volume2 size={13} />
+          <span>Test Pirates Alarm 🏴‍☠️</span>
+        </button>
+      </div>
+
       {/* Notification Permission Banner if not granted */}
       {notifPermission !== 'granted' && (
         <div className="p-3.5 rounded-2xl bg-gradient-to-r from-purple-900/40 via-indigo-900/40 to-slate-900/40 border border-purple-500/30 flex items-center justify-between gap-3 text-xs text-purple-200 shadow-md">
@@ -720,6 +747,20 @@ export const Tasks: React.FC<TasksProps> = ({
                       className="w-full neu-inset rounded-lg py-1.5 px-2 text-xs text-slate-900 dark:text-white bg-[#F8FAFC] dark:bg-[#060e20] focus:outline-none font-mono"
                     />
                   </div>
+                </div>
+
+                <div className="pt-1.5 flex items-center justify-between text-[10px] text-amber-700 dark:text-amber-300 font-bold bg-amber-500/10 p-2 rounded-xl border border-amber-500/20">
+                  <span className="flex items-center gap-1">
+                    <AlertCircle size={12} className="shrink-0 text-amber-500" />
+                    <span>⚠️ Warning: Will reset 24 hours later upon task completion.</span>
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => soundFx.playPiratesTheme()}
+                    className="underline text-purple-600 dark:text-purple-300 hover:text-purple-400 cursor-pointer shrink-0 ml-1"
+                  >
+                    Audition 🏴‍☠️
+                  </button>
                 </div>
               </div>
 
