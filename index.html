@@ -1,6 +1,26 @@
 <!doctype html>
 <html lang="en" class="light">
   <head>
+    <script>
+      (function() {
+        function isViteWsError(err) {
+          var str = String((err && (err.message || err)) || '');
+          return str.indexOf('WebSocket') !== -1 || str.indexOf('vite') !== -1 || str === 'WebSocket closed without opened.';
+        }
+        window.addEventListener('unhandledrejection', function(event) {
+          if (isViteWsError(event.reason)) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+          }
+        }, true);
+        window.addEventListener('error', function(event) {
+          if (isViteWsError(event.message || event.error)) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+          }
+        }, true);
+      })();
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <title>Canova AI - Neumorphic Smart Companion</title>

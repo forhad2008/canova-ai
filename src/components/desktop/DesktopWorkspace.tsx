@@ -135,13 +135,7 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
   const [analyticsPeriod, setAnalyticsPeriod] = useState<'weekly' | 'monthly' | 'yearly'>('weekly');
   const [exploreCategory, setExploreCategory] = useState('All');
   const [fileFilter, setFileFilter] = useState<'all' | 'documents' | 'images' | 'others'>('all');
-  const [showQuickAccess, setShowQuickAccess] = useState(() => {
-    // Default open on wide desktop (>= 1280px), but clean/hidden on tablet (< 1280px)
-    if (typeof window !== 'undefined') {
-      return window.innerWidth >= 1280;
-    }
-    return true;
-  });
+  const [showQuickAccess, setShowQuickAccess] = useState(false);
 
   // Global Keyboard Shortcuts (⌘K, Ctrl+K, '/', Esc)
   useEffect(() => {

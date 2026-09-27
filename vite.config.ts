@@ -61,8 +61,9 @@ export default defineConfig(() => {
       },
     },
     server: {
-      // Disable HMR in preview environment to prevent WebSocket closed errors
-      hmr: false,
+      hmr: {
+        overlay: false,
+      },
       watch: null,
     },
   };
