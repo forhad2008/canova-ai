@@ -121,7 +121,7 @@ export const DailyFocusAndTaskRings: React.FC<DailyFocusAndTaskRingsProps> = ({
               <Clock size={12} className="text-cyan-600 dark:text-[#35C9FF]" />
               <span>Daily Focus</span>
             </span>
-            <span className="text-cyan-600 dark:text-[#35C9FF] font-bold">{focusPct}%</span>
+            <span className="text-cyan-600 dark:text-[#35C9FF] font-bold tabular-nums">{focusPct}%</span>
           </div>
 
           {/* SVG Circular Ring for Focus */}
@@ -166,10 +166,10 @@ export const DailyFocusAndTaskRings: React.FC<DailyFocusAndTaskRingsProps> = ({
 
             {/* Inner Center Metrics */}
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-              <span className="text-sm font-black text-slate-900 dark:text-white tracking-tight">
+              <span className="text-sm font-black text-slate-900 dark:text-white tracking-tight tabular-nums font-mono">
                 {loggedFocusHours}h
               </span>
-              <span className="text-[9px] font-bold text-slate-500 dark:text-zinc-400">
+              <span className="text-[9px] font-bold text-slate-500 dark:text-zinc-400 tabular-nums">
                 / {focusTarget} hrs
               </span>
             </div>

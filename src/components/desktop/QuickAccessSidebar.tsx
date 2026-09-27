@@ -89,7 +89,7 @@ export const QuickAccessSidebar: React.FC<QuickAccessSidebarProps> = ({
   };
 
   return (
-    <aside className="w-80 2xl:w-88 border-l border-black/8 dark:border-white/8 bg-[#EEF2F9]/95 dark:bg-[#040a18]/95 backdrop-blur-xl flex flex-col shrink-0 h-full p-4.5 space-y-4.5 overflow-y-auto custom-scrollbar select-none z-20 text-left">
+    <aside className="w-80 2xl:w-88 border-l border-black/8 dark:border-white/8 bg-[#EEF2F9]/95 dark:bg-[#040a18]/95 backdrop-blur-xl flex flex-col shrink-0 h-full p-4 space-y-3.5 overflow-y-auto custom-scrollbar select-none z-20 text-left rounded-l-3xl">
       {/* 1. Header */}
       <div className="flex items-center justify-between pb-1 border-b border-black/5 dark:border-white/6">
         <div className="flex items-center gap-2">

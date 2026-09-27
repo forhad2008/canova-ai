@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import {
   Search,
   Sparkles,
@@ -610,7 +611,7 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
 
       {/* 2. Main Content Body with Quick Access Sidebar */}
       <div className="flex-1 flex overflow-hidden relative">
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 pr-12 sm:pr-14 lg:pr-16 custom-scrollbar space-y-4">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 pr-14 sm:pr-16 lg:pr-20 custom-scrollbar space-y-4">
           {/* Autonomous AI Agent Bar */}
           <AutonomousAgentBar onAgentAction={onAgentAction} />
 
@@ -625,14 +626,15 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
 
                 <div className="flex items-start justify-between gap-6 relative z-10">
                   <div className="space-y-3 max-w-2xl flex-1">
-                    <div className="flex items-center gap-2">
-                      <span className="text-[11px] font-bold text-purple-700 dark:text-[#A978FF] uppercase tracking-wider bg-purple-500/15 px-2.5 py-1 rounded-md border border-purple-500/30">
+                    <div className="flex items-center gap-2 text-xs font-semibold text-slate-700 dark:text-[#9AA8C7]">
+                      <span className="font-extrabold uppercase tracking-wider text-purple-700 dark:text-[#A978FF]">
                         AI Companion Studio
                       </span>
-                      <span className="text-xs font-semibold text-slate-700 dark:text-[#9AA8C7]">{getTimeBasedGreeting()}, {user.name}</span>
+                      <span aria-hidden="true" className="text-slate-400">·</span>
+                      <span>{getTimeBasedGreeting()}, {user.name}</span>
                     </div>
 
-                    <h2 className="text-2xl lg:text-3xl font-extrabold text-slate-900 dark:text-white leading-tight">
+                    <h2 className="text-2xl lg:text-3xl font-extrabold text-slate-900 dark:text-white leading-tight [text-wrap:balance]">
                       Ready to help you build, design & plan today?
                     </h2>
 
@@ -1867,48 +1869,56 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
         )}
         </div>
 
-        {/* Backdrop overlay when Quick Access is open */}
-        {showQuickAccess && (
-          <div
-            className="absolute inset-0 z-30 bg-black/15 dark:bg-black/35 backdrop-blur-[1px] transition-opacity cursor-pointer animate-fadeIn"
-            onClick={() => setShowQuickAccess(false)}
-          />
-        )}
+        {/* Portal Quick Access directly to document.body so position:fixed stays 100% fixed in middle of screen when scrolling */}
+        {createPortal(
+          <>
+            {/* Backdrop overlay when Quick Access is open */}
+            {showQuickAccess && (
+              <div
+                className="fixed inset-0 z-[99998] bg-black/20 dark:bg-black/40 backdrop-blur-[1px] transition-opacity cursor-pointer animate-fadeIn"
+                onClick={() => setShowQuickAccess(false)}
+              />
+            )}
 
-        {/* 3. Dedicated Right Overlay Drawer: Quick Access & Recents */}
-        {showQuickAccess ? (
-          <div className="absolute right-0 top-0 bottom-0 z-40 h-full shadow-2xl animate-slide-left">
-            <QuickAccessSidebar
-              tasks={tasks}
-              files={files}
-              onToggleTask={onToggleTask}
-              onAddTask={onAddTask}
-              onNavigate={onNavigate}
-              onQuickPrompt={onQuickPrompt}
-              onClose={() => setShowQuickAccess(false)}
-            />
-          </div>
-        ) : (
-          <button
-            onClick={() => {
-              soundFx.playClick();
-              setShowQuickAccess(true);
-            }}
-            title="Expand Quick Access & Recents"
-            aria-label="Expand Quick Access"
-            style={{ backgroundColor: '#5f0bca' }}
-            className="hidden md:flex absolute right-0 top-3 bottom-3 w-9 sm:w-10 rounded-l-2xl border-l border-y border-purple-400/30 text-white shadow-2xl z-30 flex-col items-center justify-center gap-2.5 hover:brightness-110 transition-all cursor-pointer group"
-          >
-            <div
-              style={{ backgroundColor: '#000000' }}
-              className="w-7 h-7 rounded-lg flex items-center justify-center shadow-md group-hover:scale-105 transition-transform"
-            >
-              <ChevronLeft size={16} className="text-white group-hover:-translate-x-0.5 transition-transform" />
-            </div>
-            <span className="[writing-mode:vertical-lr] rotate-180 text-[10px] font-extrabold uppercase tracking-widest text-white/90 hidden lg:block">
-              Quick Access
-            </span>
-          </button>
+            {/* Dedicated Right Overlay Drawer / Floating Dock anchored fixed to screen middle right */}
+            {showQuickAccess ? (
+              <div
+                className="fixed right-0 top-1/2 -translate-y-1/2 z-[99999] max-h-[85vh] h-[600px] shadow-2xl animate-slide-left rounded-l-3xl overflow-hidden border-l border-y border-purple-400/30"
+              >
+                <QuickAccessSidebar
+                  tasks={tasks}
+                  files={files}
+                  onToggleTask={onToggleTask}
+                  onAddTask={onAddTask}
+                  onNavigate={onNavigate}
+                  onQuickPrompt={onQuickPrompt}
+                  onClose={() => setShowQuickAccess(false)}
+                />
+              </div>
+            ) : (
+              <button
+                onClick={() => {
+                  soundFx.playClick();
+                  setShowQuickAccess(true);
+                }}
+                title="Expand Quick Access & Recents"
+                aria-label="Expand Quick Access"
+                style={{ backgroundColor: '#5f0bca' }}
+                className="fixed right-0 top-1/2 -translate-y-1/2 z-[99999] flex h-40 w-10 sm:w-11 rounded-l-2xl border-l border-y border-purple-300/40 text-white shadow-[0_4px_22px_rgba(95,11,202,0.45)] flex-col items-center justify-center gap-2 p-2 hover:brightness-110 active:scale-95 transition-all cursor-pointer group"
+              >
+                <div
+                  style={{ backgroundColor: '#000000' }}
+                  className="w-7 h-7 rounded-lg flex items-center justify-center shadow-md group-hover:scale-110 transition-transform shrink-0 border border-white/10"
+                >
+                  <ChevronLeft size={16} className="text-white group-hover:-translate-x-0.5 transition-transform" />
+                </div>
+                <span className="[writing-mode:vertical-lr] rotate-180 text-[10px] font-black uppercase tracking-widest text-white shrink-0 drop-shadow-xs">
+                  Quick Access
+                </span>
+              </button>
+            )}
+          </>,
+          document.body
         )}
       </div>
     </div>

@@ -290,8 +290,10 @@ export const SmartSuggestCard: React.FC<SmartSuggestCardProps> = ({
       </div>
 
       {/* Quick Secondary Recommendations */}
-      <div className="flex items-center gap-2 pt-0.5 relative z-10 overflow-x-auto no-scrollbar">
-        <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase shrink-0">Alternatives:</span>
+      <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 pt-1 relative z-10">
+        <span className="text-[10px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-wider shrink-0 mr-0.5">
+          Alternatives:
+        </span>
         {secondaries.map((sec) => {
           const SecIcon = sec.icon;
           return (
@@ -304,10 +306,10 @@ export const SmartSuggestCard: React.FC<SmartSuggestCardProps> = ({
                 }
                 onNavigate(sec.screen);
               }}
-              className="px-2.5 py-1 rounded-xl bg-white/50 dark:bg-white/5 hover:bg-purple-500/10 border border-black/5 dark:border-white/10 text-[11px] font-semibold text-slate-700 dark:text-[#9AA8C7] hover:text-purple-700 dark:hover:text-white flex items-center gap-1.5 shrink-0 transition-colors cursor-pointer"
+              className="px-2.5 py-1 rounded-xl bg-white/60 dark:bg-white/8 hover:bg-purple-500/15 border border-black/8 dark:border-white/10 text-[11px] font-semibold text-slate-700 dark:text-[#9AA8C7] hover:text-purple-700 dark:hover:text-white flex items-center gap-1.5 transition-all cursor-pointer max-w-full min-w-0 shadow-xs"
             >
-              <SecIcon size={12} className="text-purple-600 dark:text-[#A978FF]" />
-              <span>{sec.label}</span>
+              <SecIcon size={12} className="text-purple-600 dark:text-[#A978FF] shrink-0" />
+              <span className="truncate">{sec.label}</span>
             </button>
           );
         })}
