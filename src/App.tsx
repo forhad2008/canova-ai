@@ -40,7 +40,7 @@ const DEFAULT_USER: UserProfile = {
   headline: 'Graphics Designer | Web Developer | Student',
   avatar: photoAvatar,
   projectsCount: 28,
-  followersCount: '12k',
+  followersCount: '2.2k',
   followingCount: '3.5k',
   plan: 'Free',
 };
@@ -160,10 +160,14 @@ export default function App() {
       const saved = localStorage.getItem('nova_user');
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (!parsed.avatar || parsed.avatar.includes('images.unsplash.com')) {
-          return { ...parsed, avatar: photoAvatar };
+        let updated = { ...parsed };
+        if (!updated.avatar || updated.avatar.includes('images.unsplash.com')) {
+          updated.avatar = photoAvatar;
         }
-        return parsed;
+        if (updated.followersCount === '12k' || !updated.followersCount) {
+          updated.followersCount = '2.2k';
+        }
+        return updated;
       }
       return DEFAULT_USER;
     } catch {
