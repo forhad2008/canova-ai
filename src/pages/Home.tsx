@@ -13,6 +13,7 @@ import {
   CheckSquare,
 } from 'lucide-react';
 import { ScreenType, UserProfile, Task } from '../types';
+import { LiquidGlass } from '../components/common/LiquidGlass';
 import { SmartSuggestCard } from '../components/common/SmartSuggestCard';
 import { TaskProgressRing } from '../components/common/TaskProgressRing';
 import { WeeklyGoalCard } from '../components/common/WeeklyGoalCard';
@@ -273,7 +274,7 @@ export const Home: React.FC<HomeProps> = ({
 
 
       {/* 3. Hero Card: AI Assistant */}
-      <div className="relative rounded-3xl p-5 overflow-hidden neu-glass-card liquid-shimmer transition-all">
+      <LiquidGlass tint="purple" intensity="high" className="p-5">
         <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-br from-indigo-500/15 via-cyan-400/15 to-transparent rounded-full blur-2xl pointer-events-none" />
 
         <div className="flex items-center justify-between gap-3 relative z-10">
@@ -303,7 +304,7 @@ export const Home: React.FC<HomeProps> = ({
             </div>
           </div>
         </div>
-      </div>
+      </LiquidGlass>
 
       {/* 3.5 Smart Suggest Feature */}
       <SmartSuggestCard

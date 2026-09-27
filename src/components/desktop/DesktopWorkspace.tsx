@@ -44,6 +44,7 @@ import {
 } from 'lucide-react';
 import { ScreenType, Task, FileItem, AITool, UserProfile, ChatMessage, TaskPriority } from '../../types';
 import { SmartSuggestCard } from '../common/SmartSuggestCard';
+import { LiquidGlass } from '../common/LiquidGlass';
 import { NovaStar } from '../common/NovaStar';
 import { sendChatMessage } from '../../services/gemini';
 import { useRecentSearches } from '../../utils/useRecentSearches';
@@ -606,7 +607,7 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
             {/* Top Row: AI Hero Banner (2/3) + Focus Sprint Widget (1/3) */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* AI Hero Banner */}
-              <div className="lg:col-span-2 neu-glass-card rounded-3xl p-7 relative overflow-hidden liquid-shimmer flex flex-col justify-between">
+              <LiquidGlass tint="purple" intensity="high" className="lg:col-span-2 p-7 relative overflow-hidden flex flex-col justify-between">
                 <div className="absolute top-0 right-0 w-72 h-72 bg-gradient-to-br from-purple-500/20 via-cyan-400/15 to-transparent rounded-full blur-3xl pointer-events-none" />
 
                 <div className="flex items-start justify-between gap-6 relative z-10">
@@ -656,7 +657,7 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
                     <ArrowRight size={14} />
                   </button>
                 </div>
-              </div>
+              </LiquidGlass>
 
               {/* Smart Suggest Component */}
               <SmartSuggestCard
@@ -666,7 +667,7 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
               />
 
               {/* Focus Sprint & Next Up Widget */}
-              <div className="neu-card rounded-3xl p-6 flex flex-col justify-between border border-black/8 dark:border-white/8 space-y-4">
+              <LiquidGlass tint="cyan" intensity="medium" className="p-6 flex flex-col justify-between space-y-4">
                 <div className="flex items-center justify-between pb-3 border-b border-black/5 dark:border-white/6">
                   <div className="flex items-center gap-2">
                     <div className="w-8 h-8 rounded-xl bg-cyan-500/20 text-cyan-700 dark:text-[#35C9FF] flex items-center justify-center border border-cyan-500/30">
@@ -730,7 +731,7 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
                 >
                   Manage All Tasks
                 </button>
-              </div>
+              </LiquidGlass>
 
               {/* Weekly Goal Progress Component */}
               <WeeklyGoalCard tasks={tasks} onNavigate={onNavigate} />

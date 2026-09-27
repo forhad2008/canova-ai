@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Sparkles, Clock, CheckCircle2, ArrowRight, RefreshCw, Zap, FolderOpen, Target, Calendar } from 'lucide-react';
 import { Task, ScreenType } from '../../types';
 import { soundFx } from '../../utils/audio';
+import { LiquidGlass } from './LiquidGlass';
 
 interface SmartSuggestCardProps {
   tasks: Task[];
@@ -229,7 +230,7 @@ export const SmartSuggestCard: React.FC<SmartSuggestCardProps> = ({
   if (dismissed) return null;
 
   return (
-    <div className={`relative rounded-3xl p-4.5 frosted-glass-material fluid-refraction-sheen liquid-touch-response adaptive-tint-purple transition-all space-y-3 ${className}`}>
+    <LiquidGlass tint="purple" intensity="medium" className={`p-4.5 space-y-3 ${className}`}>
       {/* Background ambient liquid blur gradient */}
       <div className="absolute top-0 right-0 w-36 h-36 bg-gradient-to-br from-purple-500/10 via-amber-400/10 to-transparent rounded-full blur-2xl pointer-events-none" />
 
@@ -311,6 +312,6 @@ export const SmartSuggestCard: React.FC<SmartSuggestCardProps> = ({
           );
         })}
       </div>
-    </div>
+    </LiquidGlass>
   );
 };
