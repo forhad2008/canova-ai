@@ -103,7 +103,7 @@ export const WorkTools: React.FC<WorkToolsProps> = ({
   return (
     <div className="space-y-6 max-w-5xl mx-auto px-4 sm:px-6 py-6 pb-28 text-left">
       {/* Header Banner */}
-      <div className="neu-glass-card rounded-3xl p-6 border border-white/60 dark:border-white/10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-xl">
+      <div className="neu-glass-card rounded-3xl p-4 sm:p-6 border border-white/60 dark:border-white/10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-xl overflow-hidden">
         <div className="flex items-center gap-3.5">
           <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-cyan-500 to-blue-600 text-white flex items-center justify-center shadow-lg shrink-0">
             <Wrench size={24} />
@@ -119,39 +119,41 @@ export const WorkTools: React.FC<WorkToolsProps> = ({
         </div>
 
         {/* Tab Switcher */}
-        <div className="flex items-center gap-1.5 p-1 rounded-2xl neu-inset bg-black/5 dark:bg-black/20">
-          <button
-            onClick={() => setActiveTab('pomodoro')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-              activeTab === 'pomodoro' ? 'neu-primary-btn text-white' : 'text-slate-600 dark:text-[#9AA8C7]'
-            }`}
-          >
-            Pomodoro
-          </button>
-          <button
-            onClick={() => setActiveTab('summary')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-              activeTab === 'summary' ? 'neu-primary-btn text-white' : 'text-slate-600 dark:text-[#9AA8C7]'
-            }`}
-          >
-            Summarizer
-          </button>
-          <button
-            onClick={() => setActiveTab('code')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-              activeTab === 'code' ? 'neu-primary-btn text-white' : 'text-slate-600 dark:text-[#9AA8C7]'
-            }`}
-          >
-            Code Playground
-          </button>
-          <button
-            onClick={() => setActiveTab('saved')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-              activeTab === 'saved' ? 'neu-primary-btn text-white' : 'text-slate-600 dark:text-[#9AA8C7]'
-            }`}
-          >
-            Saved ({tools.length})
-          </button>
+        <div className="w-full md:w-auto max-w-full overflow-x-auto no-scrollbar p-1.5 rounded-2xl neu-inset bg-black/5 dark:bg-black/20 shrink-0">
+          <div className="flex items-center gap-1.5 min-w-max">
+            <button
+              onClick={() => setActiveTab('pomodoro')}
+              className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
+                activeTab === 'pomodoro' ? 'neu-primary-btn text-white shadow-xs' : 'text-slate-600 dark:text-[#9AA8C7] hover:text-black dark:hover:text-white'
+              }`}
+            >
+              Pomodoro
+            </button>
+            <button
+              onClick={() => setActiveTab('summary')}
+              className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
+                activeTab === 'summary' ? 'neu-primary-btn text-white shadow-xs' : 'text-slate-600 dark:text-[#9AA8C7] hover:text-black dark:hover:text-white'
+              }`}
+            >
+              Summarizer
+            </button>
+            <button
+              onClick={() => setActiveTab('code')}
+              className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
+                activeTab === 'code' ? 'neu-primary-btn text-white shadow-xs' : 'text-slate-600 dark:text-[#9AA8C7] hover:text-black dark:hover:text-white'
+              }`}
+            >
+              Code Playground
+            </button>
+            <button
+              onClick={() => setActiveTab('saved')}
+              className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
+                activeTab === 'saved' ? 'neu-primary-btn text-white shadow-xs' : 'text-slate-600 dark:text-[#9AA8C7] hover:text-black dark:hover:text-white'
+              }`}
+            >
+              Saved ({tools.length})
+            </button>
+          </div>
         </div>
       </div>
 

@@ -23,6 +23,7 @@ import {
 import { Task, TaskPriority } from '../types';
 import { soundFx } from '../utils/audio';
 import { FocusTimerModal } from '../components/focus/FocusTimerModal';
+import { TaskRoutineTimerModal } from '../components/focus/TaskRoutineTimerModal';
 import { generateAITaskBreakdown } from '../services/gemini';
 import { PriorityBadge } from '../components/common/PriorityBadge';
 import { TaskProgressRing } from '../components/common/TaskProgressRing';
@@ -67,6 +68,14 @@ export const Tasks: React.FC<TasksProps> = ({
   );
   const [newAlarmTime, setNewAlarmTime] = useState<string>('09:00');
   const [newAlarmEnabled, setNewAlarmEnabled] = useState(true);
+
+  // Task Routine Timer state
+  const [newRoutineEnabled, setNewRoutineEnabled] = useState(true);
+  const [newRoutineTime, setNewRoutineTime] = useState<string>('14:00');
+  const [newRoutineDurationMins, setNewRoutineDurationMins] = useState<number>(25);
+
+  const [routineModalTask, setRoutineModalTask] = useState<Task | null>(null);
+  const [isRoutineModalOpen, setIsRoutineModalOpen] = useState(false);
 
   const [focusTask, setFocusTask] = useState<Task | null>(null);
   const [notifPermission, setNotifPermission] = useState<NotificationPermission | 'unsupported'>(
@@ -189,7 +198,7 @@ export const Tasks: React.FC<TasksProps> = ({
     onAddTask({
       title: newTitle.trim(),
       category: newCategory,
-      duration: newDuration,
+      duration: `${newRoutineDurationMins} min`,
       completed: false,
       dueDate: activeTab === 'overdue' ? 'today' : activeTab === 'all' ? 'today' : activeTab,
       priority: newPriority,
@@ -198,6 +207,9 @@ export const Tasks: React.FC<TasksProps> = ({
       alarmTime: newAlarmTime,
       alarmEnabled: newAlarmEnabled,
       alarmFired: false,
+      routineTimerEnabled: newRoutineEnabled,
+      routineTime: newRoutineTime,
+      routineDurationMins: newRoutineDurationMins,
     });
 
     if (newAlarmEnabled && notifPermission === 'default') {
@@ -572,6 +584,22 @@ export const Tasks: React.FC<TasksProps> = ({
                         <span>{task.alarmTime || task.scheduledTime}</span>
                       </span>
                     )}
+
+                    {/* Routine Timer Badge & Launch Button */}
+                    {task.routineTimerEnabled && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          soundFx.playClick();
+                          setRoutineModalTask(task);
+                          setIsRoutineModalOpen(true);
+                        }}
+                        className="flex items-center gap-1 font-mono text-[10px] bg-cyan-500/15 hover:bg-cyan-500/25 text-cyan-700 dark:text-cyan-300 px-2 py-0.5 rounded-md border border-cyan-500/30 font-extrabold cursor-pointer transition-all active:scale-95"
+                      >
+                        <Clock size={10} className="text-cyan-500 animate-spin" />
+                        <span>Routine @ {task.routineTime || '14:00'} ({task.routineDurationMins || 25}m)</span>
+                      </button>
+                    )}
                   </div>
                 </div>
 
@@ -764,6 +792,62 @@ export const Tasks: React.FC<TasksProps> = ({
                 </div>
               </div>
 
+              {/* Task Routine Timer Settings */}
+              <div className="p-3 rounded-2xl neu-inset bg-[#F8FAFC] dark:bg-[#050d1e] space-y-2 border border-cyan-500/20">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+                    <Clock size={14} className="text-cyan-500" />
+                    <span>Task Routine Timer</span>
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setNewRoutineEnabled(!newRoutineEnabled)}
+                    className={`w-10 h-5 rounded-full transition-colors relative p-0.5 cursor-pointer ${
+                      newRoutineEnabled ? 'bg-cyan-600' : 'bg-slate-700'
+                    }`}
+                  >
+                    <div
+                      className={`w-4 h-4 rounded-full bg-white transition-transform ${
+                        newRoutineEnabled ? 'translate-x-5' : 'translate-x-0'
+                      }`}
+                    />
+                  </button>
+                </div>
+
+                {newRoutineEnabled && (
+                  <div className="grid grid-cols-2 gap-2 pt-1">
+                    <div>
+                      <label className="text-[10px] font-semibold text-slate-600 dark:text-[#9AA8C7] block mb-1">
+                        Routine Time
+                      </label>
+                      <input
+                        type="time"
+                        value={newRoutineTime}
+                        onChange={(e) => setNewRoutineTime(e.target.value)}
+                        className="w-full neu-inset rounded-lg py-1.5 px-2 text-xs text-slate-900 dark:text-white bg-[#F8FAFC] dark:bg-[#060e20] focus:outline-none font-mono"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="text-[10px] font-semibold text-slate-600 dark:text-[#9AA8C7] block mb-1">
+                        Routine Duration
+                      </label>
+                      <select
+                        value={newRoutineDurationMins}
+                        onChange={(e) => setNewRoutineDurationMins(Number(e.target.value))}
+                        className="w-full neu-inset rounded-lg py-1.5 px-2 text-xs text-slate-900 dark:text-white bg-[#F8FAFC] dark:bg-[#060e20] focus:outline-none font-bold"
+                      >
+                        <option value={15}>15 mins</option>
+                        <option value={25}>25 mins (Pomodoro)</option>
+                        <option value={30}>30 mins</option>
+                        <option value={45}>45 mins</option>
+                        <option value={60}>60 mins (1 hr)</option>
+                      </select>
+                    </div>
+                  </div>
+                )}
+              </div>
+
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="text-xs font-semibold text-slate-700 dark:text-[#9AA8C7] block mb-1">
@@ -817,6 +901,16 @@ export const Tasks: React.FC<TasksProps> = ({
           </div>
         </div>
       )}
+
+      {/* Task Routine Timer Modal */}
+      <TaskRoutineTimerModal
+        isOpen={isRoutineModalOpen}
+        onClose={() => setIsRoutineModalOpen(false)}
+        task={routineModalTask}
+        onCompleteTask={(tId) => {
+          onToggleTask(tId);
+        }}
+      />
 
       {/* Focus Timer Modal */}
       <FocusTimerModal

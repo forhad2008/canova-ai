@@ -29,6 +29,10 @@ export interface Task {
   isOverdue?: boolean;
   reminderTime?: string;
   hasReminder?: boolean;
+  routineTimerEnabled?: boolean;
+  routineTime?: string;         // HH:mm routine reminder time
+  routineDurationMins?: number; // duration in minutes (e.g. 15, 25, 30, 45, 60)
+  routineDays?: string[];       // e.g. ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']
   createdAt?: string;
 }
 

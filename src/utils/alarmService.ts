@@ -121,21 +121,23 @@ let alarmIntervalId: NodeJS.Timeout | null = null;
 
 export function startAlarmService(
   getTasks: () => Task[],
-  onTaskAlarmFired?: (taskId: string) => void
+  onTaskAlarmFired?: (taskId: string) => void,
+  onTaskRoutineFired?: (task: Task) => void
 ) {
   if (alarmIntervalId) clearInterval(alarmIntervalId);
 
   alarmIntervalId = setInterval(() => {
-    checkTaskAlarmsAndCheckins(getTasks(), onTaskAlarmFired);
+    checkTaskAlarmsAndCheckins(getTasks(), onTaskAlarmFired, onTaskRoutineFired);
   }, 10000); // Check every 10 seconds
 
   // Immediate initial check
-  checkTaskAlarmsAndCheckins(getTasks(), onTaskAlarmFired);
+  checkTaskAlarmsAndCheckins(getTasks(), onTaskAlarmFired, onTaskRoutineFired);
 }
 
 function checkTaskAlarmsAndCheckins(
   tasks: Task[],
-  onTaskAlarmFired?: (taskId: string) => void
+  onTaskAlarmFired?: (taskId: string) => void,
+  onTaskRoutineFired?: (task: Task) => void
 ) {
   const now = new Date();
   const currentDateStr = now.toISOString().split('T')[0];
@@ -143,14 +145,37 @@ function checkTaskAlarmsAndCheckins(
   const currentMinutes = String(now.getMinutes()).padStart(2, '0');
   const currentTimeStr = `${currentHours}:${currentMinutes}`;
 
-  // 1. Check Task Alarms
+  // 1. Check Task Alarms & Routine Timers
   let firedAlarms: Record<string, boolean> = {};
   try {
     firedAlarms = JSON.parse(localStorage.getItem(FIRED_ALARMS_KEY) || '{}');
   } catch {}
 
   tasks.forEach((task) => {
-    if (task.completed || !task.alarmEnabled) return;
+    if (task.completed) return;
+
+    // Routine timer check
+    if (task.routineTimerEnabled && task.routineTime === currentTimeStr) {
+      const routineKey = `routine_${task.id}_${currentDateStr}_${currentTimeStr}`;
+      if (!firedAlarms[routineKey]) {
+        firedAlarms[routineKey] = true;
+        try {
+          localStorage.setItem(FIRED_ALARMS_KEY, JSON.stringify(firedAlarms));
+        } catch {}
+
+        soundFx.playPiratesTheme();
+        sendBrowserNotification(`⏳ Routine Time: ${task.title}`, {
+          body: `It's time for your ${task.routineDurationMins || 25}-minute routine task! Tap to start your focus timer.`,
+          tag: `routine_${task.id}`,
+        });
+
+        if (onTaskRoutineFired) {
+          onTaskRoutineFired(task);
+        }
+      }
+    }
+
+    if (!task.alarmEnabled) return;
 
     const taskDateStr = task.scheduledDate || currentDateStr;
     const taskTimeStr = task.alarmTime || task.scheduledTime;

@@ -31,6 +31,7 @@ import { ProModal } from './components/modals/ProModal';
 import { InstallAppModal } from './components/modals/InstallAppModal';
 import { OfflineIndicator } from './components/common/OfflineIndicator';
 import { GlowUpConfettiCelebration } from './components/common/GlowUpConfettiCelebration';
+import { TaskRoutineTimerModal } from './components/focus/TaskRoutineTimerModal';
 
 import { startAlarmService } from './utils/alarmService';
 import { checkAndExecute24hReset } from './utils/autoResetService';
@@ -232,6 +233,10 @@ export default function App() {
     type: 'all_tasks',
   });
 
+  // Task Routine Fired Modal State
+  const [routineFiredTask, setRoutineFiredTask] = useState<Task | null>(null);
+  const [isRoutineFiredModalOpen, setIsRoutineFiredModalOpen] = useState<boolean>(false);
+
   // 1. Request notification permissions & subscribe to Firestore real-time collections
   useEffect(() => {
     requestNotificationPermission();
@@ -299,6 +304,10 @@ export default function App() {
         setTasks((prev) =>
           prev.map((t) => (t.id === taskId ? { ...t, alarmFired: true } : t))
         );
+      },
+      (routineTask) => {
+        setRoutineFiredTask(routineTask);
+        setIsRoutineFiredModalOpen(true);
       }
     );
   }, [tasks]);
@@ -733,6 +742,13 @@ export default function App() {
         title={celebrationState.title}
         message={celebrationState.message}
         type={celebrationState.type}
+      />
+
+      <TaskRoutineTimerModal
+        isOpen={isRoutineFiredModalOpen}
+        onClose={() => setIsRoutineFiredModalOpen(false)}
+        task={routineFiredTask}
+        onCompleteTask={(tId) => handleToggleTask(tId)}
       />
     </div>
   );
