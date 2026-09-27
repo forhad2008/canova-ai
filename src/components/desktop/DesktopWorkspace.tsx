@@ -58,6 +58,7 @@ import { TaskCalendarView } from '../common/TaskCalendarView';
 import { isTaskOverdue } from '../../utils/alarmService';
 import { TaskProgressRing } from '../common/TaskProgressRing';
 import { WeeklyGoalCard } from '../common/WeeklyGoalCard';
+import { Files } from '../../pages/Files';
 import { useTheme } from '../../utils/ThemeContext';
 import { soundFx } from '../../utils/audio';
 import { getTimeBasedGreeting } from '../../utils/greeting';
@@ -1574,74 +1575,8 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
 
         {/* ================= FILES VAULT (DESKTOP) ================= */}
         {currentScreen === 'files' && (
-          <div className="max-w-7xl mx-auto space-y-6">
-            <div className="neu-card rounded-3xl p-6 flex flex-col md:flex-row items-center justify-between gap-6 border border-black/8 dark:border-white/8">
-              <div className="space-y-1 max-w-sm">
-                <div className="flex items-center gap-2">
-                  <FolderOpen size={18} className="text-purple-600 dark:text-[#8B5CFF]" />
-                  <h4 className="text-base font-bold text-slate-900 dark:text-white">Cloud Workspace Storage</h4>
-                </div>
-                <p className="text-xs font-medium text-slate-600 dark:text-[#9AA8C7]">
-                  18.4 GB used of 50 GB encrypted cloud storage.
-                </p>
-              </div>
-
-              <div className="flex-1 w-full max-w-md space-y-1">
-                <div className="w-full h-3 rounded-full neu-inset bg-[#F8FAFC] dark:bg-[#060e20] overflow-hidden p-0.5">
-                  <div
-                    className="h-full rounded-full bg-gradient-to-r from-[#7C4DFF] via-[#3B72FF] to-[#0284C7] dark:from-[#8B5CFF] dark:via-[#4C7DFF] dark:to-[#35C9FF]"
-                    style={{ width: '36.8%' }}
-                  />
-                </div>
-                <div className="flex justify-between text-[11px] font-semibold text-slate-600 dark:text-[#657394]">
-                  <span>36.8% Used</span>
-                  <span>31.6 GB Remaining</span>
-                </div>
-              </div>
-
-              <button
-                onClick={() => {
-                  onAddFile({
-                    name: `Asset_${Date.now().toString().slice(-4)}.zip`,
-                    size: '14.2 MB',
-                    date: 'Just now',
-                    category: 'others',
-                    extension: 'zip',
-                    color: '#f59e0b',
-                  });
-                }}
-                className="neu-primary-btn px-4 py-2 rounded-xl text-xs font-bold text-white flex items-center gap-1.5 cursor-pointer shrink-0 shadow-md"
-              >
-                <Plus size={14} />
-                <span>Upload File</span>
-              </button>
-            </div>
-
-            {/* Files Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {files.map((file) => (
-                <div
-                  key={file.id}
-                  className="neu-card rounded-2xl p-4 flex items-center justify-between gap-3 group border border-black/8 dark:border-white/8"
-                >
-                  <div className="w-10 h-10 rounded-xl bg-purple-500/15 border border-purple-500/30 text-purple-700 dark:text-[#A978FF] flex items-center justify-center shrink-0">
-                    <FileCode size={18} />
-                  </div>
-                  <div className="flex-1 overflow-hidden">
-                    <h5 className="text-xs font-bold text-slate-900 dark:text-white truncate">{file.name}</h5>
-                    <p className="text-[11px] font-medium text-slate-600 dark:text-[#657394]">
-                      {file.size} • {file.date}
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => onDeleteFile(file.id)}
-                    className="opacity-0 group-hover:opacity-100 text-xs font-semibold text-red-500 hover:text-red-700 px-2 py-1 cursor-pointer transition-opacity"
-                  >
-                    Delete
-                  </button>
-                </div>
-              ))}
-            </div>
+          <div className="max-w-7xl mx-auto">
+            <Files files={files} onAddFile={onAddFile} onDeleteFile={onDeleteFile} />
           </div>
         )}
 

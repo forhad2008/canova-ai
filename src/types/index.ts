@@ -27,14 +27,27 @@ export interface Task {
   isOverdue?: boolean;
 }
 
+export interface ExtractedZipEntry {
+  name: string;
+  size: number;
+  sizeFormatted: string;
+  isFolder: boolean;
+  date?: string;
+}
+
 export interface FileItem {
   id: string;
   name: string;
   size: string;
+  bytes?: number;
   date: string;
   category: 'documents' | 'images' | 'others';
   extension: string;
   color: string;
+  dataUrl?: string;
+  fileBlob?: Blob;
+  isZip?: boolean;
+  zipContents?: ExtractedZipEntry[];
 }
 
 export interface AITool {
