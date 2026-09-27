@@ -1,3 +1,5 @@
+import { triggerHaptic } from './useHaptics';
+
 /**
  * Pure Web Audio API Synthesizer for tactile UI clicks and rewards.
  * Zero external audio files required.
@@ -21,6 +23,7 @@ class SoundEffectsManager {
 
   // Soft tactile click for neumorphic buttons
   public playClick() {
+    triggerHaptic('light');
     if (!this.enabled) return;
     try {
       this.initCtx();
@@ -46,6 +49,7 @@ class SoundEffectsManager {
 
   // Rewarding harmonic chime for task completions & success
   public playSuccess() {
+    triggerHaptic('success');
     if (!this.enabled) return;
     try {
       this.initCtx();
@@ -70,6 +74,36 @@ class SoundEffectsManager {
 
         osc.start(now + i * 0.05);
         osc.stop(now + i * 0.05 + 0.3);
+      });
+    } catch {}
+  }
+
+  // Task reminder alarm chime
+  public playAlarm() {
+    if (!this.enabled) return;
+    try {
+      this.initCtx();
+      if (!this.ctx) return;
+
+      const now = this.ctx.currentTime;
+      const notes = [880, 1174.66, 880, 1174.66]; // A5, D6 pulse
+
+      notes.forEach((freq, i) => {
+        if (!this.ctx) return;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now + i * 0.12);
+
+        gain.gain.setValueAtTime(0.12, now + i * 0.12);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.12 + 0.1);
+
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+
+        osc.start(now + i * 0.12);
+        osc.stop(now + i * 0.12 + 0.12);
       });
     } catch {}
   }

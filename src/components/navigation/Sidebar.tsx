@@ -60,6 +60,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
       badge: pendingTasksCount,
       badgeColor: 'bg-cyan-500/20 text-[#35C9FF] border-cyan-500/30',
     },
+    { id: 'study', label: 'Study Hub', icon: Sparkles },
+    { id: 'worktools', label: 'Work Tools', icon: Compass },
     { id: 'analytics', label: 'Overview', icon: BarChart3 },
     { id: 'explore', label: 'Explore Tools', icon: Compass },
     { id: 'files', label: 'Files Library', icon: FolderClosed },
@@ -78,11 +80,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
           aria-label="Return to Home Dashboard"
           className="w-full flex items-center justify-center lg:justify-start gap-3 px-1 lg:px-2 py-2 mb-4 lg:mb-5 border-b border-black/5 dark:border-white/6 pb-3 lg:pb-4 rounded-2xl hover:bg-black/5 dark:hover:bg-white/5 active:scale-[0.98] transition-all duration-200 cursor-pointer text-left group"
         >
-          <div className="w-10 h-10 lg:w-11 lg:h-11 rounded-2xl overflow-hidden shadow-[0_4px_16px_rgba(139,92,255,0.35)] shrink-0 flex items-center justify-center bg-white/5 dark:bg-black/20 border border-purple-500/20 group-hover:border-purple-500/50 group-hover:shadow-[0_4px_20px_rgba(139,92,255,0.5)] transition-all duration-200">
+          <div className="w-10 h-10 lg:w-11 lg:h-11 rounded-2xl overflow-hidden shrink-0 flex items-center justify-center bg-transparent border-0 transition-all duration-200">
             <img
               src={logo7Img}
               alt="Canova AI Logo"
-              className="w-full h-full object-contain p-0.5 rounded-2xl transition-transform group-hover:scale-105 duration-200"
+              className="w-full h-full object-contain p-0.5 rounded-2xl transition-transform group-hover:scale-105 duration-200 bg-transparent"
             />
           </div>
           <div className="hidden lg:block overflow-hidden">

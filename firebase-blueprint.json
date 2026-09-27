@@ -1,51 +1,86 @@
 {
   "entities": {
-    "UserProfile": {
-      "collection": "users",
-      "fields": {
-        "email": { "type": "string" },
-        "name": { "type": "string" },
-        "avatar": { "type": "string" },
-        "plan": { "type": "string" },
-        "role": { "type": "string" },
-        "updatedAt": { "type": "string" }
-      }
-    },
-    "Task": {
-      "collection": "tasks",
-      "fields": {
-        "userId": { "type": "string" },
-        "title": { "type": "string" },
-        "category": { "type": "string" },
-        "duration": { "type": "string" },
+    "TaskItem": {
+      "title": "Task Item",
+      "description": "User productivity tasks and reminders",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 300 },
+        "category": { "type": "string", "maxLength": 50 },
+        "priority": { "type": "string", "maxLength": 20 },
         "completed": { "type": "boolean" },
-        "dueDate": { "type": "string" },
-        "createdAt": { "type": "string" }
-      }
+        "time": { "type": "string", "maxLength": 50 },
+        "dueDate": { "type": "string", "maxLength": 50 },
+        "reminderTime": { "type": "string", "maxLength": 50 },
+        "hasReminder": { "type": "boolean" },
+        "createdAt": { "type": "string", "maxLength": 50 },
+        "userId": { "type": "string", "maxLength": 128 }
+      },
+      "required": ["title", "category", "completed"]
     },
-    "FileItem": {
-      "collection": "files",
-      "fields": {
-        "userId": { "type": "string" },
-        "name": { "type": "string" },
-        "size": { "type": "string" },
-        "date": { "type": "string" },
-        "category": { "type": "string" },
-        "extension": { "type": "string" },
-        "color": { "type": "string" },
-        "createdAt": { "type": "string" }
-      }
+    "StudyMaterial": {
+      "title": "Study Material",
+      "description": "Flashcards, notes, summaries and quiz questions",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 200 },
+        "type": { "type": "string", "enum": ["note", "flashcard", "quiz", "summary"], "maxLength": 30 },
+        "content": { "type": "string", "maxLength": 10000 },
+        "subject": { "type": "string", "maxLength": 100 },
+        "tags": { "type": "string", "maxLength": 300 },
+        "createdAt": { "type": "string", "maxLength": 50 },
+        "userId": { "type": "string", "maxLength": 128 }
+      },
+      "required": ["title", "type", "content"]
     },
-    "ChatMessage": {
-      "collection": "chat_messages",
-      "fields": {
-        "userId": { "type": "string" },
-        "text": { "type": "string" },
-        "sender": { "type": "string" },
-        "timestamp": { "type": "string" },
-        "model": { "type": "string" },
-        "groundingSources": { "type": "array" }
-      }
+    "WorkTool": {
+      "title": "Work Tool Document",
+      "description": "Saved work tool outputs like summaries, code notes, pomodoro logs",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "toolType": { "type": "string", "maxLength": 50 },
+        "title": { "type": "string", "maxLength": 200 },
+        "content": { "type": "string", "maxLength": 10000 },
+        "updatedAt": { "type": "string", "maxLength": 50 },
+        "userId": { "type": "string", "maxLength": 128 }
+      },
+      "required": ["toolType", "title", "content"]
+    },
+    "Reminder": {
+      "title": "Task Reminder",
+      "description": "Scheduled notifications for task reminders and study alerts",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 300 },
+        "targetId": { "type": "string", "maxLength": 128 },
+        "reminderTime": { "type": "string", "maxLength": 50 },
+        "status": { "type": "string", "enum": ["pending", "triggered", "dismissed"], "maxLength": 30 },
+        "createdAt": { "type": "string", "maxLength": 50 },
+        "userId": { "type": "string", "maxLength": 128 }
+      },
+      "required": ["title", "reminderTime", "status"]
+    }
+  },
+  "firestore": {
+    "/tasks/{taskId}": {
+      "schema": { "$ref": "#/entities/TaskItem" },
+      "description": "User productivity task items"
+    },
+    "/study_materials/{materialId}": {
+      "schema": { "$ref": "#/entities/StudyMaterial" },
+      "description": "User study materials, flashcards, notes, and quizzes"
+    },
+    "/work_tools/{toolId}": {
+      "schema": { "$ref": "#/entities/WorkTool" },
+      "description": "User work tool documents and notes"
+    },
+    "/reminders/{reminderId}": {
+      "schema": { "$ref": "#/entities/Reminder" },
+      "description": "Active task reminders"
     }
   }
 }

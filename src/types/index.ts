@@ -3,6 +3,8 @@ export type ScreenType =
   | 'home'
   | 'assistant'
   | 'tasks'
+  | 'study'
+  | 'worktools'
   | 'analytics'
   | 'explore'
   | 'files'
@@ -25,6 +27,38 @@ export interface Task {
   alarmEnabled?: boolean;
   alarmFired?: boolean;
   isOverdue?: boolean;
+  reminderTime?: string;
+  hasReminder?: boolean;
+  createdAt?: string;
+}
+
+export interface StudyMaterial {
+  id: string;
+  title: string;
+  type: 'note' | 'flashcard' | 'quiz' | 'summary';
+  content: string;
+  subject?: string;
+  tags?: string[];
+  createdAt: string;
+  flashcards?: { question: string; answer: string }[];
+  quizQuestions?: { question: string; options: string[]; answerIndex: number }[];
+}
+
+export interface WorkToolItem {
+  id: string;
+  toolType: 'summary' | 'notes' | 'pomodoro' | 'code' | 'spreadsheet';
+  title: string;
+  content: string;
+  updatedAt: string;
+}
+
+export interface TaskReminder {
+  id: string;
+  title: string;
+  targetId: string;
+  reminderTime: string;
+  status: 'pending' | 'triggered' | 'dismissed';
+  createdAt: string;
 }
 
 export interface ExtractedZipEntry {

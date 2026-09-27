@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { ScreenType, Task, FileItem, AITool, UserProfile } from './types';
+import { ScreenType, Task, FileItem, AITool, UserProfile, StudyMaterial, WorkToolItem, TaskReminder } from './types';
 
 // Components
 import { BottomNav } from './components/navigation/BottomNav';
@@ -22,15 +22,37 @@ import { Explore } from './pages/Explore';
 import { Files } from './pages/Files';
 import { Profile } from './pages/Profile';
 import { Settings } from './pages/Settings';
+import { StudyMaterials } from './pages/StudyMaterials';
+import { WorkTools } from './pages/WorkTools';
 
 // Modals
 import { ToolModal } from './components/modals/ToolModal';
 import { ProModal } from './components/modals/ProModal';
 import { InstallAppModal } from './components/modals/InstallAppModal';
 import { OfflineIndicator } from './components/common/OfflineIndicator';
+import { GlowUpConfettiCelebration } from './components/common/GlowUpConfettiCelebration';
 
 import { startAlarmService } from './utils/alarmService';
 import { checkAndExecute24hReset } from './utils/autoResetService';
+import {
+  subscribeToTasks,
+  saveTaskToFirestore,
+  deleteTaskFromFirestore,
+  subscribeToStudyMaterials,
+  saveStudyMaterialToFirestore,
+  deleteStudyMaterialFromFirestore,
+  subscribeToWorkTools,
+  saveWorkToolToFirestore,
+  deleteWorkToolFromFirestore,
+  subscribeToReminders,
+  saveReminderToFirestore,
+  deleteReminderFromFirestore,
+} from './services/firestoreSync';
+import {
+  checkScheduledReminders,
+  triggerTaskReminderAlert,
+  requestNotificationPermission,
+} from './utils/reminderService';
 
 import photoAvatar from './assets/photo.png';
 
@@ -193,6 +215,63 @@ export default function App() {
     }
   });
 
+  const [studyMaterials, setStudyMaterials] = useState<StudyMaterial[]>([]);
+  const [workTools, setWorkTools] = useState<WorkToolItem[]>([]);
+  const [reminders, setReminders] = useState<TaskReminder[]>([]);
+
+  // Celebration Modal State (Framer Motion & Confetti)
+  const [celebrationState, setCelebrationState] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    type: 'all_tasks' | 'daily_goal';
+  }>({
+    isOpen: false,
+    title: 'Daily Goal Cleared!',
+    message: 'Outstanding momentum! You have completed all your daily tasks.',
+    type: 'all_tasks',
+  });
+
+  // 1. Request notification permissions & subscribe to Firestore real-time collections
+  useEffect(() => {
+    requestNotificationPermission();
+
+    const unsubTasks = subscribeToTasks((items) => {
+      if (items && items.length > 0) setTasks(items);
+    });
+
+    const unsubStudy = subscribeToStudyMaterials((items) => {
+      setStudyMaterials(items);
+    });
+
+    const unsubTools = subscribeToWorkTools((items) => {
+      setWorkTools(items);
+    });
+
+    const unsubReminders = subscribeToReminders((items) => {
+      setReminders(items);
+    });
+
+    return () => {
+      unsubTasks();
+      unsubStudy();
+      unsubTools();
+      unsubReminders();
+    };
+  }, []);
+
+  // 2. Scheduled Reminders Runner
+  useEffect(() => {
+    const reminderInterval = setInterval(() => {
+      checkScheduledReminders(reminders, (triggeredReminder) => {
+        triggerTaskReminderAlert(triggeredReminder.title);
+        saveReminderToFirestore({ ...triggeredReminder, status: 'triggered' });
+      });
+    }, 15000);
+
+    return () => clearInterval(reminderInterval);
+  }, [reminders]);
+
   // Sync to local storage
   useEffect(() => {
     try {
@@ -241,19 +320,136 @@ export default function App() {
     return () => clearInterval(intervalId);
   }, [tasks]);
 
-  // Task actions
+  // Task actions with Firestore sync
   const handleToggleTask = (id: string) => {
-    setTasks((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t))
-    );
+    setTasks((prev) => {
+      const updatedList = prev.map((t) => {
+        if (t.id === id) {
+          const updated = { ...t, completed: !t.completed };
+          saveTaskToFirestore(updated);
+          return updated;
+        }
+        return t;
+      });
+
+      const toggledTask = updatedList.find((t) => t.id === id);
+      const totalTasks = updatedList.length;
+      const completedTasks = updatedList.filter((t) => t.completed).length;
+
+      if (toggledTask && toggledTask.completed && totalTasks > 0 && completedTasks === totalTasks) {
+        setTimeout(() => {
+          setCelebrationState({
+            isOpen: true,
+            title: '100% Tasks Cleared!',
+            message: 'Incredible momentum! You have completed all scheduled tasks for today.',
+            type: 'all_tasks',
+          });
+        }, 200);
+      }
+
+      return updatedList;
+    });
   };
 
   const handleAddTask = (newTask: Omit<Task, 'id'>) => {
-    setTasks((prev) => [{ ...newTask, id: `t-${Date.now()}` }, ...prev]);
+    const createdTask: Task = { ...newTask, id: `t-${Date.now()}` };
+    setTasks((prev) => [createdTask, ...prev]);
+    saveTaskToFirestore(createdTask);
+
+    if (createdTask.hasReminder && createdTask.reminderTime) {
+      const reminder: TaskReminder = {
+        id: `r-${Date.now()}`,
+        title: createdTask.title,
+        targetId: createdTask.id,
+        reminderTime: createdTask.reminderTime,
+        status: 'pending',
+        createdAt: new Date().toISOString(),
+      };
+      saveReminderToFirestore(reminder);
+    }
   };
 
   const handleDeleteTask = (id: string) => {
     setTasks((prev) => prev.filter((t) => t.id !== id));
+    deleteTaskFromFirestore(id);
+  };
+
+  const handleAddStudyMaterial = (material: Omit<StudyMaterial, 'id'>) => {
+    const item: StudyMaterial = { ...material, id: `sm-${Date.now()}` };
+    setStudyMaterials((prev) => [item, ...prev]);
+    saveStudyMaterialToFirestore(item);
+  };
+
+  const handleDeleteStudyMaterial = (id: string) => {
+    setStudyMaterials((prev) => prev.filter((s) => s.id !== id));
+    deleteStudyMaterialFromFirestore(id);
+  };
+
+  const handleAddWorkTool = (tool: Omit<WorkToolItem, 'id'>) => {
+    const item: WorkToolItem = { ...tool, id: `wt-${Date.now()}` };
+    setWorkTools((prev) => [item, ...prev]);
+    saveWorkToolToFirestore(item);
+  };
+
+  const handleDeleteWorkTool = (id: string) => {
+    setWorkTools((prev) => prev.filter((w) => w.id !== id));
+    deleteWorkToolFromFirestore(id);
+  };
+
+  const handleAgentAction = (data: any) => {
+    if (Array.isArray(data.tasks)) {
+      data.tasks.forEach((t: any) => {
+        handleAddTask({
+          title: t.title || 'Agent Task',
+          category: t.category || 'Productivity',
+          duration: t.duration || '30 min',
+          completed: false,
+          dueDate: 'today',
+          priority: t.priority || 'medium',
+          hasReminder: t.hasReminder,
+          reminderTime: t.reminderTime,
+        });
+      });
+    }
+
+    if (Array.isArray(data.studyMaterials)) {
+      data.studyMaterials.forEach((sm: any) => {
+        handleAddStudyMaterial({
+          title: sm.title || 'Study Note',
+          type: sm.type || 'note',
+          content: sm.content || '',
+          subject: sm.subject,
+          createdAt: new Date().toLocaleDateString(),
+          flashcards: sm.flashcards || [],
+          quizQuestions: sm.quizQuestions || [],
+        });
+      });
+    }
+
+    if (Array.isArray(data.workTools)) {
+      data.workTools.forEach((wt: any) => {
+        handleAddWorkTool({
+          toolType: wt.toolType || 'summary',
+          title: wt.title || 'Generated Output',
+          content: wt.content || '',
+          updatedAt: new Date().toLocaleDateString(),
+        });
+      });
+    }
+
+    if (Array.isArray(data.reminders)) {
+      data.reminders.forEach((r: any) => {
+        const reminder: TaskReminder = {
+          id: `r-${Date.now()}`,
+          title: r.title || 'Scheduled Reminder',
+          targetId: 'agent',
+          reminderTime: r.reminderTime || '12:00',
+          status: 'pending',
+          createdAt: new Date().toISOString(),
+        };
+        saveReminderToFirestore(reminder);
+      });
+    }
   };
 
   const handleUpdateTaskPriority = (id: string, priority: 'low' | 'medium' | 'high') => {
@@ -352,6 +548,22 @@ export default function App() {
             onUpdateTaskDate={handleUpdateTaskDate}
           />
         );
+      case 'study':
+        return (
+          <StudyMaterials
+            materials={studyMaterials}
+            onAddMaterial={handleAddStudyMaterial}
+            onDeleteMaterial={handleDeleteStudyMaterial}
+          />
+        );
+      case 'worktools':
+        return (
+          <WorkTools
+            tools={workTools}
+            onAddTool={handleAddWorkTool}
+            onDeleteTool={handleDeleteWorkTool}
+          />
+        );
       case 'analytics':
         return <Analytics onNavigate={(screen) => setCurrentScreen(screen)} />;
       case 'explore':
@@ -444,6 +656,8 @@ export default function App() {
             user={user}
             tasks={tasks}
             files={files}
+            studyMaterials={studyMaterials}
+            workTools={workTools}
             onToggleTask={handleToggleTask}
             onAddTask={handleAddTask}
             onDeleteTask={handleDeleteTask}
@@ -451,6 +665,11 @@ export default function App() {
             onUpdateTaskDate={handleUpdateTaskDate}
             onAddFile={handleAddFile}
             onDeleteFile={handleDeleteFile}
+            onAddStudyMaterial={handleAddStudyMaterial}
+            onDeleteStudyMaterial={handleDeleteStudyMaterial}
+            onAddWorkTool={handleAddWorkTool}
+            onDeleteWorkTool={handleDeleteWorkTool}
+            onAgentAction={handleAgentAction}
             onSelectTool={(tool) => setActiveTool(tool)}
             onOpenProModal={() => setIsProModalOpen(true)}
             onOpenInstallModal={handleOpenInstallModal}
@@ -506,6 +725,14 @@ export default function App() {
       />
 
       <OfflineIndicator />
+
+      <GlowUpConfettiCelebration
+        isOpen={celebrationState.isOpen}
+        onClose={() => setCelebrationState((prev) => ({ ...prev, isOpen: false }))}
+        title={celebrationState.title}
+        message={celebrationState.message}
+        type={celebrationState.type}
+      />
     </div>
   );
 }

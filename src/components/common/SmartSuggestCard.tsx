@@ -260,7 +260,7 @@ export const SmartSuggestCard: React.FC<SmartSuggestCardProps> = ({
       </div>
 
       {/* Recommended Action Box */}
-      <div className="relative z-10 p-3.5 rounded-2xl bg-white/40 dark:bg-black/25 backdrop-blur-md border border-white/60 dark:border-white/10 shadow-inner space-y-2.5">
+      <div className="relative z-10 p-3.5 rounded-2xl bg-white/40 dark:bg-zinc-900/90 backdrop-blur-md border border-white/60 dark:border-zinc-800 shadow-inner space-y-2.5">
         <div className="flex items-start gap-3">
           <div className="w-9 h-9 rounded-2xl bg-gradient-to-br from-purple-500/20 to-indigo-500/20 text-purple-700 dark:text-[#A978FF] flex items-center justify-center shrink-0 border border-purple-500/30">
             <IconComponent size={18} />

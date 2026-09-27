@@ -230,7 +230,111 @@ Do not enclose in markdown code fences if possible, or return parseable JSON.`;
   }
 });
 
-// 4. API Key Verification test endpoint
+// 4. Autonomous Workspace Agent Endpoint (Processes tasks, study materials, work tools & reminders)
+app.post('/api/agent/autonomous', async (req, res) => {
+  try {
+    const { prompt, currentContext, customApiKey } = req.body;
+    const ai = getGeminiClient(customApiKey);
+
+    if (!ai) {
+      return res.status(200).json({
+        fallback: true,
+        reply: `I processed your request: "${prompt}". (Offline mode active)`,
+        actions: [],
+      });
+    }
+
+    const systemInstruction = `You are Canova Autonomous Workspace Agent. You can directly manage work tools, create tasks, build study materials (flashcards/notes/quizzes), and schedule task reminders.
+Analyze the user request and return a JSON object with:
+1. "reply": A helpful conversational summary message.
+2. "tasks": Array of task objects to create, each with { "title": string, "category": "Productivity"|"Development"|"Design"|"Study", "priority": "high"|"medium"|"low", "duration": string, "scheduledTime"?: string, "hasReminder"?: boolean, "reminderTime"?: string }
+3. "studyMaterials": Array of study material objects to create, each with { "title": string, "type": "note"|"flashcard"|"quiz"|"summary", "content": string, "subject": string, "flashcards"?: [{ "question": string, "answer": string }], "quizQuestions"?: [{ "question": string, "options": string[], "answerIndex": number }] }
+4. "reminders": Array of reminder objects to set, each with { "title": string, "reminderTime": string }
+5. "workTools": Array of work tool output objects, each with { "toolType": "summary"|"notes"|"pomodoro"|"code"|"spreadsheet", "title": string, "content": string }`;
+
+    const response = await ai.models.generateContent({
+      model: 'gemini-3.8-flash',
+      contents: prompt,
+      config: {
+        systemInstruction,
+        responseMimeType: 'application/json',
+      },
+    });
+
+    let result = { reply: 'Processed successfully.', tasks: [], studyMaterials: [], reminders: [], workTools: [] };
+    try {
+      result = JSON.parse(response.text || '{}');
+    } catch {
+      result.reply = response.text || 'Action acknowledged.';
+    }
+
+    return res.json({ ...result, fallback: false });
+  } catch (error: any) {
+    console.error('Autonomous Agent Error:', error);
+    return res.status(200).json({
+      fallback: true,
+      reply: 'Executed command in offline mode.',
+      error: error.message,
+    });
+  }
+});
+
+// 5. Study Material Generator endpoint
+app.post('/api/agent/generate-study', async (req, res) => {
+  try {
+    const { topic, materialType, customApiKey } = req.body;
+    const ai = getGeminiClient(customApiKey);
+
+    if (!ai) {
+      return res.status(200).json({
+        fallback: true,
+        title: `${topic} ${materialType}`,
+        type: materialType || 'flashcard',
+        content: `Study guide for ${topic}.`,
+        flashcards: [
+          { question: `What is the core definition of ${topic}?`, answer: `Key principles of ${topic}.` },
+          { question: `Why is ${topic} important?`, answer: `Core applications and significance.` }
+        ]
+      });
+    }
+
+    const systemInstruction = `You are a world-class academic study assistant. Generate comprehensive study materials for topic "${topic}" of type "${materialType}".
+Return ONLY a valid JSON object matching:
+{
+  "title": string,
+  "subject": string,
+  "type": "flashcard" | "note" | "quiz" | "summary",
+  "content": string (detailed overview/markdown notes),
+  "flashcards": [{ "question": string, "answer": string }],
+  "quizQuestions": [{ "question": string, "options": string[], "answerIndex": number }]
+}`;
+
+    const response = await ai.models.generateContent({
+      model: 'gemini-3.8-flash',
+      contents: `Generate study material for topic: ${topic}`,
+      config: {
+        systemInstruction,
+        responseMimeType: 'application/json',
+      },
+    });
+
+    const material = JSON.parse(response.text || '{}');
+    return res.json({ material, fallback: false });
+  } catch (error: any) {
+    console.error('Study Material Gen Error:', error);
+    return res.status(200).json({
+      fallback: true,
+      material: {
+        title: `${req.body.topic} Study Material`,
+        type: req.body.materialType || 'flashcard',
+        content: `Comprehensive overview of ${req.body.topic}.`,
+        flashcards: [{ question: `What is ${req.body.topic}?`, answer: 'Fundamental concept.' }]
+      }
+    });
+  }
+});
+
+// 6. API Key Verification test endpoint
 app.post('/api/ai/verify-key', async (req, res) => {
   try {
     const { apiKey } = req.body;

@@ -72,11 +72,11 @@ export const LiquidGlass: React.FC<LiquidGlassProps> = ({
 
   // Tint mapping
   const tintClasses = {
-    purple: 'bg-gradient-to-br from-purple-500/12 via-indigo-500/5 to-white/70 dark:from-purple-900/25 dark:via-indigo-950/15 dark:to-[#081226]/85 border-purple-500/25 dark:border-purple-500/30',
-    cyan: 'bg-gradient-to-br from-cyan-500/12 via-blue-500/5 to-white/70 dark:from-cyan-900/25 dark:via-blue-950/15 dark:to-[#081226]/85 border-cyan-500/25 dark:border-cyan-500/30',
-    amber: 'bg-gradient-to-br from-amber-500/12 via-orange-500/5 to-white/70 dark:from-amber-900/25 dark:via-orange-950/15 dark:to-[#081226]/85 border-amber-500/25 dark:border-amber-500/30',
-    emerald: 'bg-gradient-to-br from-emerald-500/12 via-teal-500/5 to-white/70 dark:from-emerald-900/25 dark:via-teal-950/15 dark:to-[#081226]/85 border-emerald-500/25 dark:border-emerald-500/30',
-    none: 'bg-white/65 dark:bg-[#081226]/80 border-white/60 dark:border-white/12',
+    purple: 'bg-gradient-to-br from-purple-500/12 via-indigo-500/5 to-white/70 dark:from-black dark:via-zinc-950 dark:to-black border-purple-500/25 dark:border-zinc-800',
+    cyan: 'bg-gradient-to-br from-cyan-500/12 via-blue-500/5 to-white/70 dark:from-black dark:via-zinc-950 dark:to-black border-cyan-500/25 dark:border-zinc-800',
+    amber: 'bg-gradient-to-br from-amber-500/12 via-orange-500/5 to-white/70 dark:from-black dark:via-zinc-950 dark:to-black border-amber-500/25 dark:border-zinc-800',
+    emerald: 'bg-gradient-to-br from-emerald-500/12 via-teal-500/5 to-white/70 dark:from-black dark:via-zinc-950 dark:to-black border-emerald-500/25 dark:border-zinc-800',
+    none: 'bg-white/65 dark:bg-black border-white/60 dark:border-zinc-800',
   }[tint];
 
   return (

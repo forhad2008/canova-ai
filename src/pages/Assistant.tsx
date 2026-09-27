@@ -37,6 +37,7 @@ interface AssistantProps {
 import { NovaStar } from '../components/common/NovaStar';
 import { sendChatMessage } from '../services/gemini';
 import { soundFx } from '../utils/audio';
+import { useVoiceToText } from '../utils/useVoiceToText';
 
 const DEFAULT_THREAD: ChatThread = {
   id: 'default-thread',
@@ -103,7 +104,12 @@ export const Assistant: React.FC<AssistantProps> = ({
 
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const [isRecording, setIsRecording] = useState(false);
+
+  // Real voice to text hook
+  const { isListening: isRecording, toggleListening: toggleRecording, stopListening: stopRecording } = useVoiceToText((text) => {
+    setInput((prev) => (prev ? `${prev} ${text}` : text));
+  });
+
   const [showMenu, setShowMenu] = useState(false);
   const [speakingId, setSpeakingId] = useState<string | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -751,13 +757,13 @@ export const Assistant: React.FC<AssistantProps> = ({
         <div className="px-4 py-2.5 bg-gradient-to-r from-purple-100 to-indigo-100 dark:from-purple-950/70 dark:to-indigo-950/70 border-t border-purple-500/30 flex items-center justify-between text-xs text-purple-900 dark:text-purple-200">
           <div className="flex items-center gap-3">
             <span className="w-2.5 h-2.5 bg-red-500 rounded-full animate-ping" />
-            <span className="text-[11px] font-bold">Listening to your voice prompt...</span>
+            <span className="text-[11px] font-bold">Listening to your voice prompt... Speak now</span>
           </div>
           <button
-            onClick={() => setIsRecording(false)}
-            className="text-xs font-bold text-purple-700 underline cursor-pointer"
+            onClick={() => stopRecording()}
+            className="text-xs font-bold text-purple-700 dark:text-purple-300 underline cursor-pointer"
           >
-            Cancel
+            Done / Cancel
           </button>
         </div>
       )}
@@ -838,13 +844,7 @@ export const Assistant: React.FC<AssistantProps> = ({
               type="button"
               onClick={() => {
                 soundFx.playClick();
-                setIsRecording(!isRecording);
-                if (!isRecording) {
-                  setTimeout(() => {
-                    setInput('Generate a futuristic cyberpunk brand moodboard description');
-                    setIsRecording(false);
-                  }, 2200);
-                }
+                toggleRecording();
               }}
               aria-label="Voice input"
               className={`absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer ${

@@ -9,7 +9,17 @@ import {
   Star,
   Flame,
   Zap,
+  BarChart2,
 } from 'lucide-react';
+import {
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+} from 'recharts';
 import { ScreenType } from '../types';
 import { soundFx } from '../utils/audio';
 
@@ -19,7 +29,6 @@ interface AnalyticsProps {
 
 export const Analytics: React.FC<AnalyticsProps> = ({ onNavigate }) => {
   const [period, setPeriod] = useState<'weekly' | 'monthly' | 'yearly'>('weekly');
-  const [activeHoverPoint, setActiveHoverPoint] = useState<number | null>(4); // default active Fri
 
   const statsByPeriod = {
     weekly: {
@@ -74,21 +83,6 @@ export const Analytics: React.FC<AnalyticsProps> = ({ onNavigate }) => {
 
   const current = statsByPeriod[period];
 
-  const buildSvgPath = () => {
-    const pts = current.chartPoints;
-    let path = `M ${pts[0].x} ${pts[0].y}`;
-    for (let i = 0; i < pts.length - 1; i++) {
-      const p0 = pts[i];
-      const p1 = pts[i + 1];
-      const mx = (p0.x + p1.x) / 2;
-      path += ` C ${mx} ${p0.y}, ${mx} ${p1.y}, ${p1.x} ${p1.y}`;
-    }
-    return path;
-  };
-
-  const linePath = buildSvgPath();
-  const fillPath = `${linePath} L 280 95 L 0 95 Z`;
-
   return (
     <div className="relative flex flex-col space-y-4 px-5 py-4 pb-28 text-left select-none max-w-2xl mx-auto w-full">
       {/* 1. Header */}
@@ -121,7 +115,6 @@ export const Analytics: React.FC<AnalyticsProps> = ({ onNavigate }) => {
               onClick={() => {
                 soundFx.playClick();
                 setPeriod(tab);
-                setActiveHoverPoint(0);
               }}
               className={`flex-1 py-2 text-xs font-semibold rounded-full transition-all cursor-pointer ${
                 isActive
@@ -135,107 +128,99 @@ export const Analytics: React.FC<AnalyticsProps> = ({ onNavigate }) => {
         })}
       </div>
 
-      {/* 3. Hero Card: Total Progress with interactive wave chart */}
-      <div className="neu-card rounded-3xl p-5 relative overflow-hidden bg-gradient-to-b from-[#F4F7FC] via-[#EEF2F9] to-[#E5ECF6] dark:from-[#0e1d3d] dark:via-[#09152e] dark:to-[#060e20] border border-black/5 dark:border-white/10">
-        <div className="flex items-center justify-between mb-1">
-          <span className="text-xs font-bold text-slate-900 dark:text-[#9AA8C7]">
-            Total Progress
-          </span>
-          <span className="flex items-center gap-1 text-[11px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+      {/* 3. Recharts Daily Completion Trend Chart */}
+      <div className="neu-card rounded-3xl p-5 relative overflow-hidden bg-gradient-to-b from-[#F4F7FC] via-[#EEF2F9] to-[#E5ECF6] dark:from-[#0e1d3d] dark:via-[#09152e] dark:to-[#060e20] border border-black/5 dark:border-white/10 shadow-xl space-y-3">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-sm font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+              <BarChart2 size={16} className="text-purple-600 dark:text-purple-400" />
+              <span>Daily Completion Trend</span>
+            </h3>
+            <p className="text-[11px] font-semibold text-slate-600 dark:text-[#9AA8C7]">
+              Task productivity & completion rate per day
+            </p>
+          </div>
+          <span className="flex items-center gap-1 text-[11px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20">
             <TrendingUp size={12} /> {current.delta}
           </span>
         </div>
 
-        {/* Big percentage & interactive tooltip */}
-        <div className="flex items-baseline justify-between mb-2">
-          <span className="text-3xl font-extrabold text-black dark:text-white tracking-tight">
-            {current.progress}%
-          </span>
-
-          {activeHoverPoint !== null && current.chartPoints[activeHoverPoint] && (
-            <div className="neu-inset px-2.5 py-1 rounded-lg border border-purple-500/30 text-[11px] font-bold text-purple-700 dark:text-purple-300 flex items-center gap-1.5 animate-fadeIn">
-              <Zap size={11} className="text-cyan-600 dark:text-[#35C9FF]" />
-              <span>
-                {current.chartPoints[activeHoverPoint].day}: {current.chartPoints[activeHoverPoint].pct} ({current.chartPoints[activeHoverPoint].hrs})
-              </span>
-            </div>
-          )}
-        </div>
-
-        {/* Wave SVG Chart with hoverable datapoints */}
-        <div className="w-full h-24 pt-1 relative">
-          <svg
-            viewBox="0 0 280 95"
-            className="w-full h-full overflow-visible"
-            preserveAspectRatio="none"
-          >
-            <defs>
-              <linearGradient id="chartGlow2" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#4C7DFF" />
-                <stop offset="50%" stopColor="#8B5CFF" />
-                <stop offset="100%" stopColor="#35C9FF" />
-              </linearGradient>
-
-              <linearGradient id="chartFill2" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor="#8B5CFF" stopOpacity="0.4" />
-                <stop offset="60%" stopColor="#4C7DFF" stopOpacity="0.1" />
-                <stop offset="100%" stopColor="#0B1730" stopOpacity="0" />
-              </linearGradient>
-            </defs>
-
-            {/* Gradient Fill under wave */}
-            <path d={fillPath} fill="url(#chartFill2)" />
-
-            {/* Stroke Line */}
-            <path
-              d={linePath}
-              fill="none"
-              stroke="url(#chartGlow2)"
-              strokeWidth="3.5"
-              strokeLinecap="round"
-              className="drop-shadow-[0_4px_12px_rgba(139,92,255,0.7)] transition-all duration-500"
-            />
-
-            {/* Data points with interactive hover */}
-            {current.chartPoints.map((pt, idx) => (
-              <g
-                key={idx}
-                className="cursor-pointer"
-                onClick={() => {
-                  soundFx.playClick();
-                  setActiveHoverPoint(idx);
-                }}
-              >
-                <circle
-                  cx={pt.x}
-                  cy={pt.y}
-                  r={activeHoverPoint === idx ? 6 : 4}
-                  fill={activeHoverPoint === idx ? '#35C9FF' : '#8B5CFF'}
-                  stroke="#FFFFFF"
-                  strokeWidth="1.5"
-                  className="transition-all duration-200 drop-shadow-[0_0_8px_rgba(53,201,255,0.8)]"
-                />
-              </g>
-            ))}
-          </svg>
-        </div>
-
-        {/* Bottom scale labels */}
-        <div className="flex justify-between items-center text-[10px] text-slate-800 dark:text-[#657394] pt-2 px-1 border-t border-black/5 dark:border-white/5">
-          {current.days.map((d, i) => (
-            <span
-              key={i}
-              onClick={() => {
-                soundFx.playClick();
-                setActiveHoverPoint(i);
-              }}
-              className={`cursor-pointer transition-colors font-medium ${
-                activeHoverPoint === i ? 'text-purple-700 dark:text-purple-300 font-bold' : 'hover:text-black dark:hover:text-white'
-              }`}
-            >
-              {d}
+        {/* Big percentage headline */}
+        <div className="flex items-baseline justify-between pt-1">
+          <div className="flex items-baseline gap-2">
+            <span className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+              {current.progress}%
             </span>
-          ))}
+            <span className="text-xs font-bold text-slate-500">Average Rate</span>
+          </div>
+
+          <div className="neu-inset px-3 py-1 rounded-xl border border-purple-500/30 text-[11px] font-bold text-purple-700 dark:text-purple-300 flex items-center gap-1.5">
+            <Zap size={12} className="text-cyan-500" />
+            <span>{current.tasksDone} Tasks Completed</span>
+          </div>
+        </div>
+
+        {/* Recharts Area Chart Container */}
+        <div className="w-full h-48 pt-2">
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart
+              data={current.chartPoints.map((pt) => ({
+                day: pt.day,
+                completionRate: parseInt(pt.pct),
+                hours: parseFloat(pt.hrs),
+              }))}
+              margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+            >
+              <defs>
+                <linearGradient id="rechartsGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#8B5CFF" stopOpacity={0.6} />
+                  <stop offset="95%" stopColor="#35C9FF" stopOpacity={0.0} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" opacity={0.15} vertical={false} />
+              <XAxis
+                dataKey="day"
+                tickLine={false}
+                axisLine={false}
+                tick={{ fill: '#64748B', fontSize: 11, fontWeight: 600 }}
+              />
+              <YAxis
+                domain={[0, 100]}
+                tickLine={false}
+                axisLine={false}
+                tick={{ fill: '#64748B', fontSize: 10 }}
+                unit="%"
+              />
+              <Tooltip
+                content={({ active, payload }) => {
+                  if (active && payload && payload.length) {
+                    const data = payload[0].payload;
+                    return (
+                      <div className="p-3 rounded-2xl bg-white/95 dark:bg-[#071329]/95 backdrop-blur-md border border-purple-500/30 shadow-2xl text-xs space-y-1">
+                        <p className="font-extrabold text-slate-900 dark:text-white">{data.day}</p>
+                        <p className="text-purple-600 dark:text-purple-300 font-bold">
+                          Completion Rate: {data.completionRate}%
+                        </p>
+                        <p className="text-cyan-600 dark:text-cyan-400 font-semibold">
+                          Logged Focus: {data.hours} hrs
+                        </p>
+                      </div>
+                    );
+                  }
+                  return null;
+                }}
+              />
+              <Area
+                type="monotone"
+                dataKey="completionRate"
+                stroke="#8B5CFF"
+                strokeWidth={3}
+                fillOpacity={1}
+                fill="url(#rechartsGradient)"
+                activeDot={{ r: 6, fill: '#35C9FF', stroke: '#FFFFFF', strokeWidth: 2 }}
+              />
+            </AreaChart>
+          </ResponsiveContainer>
         </div>
       </div>
 

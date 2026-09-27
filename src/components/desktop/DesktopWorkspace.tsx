@@ -59,6 +59,10 @@ import { isTaskOverdue } from '../../utils/alarmService';
 import { TaskProgressRing } from '../common/TaskProgressRing';
 import { WeeklyGoalCard } from '../common/WeeklyGoalCard';
 import { Files } from '../../pages/Files';
+import { StudyMaterials } from '../../pages/StudyMaterials';
+import { WorkTools } from '../../pages/WorkTools';
+import { AutonomousAgentBar } from '../common/AutonomousAgentBar';
+import { StudyMaterial, WorkToolItem } from '../../types';
 import { useTheme } from '../../utils/ThemeContext';
 import { soundFx } from '../../utils/audio';
 import { getTimeBasedGreeting } from '../../utils/greeting';
@@ -70,6 +74,8 @@ interface DesktopWorkspaceProps {
   user: UserProfile;
   tasks: Task[];
   files: FileItem[];
+  studyMaterials?: StudyMaterial[];
+  workTools?: WorkToolItem[];
   onToggleTask: (id: string) => void;
   onAddTask: (task: Omit<Task, 'id'>) => void;
   onDeleteTask: (id: string) => void;
@@ -77,6 +83,11 @@ interface DesktopWorkspaceProps {
   onUpdateTaskDate?: (id: string, newDateStr: string) => void;
   onAddFile: (file: Omit<FileItem, 'id'>) => void;
   onDeleteFile: (id: string) => void;
+  onAddStudyMaterial?: (material: Omit<StudyMaterial, 'id'>) => void;
+  onDeleteStudyMaterial?: (id: string) => void;
+  onAddWorkTool?: (tool: Omit<WorkToolItem, 'id'>) => void;
+  onDeleteWorkTool?: (id: string) => void;
+  onAgentAction?: (data: any) => void;
   onSelectTool: (tool: AITool) => void;
   onOpenProModal: () => void;
   onOpenInstallModal?: (tab?: 'desktop' | 'android') => void;
@@ -91,6 +102,8 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
   user,
   tasks,
   files,
+  studyMaterials = [],
+  workTools = [],
   onToggleTask,
   onAddTask,
   onDeleteTask,
@@ -98,6 +111,11 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
   onUpdateTaskDate,
   onAddFile,
   onDeleteFile,
+  onAddStudyMaterial = () => {},
+  onDeleteStudyMaterial = () => {},
+  onAddWorkTool = () => {},
+  onDeleteWorkTool = () => {},
+  onAgentAction = () => {},
   onSelectTool,
   onOpenProModal,
   onOpenInstallModal,
@@ -601,8 +619,11 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
 
       {/* 2. Main Content Body with Quick Access Sidebar */}
       <div className="flex-1 flex overflow-hidden">
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 custom-scrollbar">
-        {/* ================= HOME DASHBOARD (DESKTOP) ================= */}
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 custom-scrollbar space-y-4">
+          {/* Autonomous AI Agent Bar */}
+          <AutonomousAgentBar onAgentAction={onAgentAction} />
+
+          {/* ================= HOME DASHBOARD (DESKTOP) ================= */}
         {currentScreen === 'home' && (
           <div className="max-w-7xl mx-auto space-y-6">
             {/* Top Row: AI Hero Banner (2/3) + Focus Sprint Widget (1/3) */}
@@ -687,7 +708,7 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
                     <span>Sprint Progress</span>
                     <span>3.5h / 5.0h</span>
                   </div>
-                  <div className="w-full h-2.5 rounded-full neu-inset overflow-hidden p-0.5 bg-[#F8FAFC] dark:bg-[#050d1e]">
+                  <div className="w-full h-2.5 rounded-full neu-inset overflow-hidden p-0.5 bg-[#F8FAFC] dark:bg-black">
                     <div
                       className="h-full rounded-full bg-gradient-to-r from-[#7C4DFF] to-[#3B72FF] dark:from-[#8B5CFF] dark:to-[#35C9FF] transition-all duration-500"
                       style={{ width: '68%' }}
@@ -695,7 +716,7 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
                   </div>
                 </div>
 
-                <div className="neu-inset bg-[#F8FAFC] dark:bg-[#060e20] rounded-2xl p-3.5 space-y-2 border border-black/5 dark:border-white/5">
+                <div className="neu-inset bg-[#F8FAFC] dark:bg-zinc-900 rounded-2xl p-3.5 space-y-2 border border-black/5 dark:border-zinc-800">
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] font-bold text-purple-700 dark:text-[#A978FF] uppercase tracking-wider block">
                       Next Priority Task
@@ -733,6 +754,16 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
                   Manage All Tasks
                 </button>
               </LiquidGlass>
+
+              {/* Daily Task Completion Circular Progress Ring Gauge */}
+              <div onClick={() => onNavigate('tasks')} className="cursor-pointer group">
+                <TaskProgressRing
+                  total={tasks.length}
+                  completed={tasks.filter((t) => t.completed).length}
+                  highPriorityPending={tasks.filter((t) => !t.completed && t.priority === 'high').length}
+                  activeTabLabel="Daily Sprint"
+                />
+              </div>
 
               {/* Weekly Goal Progress Component */}
               <WeeklyGoalCard tasks={tasks} onNavigate={onNavigate} />
@@ -1570,6 +1601,28 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
                   </div>
                 ))}
             </div>
+          </div>
+        )}
+
+        {/* ================= STUDY MATERIALS HUB (DESKTOP) ================= */}
+        {currentScreen === 'study' && (
+          <div className="max-w-7xl mx-auto">
+            <StudyMaterials
+              materials={studyMaterials}
+              onAddMaterial={onAddStudyMaterial}
+              onDeleteMaterial={onDeleteStudyMaterial}
+            />
+          </div>
+        )}
+
+        {/* ================= WORK TOOLS SUITE (DESKTOP) ================= */}
+        {currentScreen === 'worktools' && (
+          <div className="max-w-7xl mx-auto">
+            <WorkTools
+              tools={workTools}
+              onAddTool={onAddWorkTool}
+              onDeleteTool={onDeleteWorkTool}
+            />
           </div>
         )}
 
