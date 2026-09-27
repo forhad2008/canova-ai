@@ -1904,7 +1904,7 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
                 title="Expand Quick Access & Recents"
                 aria-label="Expand Quick Access"
                 style={{ backgroundColor: '#5f0bca' }}
-                className="fixed right-0 top-1/2 -translate-y-1/2 z-[99999] flex h-40 w-10 sm:w-11 rounded-l-2xl border-l border-y border-purple-300/40 text-white shadow-[0_4px_22px_rgba(95,11,202,0.45)] flex-col items-center justify-center gap-2 p-2 hover:brightness-110 active:scale-95 transition-all cursor-pointer group"
+                className="fixed right-0 top-1/2 -translate-y-1/2 z-[99999] flex h-14 w-10 sm:w-11 rounded-l-2xl border-l border-y border-purple-300/40 text-white shadow-[0_4px_22px_rgba(95,11,202,0.45)] items-center justify-center p-2 hover:brightness-110 active:scale-95 transition-all cursor-pointer group"
               >
                 <div
                   style={{ backgroundColor: '#000000' }}
@@ -1912,9 +1912,6 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
                 >
                   <ChevronLeft size={16} className="text-white group-hover:-translate-x-0.5 transition-transform" />
                 </div>
-                <span className="[writing-mode:vertical-lr] rotate-180 text-[10px] font-black uppercase tracking-widest text-white shrink-0 drop-shadow-xs">
-                  Quick Access
-                </span>
               </button>
             )}
           </>,
