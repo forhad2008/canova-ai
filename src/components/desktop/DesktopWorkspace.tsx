@@ -581,14 +581,11 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
               setShowQuickAccess(!showQuickAccess);
             }}
             title={showQuickAccess ? 'Hide Quick Access' : 'Show Quick Access'}
-            className={`neu-card-subtle px-3 py-1.5 rounded-xl border flex items-center gap-1.5 text-xs transition-all cursor-pointer ${
-              showQuickAccess
-                ? 'border-purple-500/50 text-purple-700 dark:text-purple-300 shadow-[0_0_12px_rgba(139,92,255,0.25)] font-bold'
-                : 'border-black/5 dark:border-white/6 text-slate-600 dark:text-[#657394] hover:text-slate-900 dark:hover:text-white'
-            }`}
+            style={{ backgroundColor: '#5f0bca' }}
+            className="px-3 py-1.5 rounded-xl border border-purple-400/40 flex items-center gap-1.5 text-xs font-bold text-[#ffffff] hover:opacity-95 transition-all cursor-pointer shadow-sm"
           >
-            <Zap size={13} className={showQuickAccess ? 'text-purple-600 dark:text-[#8B5CFF]' : ''} />
-            <span className="hidden xl:inline">Quick Access</span>
+            <Zap size={13} style={{ color: '#ffffff' }} />
+            <span className="hidden xl:inline text-[#ffffff]">Quick Access</span>
           </button>
 
           <button
@@ -618,8 +615,8 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
       </div>
 
       {/* 2. Main Content Body with Quick Access Sidebar */}
-      <div className="flex-1 flex overflow-hidden">
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 custom-scrollbar space-y-4">
+      <div className="flex-1 flex overflow-hidden relative">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 pr-12 sm:pr-14 lg:pr-16 custom-scrollbar space-y-4">
           {/* Autonomous AI Agent Bar */}
           <AutonomousAgentBar onAgentAction={onAgentAction} />
 
@@ -1876,17 +1873,27 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
         )}
         </div>
 
-        {/* 3. Dedicated Right Sidebar: Quick Access & Recents */}
-        {showQuickAccess ? (
-          <QuickAccessSidebar
-            tasks={tasks}
-            files={files}
-            onToggleTask={onToggleTask}
-            onAddTask={onAddTask}
-            onNavigate={onNavigate}
-            onQuickPrompt={onQuickPrompt}
-            onClose={() => setShowQuickAccess(false)}
+        {/* Backdrop overlay when Quick Access is open */}
+        {showQuickAccess && (
+          <div
+            className="absolute inset-0 z-30 bg-black/15 dark:bg-black/35 backdrop-blur-[1px] transition-opacity cursor-pointer animate-fadeIn"
+            onClick={() => setShowQuickAccess(false)}
           />
+        )}
+
+        {/* 3. Dedicated Right Overlay Drawer: Quick Access & Recents */}
+        {showQuickAccess ? (
+          <div className="absolute right-0 top-0 bottom-0 z-40 h-full shadow-2xl animate-slide-left">
+            <QuickAccessSidebar
+              tasks={tasks}
+              files={files}
+              onToggleTask={onToggleTask}
+              onAddTask={onAddTask}
+              onNavigate={onNavigate}
+              onQuickPrompt={onQuickPrompt}
+              onClose={() => setShowQuickAccess(false)}
+            />
+          </div>
         ) : (
           <button
             onClick={() => {
@@ -1895,9 +1902,18 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
             }}
             title="Expand Quick Access & Recents"
             aria-label="Expand Quick Access"
-            className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 z-30 neu-card py-3 px-1.5 rounded-l-xl border-l border-y border-purple-500/40 bg-[#071329]/95 text-purple-300 hover:text-white hover:bg-purple-900/40 transition-all shadow-xl group items-center cursor-pointer"
+            style={{ backgroundColor: '#5f0bca' }}
+            className="hidden md:flex absolute right-0 top-3 bottom-3 w-9 sm:w-10 rounded-l-2xl border-l border-y border-purple-400/30 text-white shadow-2xl z-30 flex-col items-center justify-center gap-2.5 hover:brightness-110 transition-all cursor-pointer group"
           >
-            <ChevronLeft size={16} className="group-hover:-translate-x-0.5 transition-transform" />
+            <div
+              style={{ backgroundColor: '#000000' }}
+              className="w-7 h-7 rounded-lg flex items-center justify-center shadow-md group-hover:scale-105 transition-transform"
+            >
+              <ChevronLeft size={16} className="text-white group-hover:-translate-x-0.5 transition-transform" />
+            </div>
+            <span className="[writing-mode:vertical-lr] rotate-180 text-[10px] font-extrabold uppercase tracking-widest text-white/90 hidden lg:block">
+              Quick Access
+            </span>
           </button>
         )}
       </div>

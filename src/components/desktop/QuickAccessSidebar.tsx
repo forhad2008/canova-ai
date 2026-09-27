@@ -93,7 +93,7 @@ export const QuickAccessSidebar: React.FC<QuickAccessSidebarProps> = ({
       {/* 1. Header */}
       <div className="flex items-center justify-between pb-1 border-b border-black/5 dark:border-white/6">
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-[#7C4DFF] to-[#35C9FF] flex items-center justify-center text-white shadow-xs">
+          <div style={{ backgroundColor: '#5f0bca' }} className="w-7 h-7 rounded-lg flex items-center justify-center text-white shadow-xs">
             <Zap size={14} />
           </div>
           <div>
