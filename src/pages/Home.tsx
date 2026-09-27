@@ -13,7 +13,7 @@ import {
   CheckSquare,
 } from 'lucide-react';
 import { ScreenType, UserProfile, Task } from '../types';
-import { SphereOrb } from '../components/common/SphereOrb';
+import { SmartSuggestCard } from '../components/common/SmartSuggestCard';
 import { TaskProgressRing } from '../components/common/TaskProgressRing';
 import { WeeklyGoalCard } from '../components/common/WeeklyGoalCard';
 import { soundFx } from '../utils/audio';
@@ -277,14 +277,14 @@ export const Home: React.FC<HomeProps> = ({
         <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-br from-indigo-500/15 via-cyan-400/15 to-transparent rounded-full blur-2xl pointer-events-none" />
 
         <div className="flex items-center justify-between gap-3 relative z-10">
-          <div className="space-y-2 max-w-[62%]">
+          <div className="space-y-2 flex-1">
             <span className="text-[11px] font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider block">
               Canova AI Studio
             </span>
             <h3 className="text-lg font-bold text-slate-900 dark:text-white leading-tight">
               Ready to assist your workspace today?
             </h3>
-            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed line-clamp-2">
+            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed max-w-lg">
               Ask questions, generate ideas, manage tasks, or process files with real-time intelligence.
             </p>
 
@@ -295,26 +295,22 @@ export const Home: React.FC<HomeProps> = ({
                   onNavigate('assistant');
                 }}
                 aria-label="Start Assistant"
-                className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-xs flex items-center gap-2 transition-all shadow-xs active:scale-[0.98] cursor-pointer"
+                className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-xs inline-flex items-center gap-2 transition-all shadow-xs active:scale-[0.98] cursor-pointer"
               >
                 <span>Launch Assistant</span>
                 <ArrowRight size={14} />
               </button>
             </div>
           </div>
-
-          {/* 3D Photorealistic Hydro Water Ball */}
-          <div className="pr-1 flex items-center justify-center">
-            <SphereOrb
-              size={92}
-              interactive={true}
-              vapeOpacity={0.9}
-              smokePattern="wave"
-              smokeColor="cyan"
-            />
-          </div>
         </div>
       </div>
+
+      {/* 3.5 Smart Suggest Feature */}
+      <SmartSuggestCard
+        tasks={tasks}
+        onNavigate={onNavigate}
+        onQuickPrompt={onQuickPrompt}
+      />
 
       {/* 4. Daily & Weekly Goal Progress Section */}
       <div className="space-y-4">
@@ -392,7 +388,7 @@ export const Home: React.FC<HomeProps> = ({
           soundFx.playClick();
           onNavigate('analytics');
         }}
-        className="neu-card rounded-2xl p-3.5 flex items-center justify-between gap-3 border border-black/5 dark:border-purple-500/20 bg-white dark:bg-gradient-to-r dark:from-purple-900/20 dark:via-[#0a1632] dark:to-[#060e20] cursor-pointer hover:border-purple-500/40 transition-all text-left"
+        className="neu-glass-card liquid-shimmer rounded-2xl p-3.5 flex items-center justify-between gap-3 cursor-pointer hover:border-purple-500/40 transition-all text-left"
       >
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-xl bg-purple-500/20 text-purple-700 dark:text-[#A978FF] flex items-center justify-center shrink-0 border border-purple-500/30">

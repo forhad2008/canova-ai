@@ -43,8 +43,8 @@ import {
   FileText,
 } from 'lucide-react';
 import { ScreenType, Task, FileItem, AITool, UserProfile, ChatMessage, TaskPriority } from '../../types';
+import { SmartSuggestCard } from '../common/SmartSuggestCard';
 import { NovaStar } from '../common/NovaStar';
-import { SphereOrb } from '../common/SphereOrb';
 import { sendChatMessage } from '../../services/gemini';
 import { useRecentSearches } from '../../utils/useRecentSearches';
 import { RecentSearchesList } from '../common/RecentSearchesList';
@@ -610,7 +610,7 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
                 <div className="absolute top-0 right-0 w-72 h-72 bg-gradient-to-br from-purple-500/20 via-cyan-400/15 to-transparent rounded-full blur-3xl pointer-events-none" />
 
                 <div className="flex items-start justify-between gap-6 relative z-10">
-                  <div className="space-y-3 max-w-lg">
+                  <div className="space-y-3 max-w-2xl flex-1">
                     <div className="flex items-center gap-2">
                       <span className="text-[11px] font-bold text-purple-700 dark:text-[#A978FF] uppercase tracking-wider bg-purple-500/15 px-2.5 py-1 rounded-md border border-purple-500/30">
                         AI Companion Studio
@@ -625,10 +625,6 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
                     <p className="text-xs font-medium text-slate-700 dark:text-[#9AA8C7] leading-relaxed">
                       Ask anything, create visual moodboards, optimize code architectures, or manage your daily sprints with seamless soft-white neumorphic fluidity.
                     </p>
-                  </div>
-
-                  <div className="shrink-0 hidden sm:flex items-center justify-center p-2">
-                    <SphereOrb size={104} />
                   </div>
                 </div>
 
@@ -661,6 +657,13 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
                   </button>
                 </div>
               </div>
+
+              {/* Smart Suggest Component */}
+              <SmartSuggestCard
+                tasks={tasks}
+                onNavigate={onNavigate}
+                onQuickPrompt={onQuickPrompt}
+              />
 
               {/* Focus Sprint & Next Up Widget */}
               <div className="neu-card rounded-3xl p-6 flex flex-col justify-between border border-black/8 dark:border-white/8 space-y-4">

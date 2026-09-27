@@ -399,18 +399,24 @@ export default function App() {
     <div className="w-screen h-screen bg-[#EEF2F9] dark:bg-[#030712] text-[#1E293B] dark:text-[#F7F8FF] overflow-hidden flex flex-col relative transition-colors duration-200">
       {/* 
         ========================================================================
-        AMBIENT LIQUID LIGHT MESH (Refracted through all Neumorphic Glass layers)
+        AMBIENT LIQUID MESH CANVAS (Refracted through all Glassmorphism surfaces)
         ========================================================================
       */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden z-0 select-none">
-        {/* Top-left Liquid Purple Orb */}
-        <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-gradient-to-br from-purple-500/25 via-indigo-500/15 to-transparent blur-3xl animate-liquid-blob-1 dark:from-purple-600/20 dark:via-indigo-600/12" />
+        {/* Top-left Liquid Purple/Indigo Orb */}
+        <div className="absolute -top-32 -left-32 w-[520px] h-[520px] rounded-full bg-gradient-to-br from-indigo-500/35 via-purple-500/25 to-pink-500/15 blur-3xl animate-liquid-blob-1 dark:from-indigo-600/30 dark:via-purple-600/20" />
         
         {/* Top-right Liquid Cyan & Sky Orb */}
-        <div className="absolute top-1/4 -right-28 w-[420px] h-[420px] rounded-full bg-gradient-to-bl from-cyan-400/20 via-blue-500/15 to-transparent blur-3xl animate-liquid-blob-2 dark:from-cyan-500/15 dark:via-blue-600/10" />
+        <div className="absolute -top-20 -right-28 w-[580px] h-[580px] rounded-full bg-gradient-to-bl from-cyan-400/35 via-sky-500/25 to-blue-600/15 blur-3xl animate-liquid-blob-2 dark:from-cyan-500/25 dark:via-blue-600/18" />
         
-        {/* Bottom-left Liquid Magenta & Violet Caustic Orb */}
-        <div className="absolute -bottom-24 left-1/3 w-[500px] h-[500px] rounded-full bg-gradient-to-tr from-fuchsia-400/18 via-purple-600/12 to-transparent blur-3xl animate-liquid-blob-3 dark:from-fuchsia-600/15 dark:via-purple-800/10" />
+        {/* Center Floating Violet Prism Orb */}
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[650px] h-[650px] rounded-full bg-gradient-to-tr from-fuchsia-500/20 via-violet-600/25 to-indigo-400/15 blur-3xl animate-liquid-blob-3 dark:from-fuchsia-600/18 dark:via-purple-800/20" />
+
+        {/* Bottom-left Liquid Emerald & Cyan Caustic Orb */}
+        <div className="absolute -bottom-32 -left-20 w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-emerald-400/25 via-teal-500/20 to-cyan-600/15 blur-3xl animate-liquid-blob-1 dark:from-emerald-600/18 dark:via-teal-700/15" />
+
+        {/* Bottom-right Warm Rose/Amber Accent Orb */}
+        <div className="absolute -bottom-28 -right-20 w-[500px] h-[500px] rounded-full bg-gradient-to-tl from-rose-500/20 via-pink-500/18 to-amber-400/12 blur-3xl animate-liquid-blob-2 dark:from-rose-600/15 dark:via-purple-900/15" />
       </div>
 
       {/* 

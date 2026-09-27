@@ -1,7 +1,6 @@
 import React from 'react';
-import { Home, Search, FolderClosed, User } from 'lucide-react';
+import { Home, Search, FolderClosed, User, MessageSquare } from 'lucide-react';
 import { ScreenType } from '../../types';
-import { NovaStar } from '../common/NovaStar';
 import { soundFx } from '../../utils/audio';
 
 interface BottomNavProps {
@@ -73,9 +72,9 @@ export const BottomNav: React.FC<BottomNavProps> = ({
                 <div className="w-full h-full rounded-full bg-[#EEF2F9] dark:bg-[#071226]" />
               </div>
 
-              {/* Center button core with vivid gradient and 4-point star */}
+              {/* Center button core with vivid gradient and chat icon */}
               <div className="relative z-10 w-12 h-12 rounded-full flex items-center justify-center bg-gradient-to-br from-[#9B72FF] via-[#7C4DFF] to-[#3B72FF] dark:from-[#A978FF] dark:via-[#8B5CFF] dark:to-[#4C7DFF] shadow-[inset_0_2px_4px_rgba(255,255,255,0.6),0_6px_20px_rgba(124,77,255,0.45)] dark:shadow-[inset_0_2px_4px_rgba(255,255,255,0.5),0_6px_20px_rgba(139,92,255,0.7)]">
-                <NovaStar size={26} glow={false} />
+                <MessageSquare size={22} className="text-white fill-white/20 stroke-[2.2]" />
               </div>
             </button>
           </div>
