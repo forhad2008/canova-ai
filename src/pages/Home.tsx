@@ -8,18 +8,12 @@ import {
   LayoutGrid,
   Sparkles,
   TrendingUp,
-  CloudFog,
-  RotateCw,
-  Activity,
-  Wind,
-  Palette,
   X,
   FileText,
   CheckSquare,
 } from 'lucide-react';
 import { ScreenType, UserProfile, Task } from '../types';
-import { SphereOrb, SmokePattern, SmokeColor } from '../components/common/SphereOrb';
-import { NeumorphicDensitySlider } from '../components/common/NeumorphicDensitySlider';
+import { SphereOrb } from '../components/common/SphereOrb';
 import { TaskProgressRing } from '../components/common/TaskProgressRing';
 import { WeeklyGoalCard } from '../components/common/WeeklyGoalCard';
 import { soundFx } from '../utils/audio';
@@ -47,37 +41,6 @@ export const Home: React.FC<HomeProps> = ({
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
-  const [vapeOpacity, setVapeOpacity] = useState<number>(() => {
-    const saved = localStorage.getItem('nova_vape_opacity');
-    return saved !== null ? parseFloat(saved) : 0.75;
-  });
-  const [smokePattern, setSmokePattern] = useState<SmokePattern>(() => {
-    const saved = localStorage.getItem('nova_smoke_pattern') as SmokePattern;
-    return saved === 'pulse' || saved === 'stream' ? saved : 'swirl';
-  });
-  const [smokeColor, setSmokeColor] = useState<SmokeColor>(() => {
-    const saved = localStorage.getItem('nova_smoke_color') as SmokeColor;
-    return saved === 'white' || saved === 'neon-purple' || saved === 'deep-blue' || saved === 'cyan'
-      ? saved
-      : 'neon-purple';
-  });
-
-  const handleVapeOpacityChange = (val: number) => {
-    setVapeOpacity(val);
-    localStorage.setItem('nova_vape_opacity', val.toString());
-  };
-
-  const handleSmokePatternChange = (pattern: SmokePattern) => {
-    soundFx.playClick();
-    setSmokePattern(pattern);
-    localStorage.setItem('nova_smoke_pattern', pattern);
-  };
-
-  const handleSmokeColorChange = (color: SmokeColor) => {
-    soundFx.playClick();
-    setSmokeColor(color);
-    localStorage.setItem('nova_smoke_color', color);
-  };
 
   const { recentSearches, addSearch, removeSearch, clearSearches } = useRecentSearches(
     'nova_recent_searches_home',
@@ -311,147 +274,43 @@ export const Home: React.FC<HomeProps> = ({
 
       {/* 3. Hero Card: AI Assistant */}
       <div className="relative rounded-3xl p-5 overflow-hidden neu-glass-card liquid-shimmer transition-all">
-        <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-br from-purple-500/20 via-cyan-400/15 to-transparent rounded-full blur-2xl pointer-events-none" />
+        <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-br from-indigo-500/15 via-cyan-400/15 to-transparent rounded-full blur-2xl pointer-events-none" />
 
         <div className="flex items-center justify-between gap-3 relative z-10">
           <div className="space-y-2 max-w-[62%]">
-            <span className="text-[11px] font-black text-purple-700 dark:text-[#A978FF] uppercase tracking-wider block">
-              Canova AI
+            <span className="text-[11px] font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider block">
+              Canova AI Studio
             </span>
-            <h3 className="text-lg font-black text-black dark:text-white leading-tight">
-              Ready to help you today?
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white leading-tight">
+              Ready to assist your workspace today?
             </h3>
-            <p className="text-[11px] text-slate-800 dark:text-[#9AA8C7] font-semibold leading-relaxed line-clamp-2">
-              Ask, create, plan, or get things done — I'm here for you.
+            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed line-clamp-2">
+              Ask questions, generate ideas, manage tasks, or process files with real-time intelligence.
             </p>
 
-            <div className="pt-1">
+            <div className="pt-2">
               <button
                 onClick={() => {
                   soundFx.playClick();
                   onNavigate('assistant');
                 }}
                 aria-label="Start Assistant"
-                className="w-8 h-8 rounded-full neu-primary-btn flex items-center justify-center text-white cursor-pointer hover:scale-105 transition-transform shadow-md"
+                className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-xs flex items-center gap-2 transition-all shadow-xs active:scale-[0.98] cursor-pointer"
               >
-                <ArrowRight size={15} />
+                <span>Launch Assistant</span>
+                <ArrowRight size={14} />
               </button>
             </div>
           </div>
 
-          {/* 3D Iridescent Glowing Sphere Orb */}
+          {/* 3D Photorealistic Hydro Water Ball */}
           <div className="pr-1 flex items-center justify-center">
             <SphereOrb
-              size={88}
+              size={92}
               interactive={true}
-              vapeOpacity={vapeOpacity}
-              smokePattern={smokePattern}
-              smokeColor={smokeColor}
-            />
-          </div>
-        </div>
-
-        {/* Smokey Vape Controls: Color Palette + Pattern Selector + Opacity Slider (Hidden on mobile) */}
-        <div className="hidden md:block mt-4 pt-3 border-t border-black/5 dark:border-white/5 relative z-10 space-y-3 bg-[#F1F5F9] dark:bg-black/25 -mx-1 px-3.5 py-3 rounded-2xl border border-white/70 dark:border-white/5 shadow-[inset_3px_3px_8px_rgba(166,180,204,0.35),inset_-3px_-3px_8px_rgba(255,255,255,0.95)] dark:shadow-none">
-          {/* Color Palette Selector: Standard White, Neon Purple, Deep Blue, Cyan */}
-          <div className="flex items-center justify-between gap-2">
-            <span className="text-[11px] font-black text-black dark:text-[#9AA8C7] flex items-center gap-1.5 shrink-0">
-              <Palette size={12} className="text-black dark:text-[#A978FF]" />
-              Color Palette
-            </span>
-
-            <div className="flex items-center gap-1.5 bg-white dark:bg-[#050B18]/70 p-1 rounded-xl border border-black/8 dark:border-white/5 shadow-[2px_3px_8px_rgba(166,180,204,0.25),-2px_-2px_6px_rgba(255,255,255,0.9)] dark:shadow-none">
-              {[
-                {
-                  id: 'white' as SmokeColor,
-                  label: 'White',
-                  dotBg: 'bg-white border border-black/40',
-                  glow: 'shadow-[0_0_8px_rgba(0,0,0,0.35)] dark:shadow-[0_0_8px_rgba(255,255,255,0.6)]',
-                  activeBorder: 'border-black dark:border-white/50 text-black dark:text-white bg-black/10 dark:bg-white/10 font-black',
-                },
-                {
-                  id: 'neon-purple' as SmokeColor,
-                  label: 'Purple',
-                  dotBg: 'bg-[#9333EA] dark:bg-[#C084FC]',
-                  glow: 'shadow-[0_0_8px_rgba(147,51,234,0.5)] dark:shadow-[0_0_8px_rgba(192,132,252,0.7)]',
-                  activeBorder: 'border-black dark:border-purple-400/50 text-black dark:text-purple-200 bg-purple-500/15 font-black',
-                },
-                {
-                  id: 'deep-blue' as SmokeColor,
-                  label: 'Blue',
-                  dotBg: 'bg-[#2563EB] dark:bg-[#3B82F6]',
-                  glow: 'shadow-[0_0_8px_rgba(37,99,235,0.5)] dark:shadow-[0_0_8px_rgba(59,130,246,0.7)]',
-                  activeBorder: 'border-black dark:border-blue-400/50 text-black dark:text-blue-200 bg-blue-500/15 font-black',
-                },
-                {
-                  id: 'cyan' as SmokeColor,
-                  label: 'Cyan',
-                  dotBg: 'bg-[#0891B2] dark:bg-[#22D3EE]',
-                  glow: 'shadow-[0_0_8px_rgba(8,145,178,0.5)] dark:shadow-[0_0_8px_rgba(34,211,238,0.7)]',
-                  activeBorder: 'border-black dark:border-cyan-400/50 text-black dark:text-cyan-200 bg-cyan-500/15 font-black',
-                },
-              ].map((colorItem) => {
-                const isActive = smokeColor === colorItem.id;
-                return (
-                  <button
-                    key={colorItem.id}
-                    type="button"
-                    onClick={() => handleSmokeColorChange(colorItem.id)}
-                    className={`flex items-center gap-1.5 px-2 py-1 rounded-lg text-[10px] font-black transition-all cursor-pointer border ${
-                      isActive
-                        ? `${colorItem.activeBorder} scale-102`
-                        : 'border-transparent text-black dark:text-[#657394] hover:text-black dark:hover:text-[#9AA8C7] hover:bg-black/5 dark:hover:bg-white/5'
-                    }`}
-                  >
-                    <span
-                      className={`w-2 h-2 rounded-full ${colorItem.dotBg} ${
-                        isActive ? colorItem.glow : 'opacity-80'
-                      }`}
-                    />
-                    <span className="text-black dark:text-inherit font-black">{colorItem.label}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Pattern Cycle Buttons */}
-          <div className="flex items-center justify-between gap-2 pt-2 border-t border-black/5 dark:border-white/5">
-            <span className="text-[11px] font-black text-black dark:text-[#9AA8C7] flex items-center gap-1.5 shrink-0">
-              <span className="w-1.5 h-1.5 rounded-full bg-black dark:bg-[#8B5CFF] animate-pulse" />
-              Pattern
-            </span>
-
-            <div className="flex items-center gap-1.5 bg-white dark:bg-[#050B18]/70 p-1 rounded-xl border border-black/8 dark:border-white/5 shadow-[2px_3px_8px_rgba(166,180,204,0.25),-2px_-2px_6px_rgba(255,255,255,0.9)] dark:shadow-none">
-              {[
-                { id: 'swirl' as SmokePattern, label: 'Swirl', icon: RotateCw },
-                { id: 'pulse' as SmokePattern, label: 'Pulse', icon: Activity },
-                { id: 'stream' as SmokePattern, label: 'Stream', icon: Wind },
-              ].map(({ id, label, icon: Icon }) => {
-                const isActive = smokePattern === id;
-                return (
-                  <button
-                    key={id}
-                    onClick={() => handleSmokePatternChange(id)}
-                    className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-black transition-all cursor-pointer ${
-                      isActive
-                        ? 'bg-black text-white dark:bg-gradient-to-r dark:from-purple-600 dark:to-indigo-600 shadow-sm border border-black dark:border-purple-400/40 scale-102'
-                        : 'text-black dark:text-[#657394] hover:text-black dark:hover:text-[#9AA8C7] hover:bg-black/5 dark:hover:bg-white/5'
-                    }`}
-                  >
-                    <Icon size={11} className={isActive ? 'animate-spin-slow text-white' : 'text-black dark:text-inherit'} />
-                    <span className={isActive ? 'text-white' : 'text-black dark:text-inherit font-black'}>{label}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Neumorphic Smoke Density Opacity Slider */}
-          <div className="pt-2 border-t border-black/5 dark:border-white/5">
-            <NeumorphicDensitySlider
-              value={vapeOpacity}
-              onChange={handleVapeOpacityChange}
+              vapeOpacity={0.9}
+              smokePattern="wave"
+              smokeColor="cyan"
             />
           </div>
         </div>

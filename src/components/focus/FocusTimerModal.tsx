@@ -69,27 +69,27 @@ export const FocusTimerModal: React.FC<FocusTimerModalProps> = ({
   const progressPercent = maxSecs > 0 ? ((maxSecs - totalSeconds) / maxSecs) * 100 : 0;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-      <div className="neu-card rounded-3xl p-6 w-full max-w-sm border border-black/10 dark:border-purple-500/30 bg-white dark:bg-[#071328] text-center relative shadow-2xl space-y-4">
+    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+      <div className="rounded-2xl p-6 w-full max-w-sm border border-slate-200/80 dark:border-white/10 bg-white dark:bg-[#0F172A] text-center relative shadow-2xl space-y-4">
         <button
           onClick={() => {
             soundFx.playClick();
             onClose();
           }}
-          className="absolute top-4 right-4 w-8 h-8 rounded-full neu-button flex items-center justify-center text-slate-700 dark:text-[#9AA8C7] hover:text-slate-900 dark:hover:text-white cursor-pointer shadow-xs"
+          className="absolute top-4 right-4 w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white flex items-center justify-center cursor-pointer transition-colors"
         >
           <X size={15} />
         </button>
 
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-orange-500/20 to-purple-500/20 border border-orange-500/30 text-orange-700 dark:text-orange-300 text-xs font-extrabold">
-          <Flame size={13} className="text-orange-500 animate-pulse" />
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-50 dark:bg-orange-950/40 border border-orange-200/60 dark:border-orange-500/30 text-orange-700 dark:text-orange-300 text-xs font-semibold">
+          <Flame size={13} className="text-orange-500" />
           <span>Pomodoro Focus Session</span>
         </div>
 
         {/* Task Selector Dropdown if tasks exist */}
         {pendingTasks.length > 0 && onSelectTask && (
-          <div>
-            <label className="text-[11px] font-bold text-slate-600 dark:text-[#9AA8C7] block mb-1">
+          <div className="text-left">
+            <label className="text-xs font-medium text-slate-600 dark:text-slate-400 block mb-1">
               Select Goal to Track Progress:
             </label>
             <select
@@ -99,7 +99,7 @@ export const FocusTimerModal: React.FC<FocusTimerModalProps> = ({
                 const selected = pendingTasks.find((t) => t.id === e.target.value) || null;
                 onSelectTask(selected);
               }}
-              className="w-full neu-inset rounded-xl py-2 px-3 text-xs font-bold text-slate-900 dark:text-white bg-[#F8FAFC] dark:bg-[#060e20] focus:outline-none border border-purple-500/20"
+              className="w-full rounded-xl py-2 px-3 text-xs font-medium text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 border border-slate-200/60 dark:border-white/10 focus:outline-none focus:ring-1 focus:ring-indigo-500"
             >
               <option value="">-- Custom Focus Goal --</option>
               {pendingTasks.map((t) => (
@@ -112,25 +112,23 @@ export const FocusTimerModal: React.FC<FocusTimerModalProps> = ({
         )}
 
         <div>
-          <h3 className="text-base font-extrabold text-slate-900 dark:text-white leading-snug">
+          <h3 className="text-base font-bold text-slate-900 dark:text-white leading-snug">
             {task ? task.title : 'Uninterrupted Focus Sprint'}
           </h3>
-          <p className="text-xs font-medium text-slate-600 dark:text-[#9AA8C7]">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
             {task ? `${task.category} • Progress syncs to Daily Goals` : 'Block distractions and achieve velocity'}
           </p>
         </div>
 
         {/* Circular Progress Ring */}
         <div className="relative w-44 h-44 mx-auto flex items-center justify-center my-2">
-          <div className="absolute inset-0 rounded-full bg-purple-500/15 blur-xl animate-pulse" />
-
           <svg className="w-full h-full transform -rotate-90" viewBox="0 0 160 160">
             <circle
               cx="80"
               cy="80"
               r="70"
               stroke="currentColor"
-              className="text-slate-200 dark:text-white/10"
+              className="text-slate-100 dark:text-slate-800"
               strokeWidth="8"
               fill="none"
             />
@@ -148,18 +146,18 @@ export const FocusTimerModal: React.FC<FocusTimerModalProps> = ({
             />
             <defs>
               <linearGradient id="timerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#FF6B00" />
-                <stop offset="50%" stopColor="#7C4DFF" />
-                <stop offset="100%" stopColor="#35C9FF" />
+                <stop offset="0%" stopColor="#F97316" />
+                <stop offset="50%" stopColor="#6366F1" />
+                <stop offset="100%" stopColor="#0EA5E9" />
               </linearGradient>
             </defs>
           </svg>
 
           <div className="absolute flex flex-col items-center">
-            <span className="text-3xl font-black text-slate-900 dark:text-white tracking-tight font-mono">
+            <span className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight font-mono tabular-nums">
               {formatTime(totalSeconds)}
             </span>
-            <span className="text-[10px] text-orange-600 dark:text-orange-400 uppercase font-extrabold mt-1 tracking-wider">
+            <span className="text-[11px] text-orange-600 dark:text-orange-400 font-medium mt-1">
               {isActive ? 'Concentrating' : 'Paused'}
             </span>
           </div>
@@ -169,7 +167,7 @@ export const FocusTimerModal: React.FC<FocusTimerModalProps> = ({
         <div className="flex items-center justify-center gap-3">
           <button
             onClick={() => resetTimer(initialMinutes)}
-            className="w-10 h-10 rounded-full neu-button flex items-center justify-center text-slate-700 dark:text-[#9AA8C7] hover:text-slate-900 dark:hover:text-white cursor-pointer shadow-xs"
+            className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white flex items-center justify-center cursor-pointer transition-colors"
             title="Reset Timer"
           >
             <RotateCcw size={16} />
@@ -177,9 +175,9 @@ export const FocusTimerModal: React.FC<FocusTimerModalProps> = ({
 
           <button
             onClick={toggleTimer}
-            className="w-13 h-13 rounded-full neu-primary-btn flex items-center justify-center text-white cursor-pointer shadow-lg hover:scale-105 active:scale-95 transition-transform"
+            className="w-12 h-12 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white flex items-center justify-center cursor-pointer shadow-sm active:scale-[0.98] transition-all"
           >
-            {isActive ? <Pause size={20} /> : <Play size={20} className="ml-1" />}
+            {isActive ? <Pause size={20} /> : <Play size={20} className="ml-0.5" />}
           </button>
 
           {task && (
@@ -189,7 +187,7 @@ export const FocusTimerModal: React.FC<FocusTimerModalProps> = ({
                 if (onTaskCompleted) onTaskCompleted(task.id);
                 onClose();
               }}
-              className="w-10 h-10 rounded-full neu-button flex items-center justify-center text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 cursor-pointer shadow-xs"
+              className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 flex items-center justify-center cursor-pointer transition-colors"
               title="Mark Task Completed & Sync to Daily Goals"
             >
               <CheckCircle2 size={18} />
@@ -198,16 +196,16 @@ export const FocusTimerModal: React.FC<FocusTimerModalProps> = ({
         </div>
 
         {/* Preset Time Buttons */}
-        <div className="flex justify-center gap-1.5 pt-2 border-t border-black/5 dark:border-white/6 text-xs">
+        <div className="flex justify-center gap-1.5 pt-3 border-t border-slate-200/60 dark:border-white/10 text-xs">
           <button
             onClick={() => {
               setMode('focus');
               resetTimer(25);
             }}
-            className={`px-2.5 py-1 rounded-full transition-all font-bold text-[11px] cursor-pointer ${
+            className={`px-3 py-1.5 rounded-lg transition-colors font-medium text-xs cursor-pointer ${
               mode === 'focus' && initialMinutes === 25
-                ? 'neu-inset text-orange-600 dark:text-orange-300 border border-orange-500/30'
-                : 'text-slate-600 dark:text-[#657394]'
+                ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900'
+                : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
             }`}
           >
             25m Focus
@@ -217,10 +215,10 @@ export const FocusTimerModal: React.FC<FocusTimerModalProps> = ({
               setMode('focus');
               resetTimer(50);
             }}
-            className={`px-2.5 py-1 rounded-full transition-all font-bold text-[11px] cursor-pointer ${
+            className={`px-3 py-1.5 rounded-lg transition-colors font-medium text-xs cursor-pointer ${
               mode === 'focus' && initialMinutes === 50
-                ? 'neu-inset text-purple-600 dark:text-purple-300 border border-purple-500/30'
-                : 'text-slate-600 dark:text-[#657394]'
+                ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900'
+                : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
             }`}
           >
             50m Deep
@@ -230,10 +228,10 @@ export const FocusTimerModal: React.FC<FocusTimerModalProps> = ({
               setMode('break');
               resetTimer(5);
             }}
-            className={`px-2.5 py-1 rounded-full transition-all font-bold text-[11px] cursor-pointer ${
+            className={`px-3 py-1.5 rounded-lg transition-colors font-medium text-xs cursor-pointer ${
               mode === 'break'
-                ? 'neu-inset text-cyan-600 dark:text-cyan-300 border border-cyan-500/30'
-                : 'text-slate-600 dark:text-[#657394]'
+                ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900'
+                : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
             }`}
           >
             5m Break
