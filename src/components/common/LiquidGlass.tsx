@@ -7,12 +7,13 @@ interface LiquidGlassProps {
   intensity?: 'subtle' | 'medium' | 'high';
   interactive?: boolean;
   disableTilt?: boolean;
+  enableCursorLighting?: boolean;
   onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
 }
 
 /**
  * Liquid Glass Material Component
- * Combines ultra-high transmittance frosted glass, real-time pointer-tracked refraction caustics,
+ * Combines ultra-high transmittance frosted glass, ambient caustics,
  * chromatic lensing dispersion, and physics-based flex response.
  */
 export const LiquidGlass: React.FC<LiquidGlassProps> = ({
@@ -22,6 +23,7 @@ export const LiquidGlass: React.FC<LiquidGlassProps> = ({
   intensity = 'medium',
   interactive = true,
   disableTilt = true,
+  enableCursorLighting = false,
   onClick,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -99,43 +101,53 @@ export const LiquidGlass: React.FC<LiquidGlassProps> = ({
           : 'transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), shadow 0.28s ease',
       }}
     >
-      {/* 1. Real-time Specular Lens Light Refraction Spot */}
+      {/* 1. Static Ambient Gloss Highlight */}
       <div
-        className="absolute pointer-events-none rounded-full transition-opacity duration-300"
+        className="absolute inset-0 pointer-events-none rounded-3xl"
         style={{
-          width: '280px',
-          height: '280px',
-          top: `${pointer.y}%`,
-          left: `${pointer.x}%`,
-          transform: 'translate(-50%, -50%)',
-          background: 'radial-gradient(circle, rgba(255,255,255,0.45) 0%, rgba(168,85,247,0.2) 35%, rgba(56,189,248,0.1) 60%, transparent 80%)',
-          opacity: pointer.isHovered ? 1 : 0.35,
-          mixBlendMode: 'overlay',
+          background: 'linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 50%, rgba(255,255,255,0.05) 100%)',
         }}
       />
 
-      {/* 2. Chromatic Lensing Prism Edge Highlights */}
+      {/* 2. Optional Cursor Spotlight */}
+      {enableCursorLighting && (
+        <>
+          <div
+            className="absolute pointer-events-none rounded-full transition-opacity duration-300"
+            style={{
+              width: '280px',
+              height: '280px',
+              top: `${pointer.y}%`,
+              left: `${pointer.x}%`,
+              transform: 'translate(-50%, -50%)',
+              background: 'radial-gradient(circle, rgba(255,255,255,0.35) 0%, rgba(168,85,247,0.15) 35%, transparent 70%)',
+              opacity: pointer.isHovered ? 1 : 0.2,
+              mixBlendMode: 'overlay',
+            }}
+          />
+          <div
+            className="absolute inset-0 pointer-events-none rounded-3xl transition-opacity duration-300"
+            style={{
+              background: `radial-gradient(circle at ${pointer.x}% ${pointer.y}%, rgba(255,255,255,0.6) 0%, transparent 45%)`,
+              opacity: pointer.isHovered ? 0.2 : 0,
+            }}
+          />
+        </>
+      )}
+
+      {/* 3. Static High-Refraction Rim Top Light Bar */}
       <div
-        className="absolute inset-0 pointer-events-none rounded-3xl transition-opacity duration-300"
+        className="absolute top-0 left-0 right-0 h-[1.5px] pointer-events-none opacity-90"
         style={{
-          background: `radial-gradient(circle at ${pointer.x}% ${pointer.y}%, rgba(255,255,255,0.8) 0%, transparent 45%)`,
-          opacity: pointer.isHovered ? 0.25 : 0.08,
+          background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.85) 50%, transparent 100%)',
         }}
       />
 
-      {/* 3. High-Refraction Rim Top Light Bar */}
-      <div
-        className="absolute top-0 left-0 right-0 h-[1.5px] pointer-events-none opacity-90 transition-all duration-300"
-        style={{
-          background: `linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.95) ${pointer.x}%, transparent 100%)`,
-        }}
-      />
-
-      {/* 4. Left Chromatic Light Edge */}
+      {/* 4. Left Static Light Edge */}
       <div
         className="absolute top-0 left-0 bottom-0 w-[1.5px] pointer-events-none opacity-80"
         style={{
-          background: `linear-gradient(180deg, transparent 0%, rgba(168,85,247,0.6) ${pointer.y}%, transparent 100%)`,
+          background: 'linear-gradient(180deg, transparent 0%, rgba(168,85,247,0.4) 50%, transparent 100%)',
         }}
       />
 
