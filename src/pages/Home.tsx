@@ -148,161 +148,166 @@ export const Home: React.FC<HomeProps> = ({
 
   return (
     <div className="relative flex flex-col space-y-4 px-5 py-4 pb-24 text-left select-none max-w-2xl mx-auto w-full">
-      {/* 1. Header with greeting and avatar */}
-      <div className="flex items-center justify-between pt-1">
-        <div>
-          <span className="text-xs font-semibold text-slate-800 dark:text-[#9AA8C7] tracking-wide block">
-            {getTimeBasedGreeting()},
-          </span>
-          <h2 className="text-xl font-black text-black dark:text-white tracking-tight flex items-center gap-1.5 mt-0.5">
-            {user.name} <span className="text-lg">👋</span>
-          </h2>
+      {/* Sticky Header & Search Bar for Mobile */}
+      <div className="sticky top-0 z-40 bg-[#EEF2F9]/90 dark:bg-[#071329]/90 backdrop-blur-xl -mx-5 px-5 py-3 border-b border-black/5 dark:border-white/10 shadow-xs space-y-3">
+        {/* 1. Header with greeting and avatar */}
+        <div className="flex items-center justify-between pt-1">
+          <div>
+            <span className="text-xs font-semibold text-slate-800 dark:text-[#9AA8C7] tracking-wide block">
+              {getTimeBasedGreeting()},
+            </span>
+            <h2 className="text-xl font-black text-black dark:text-white tracking-tight flex items-center gap-1.5 mt-0.5">
+              {user.name} <span className="text-lg">👋</span>
+            </h2>
+          </div>
+
+          <div className="flex items-center gap-2.5">
+            {/* Install App Quick Button */}
+            {onOpenInstallModal && (
+              <PWAInstallButton onOpenModal={(tab) => onOpenInstallModal(tab)} variant="icon" />
+            )}
+
+            <ThemeToggle size="sm" />
+
+            {/* Profile Avatar with glowing rim */}
+            <button
+              onClick={() => {
+                soundFx.playClick();
+                onNavigate('profile');
+              }}
+              aria-label="View Profile"
+              className="relative group cursor-pointer"
+            >
+              <div className="w-11 h-11 rounded-full p-[2px] bg-gradient-to-tr from-[#7C4DFF] via-[#3B72FF] to-[#0284C7] dark:from-[#8B5CFF] dark:via-[#4C7DFF] dark:to-[#35C9FF] shadow-[0_4px_14px_rgba(124,77,255,0.3)] dark:shadow-[0_0_14px_rgba(139,92,255,0.4)] group-hover:shadow-[0_4px_18px_rgba(124,77,255,0.5)] transition-all">
+                <img
+                  src={user.avatar || photoAvatar}
+                  alt={user.name}
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).src = photoAvatar;
+                  }}
+                  className="w-full h-full object-cover rounded-full border-2 border-white dark:border-[#0B1730]"
+                />
+              </div>
+              <span className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-400 border-2 border-white dark:border-[#071226] rounded-full shadow-xs" />
+            </button>
+          </div>
         </div>
 
-        <div className="flex items-center gap-2.5">
-          {/* Install App Quick Button */}
-          {onOpenInstallModal && (
-            <PWAInstallButton onOpenModal={(tab) => onOpenInstallModal(tab)} variant="icon" />
-          )}
-
-          <ThemeToggle size="sm" />
-
-          {/* Profile Avatar with glowing rim */}
-          <button
-            onClick={() => {
-              soundFx.playClick();
-              onNavigate('profile');
-            }}
-            aria-label="View Profile"
-            className="relative group cursor-pointer"
-          >
-            <div className="w-11 h-11 rounded-full p-[2px] bg-gradient-to-tr from-[#7C4DFF] via-[#3B72FF] to-[#0284C7] dark:from-[#8B5CFF] dark:via-[#4C7DFF] dark:to-[#35C9FF] shadow-[0_4px_14px_rgba(124,77,255,0.3)] dark:shadow-[0_0_14px_rgba(139,92,255,0.4)] group-hover:shadow-[0_4px_18px_rgba(124,77,255,0.5)] transition-all">
-              <img
-                src={user.avatar || photoAvatar}
-                alt={user.name}
-                onError={(e) => {
-                  (e.currentTarget as HTMLImageElement).src = photoAvatar;
-                }}
-                className="w-full h-full object-cover rounded-full border-2 border-white dark:border-[#0B1730]"
+        {/* 2. Neumorphic Capsule Search Input with Recent Searches & Live Suggestions */}
+        <div className="relative w-full z-30">
+          <form onSubmit={handleSearchSubmit} className="relative w-full">
+            <div className="relative flex items-center">
+              <Search
+                size={17}
+                className="absolute left-4 text-purple-600 dark:text-[#A978FF] pointer-events-none"
               />
+              <input
+                type="text"
+                value={searchQuery}
+                onFocus={() => setIsSearchFocused(true)}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search anything, ask AI, or find tools..."
+                className="w-full bg-[#EEF2F9] dark:bg-[#050d1e] neu-inset rounded-full py-3.5 pl-11 pr-20 text-xs font-semibold text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-[#657394] focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-all shadow-[inset_3px_3px_6px_rgba(166,180,204,0.4),inset_-3px_-3px_6px_rgba(255,255,255,0.9)] dark:shadow-none"
+              />
+
+              <div className="absolute right-2.5 flex items-center gap-1">
+                {searchQuery && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      soundFx.playClick();
+                      setSearchQuery('');
+                    }}
+                    aria-label="Clear search"
+                    className="w-6 h-6 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors cursor-pointer"
+                  >
+                    <X size={13} />
+                  </button>
+                )}
+
+                <button
+                  type="submit"
+                  aria-label="Submit search"
+                  className="w-7 h-7 rounded-full neu-primary-btn flex items-center justify-center text-white cursor-pointer hover:scale-105 active:scale-95 transition-all shadow-xs"
+                >
+                  <ArrowRight size={13} />
+                </button>
+              </div>
             </div>
-            <span className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-400 border-2 border-white dark:border-[#071226] rounded-full shadow-xs" />
-          </button>
-        </div>
-      </div>
+          </form>
 
-      {/* 2. Neumorphic Capsule Search Input with Recent Searches & Live Suggestions */}
-      <div className="relative w-full z-30">
-        <form onSubmit={handleSearchSubmit} className="relative w-full">
-          <div className="relative flex items-center">
-            <Search
-              size={17}
-              className="absolute left-4 text-purple-600 dark:text-[#A978FF] pointer-events-none"
-            />
-            <input
-              type="text"
-              value={searchQuery}
-              onFocus={() => setIsSearchFocused(true)}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search anything, ask AI, or find tools..."
-              className="w-full bg-[#EEF2F9] dark:bg-[#050d1e] neu-inset rounded-full py-3.5 pl-11 pr-20 text-xs font-semibold text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-[#657394] focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-all shadow-[inset_3px_3px_6px_rgba(166,180,204,0.4),inset_-3px_-3px_6px_rgba(255,255,255,0.9)] dark:shadow-none"
-            />
+          {/* Live Search Suggestions Dropdown when typing */}
+          {isSearchFocused && searchQuery.trim().length > 0 && (
+            <div className="w-full mt-2 neu-card rounded-2xl p-2.5 border border-black/10 dark:border-purple-500/25 bg-white/95 dark:bg-[#081226]/95 backdrop-blur-xl shadow-xl space-y-1 animate-fadeIn">
+              {/* Direct Ask AI Option */}
+              <div
+                onClick={() => executeSearch(searchQuery)}
+                className="flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-purple-500/10 cursor-pointer text-purple-700 dark:text-purple-300 font-bold text-xs transition-colors group"
+              >
+                <Sparkles size={14} className="text-purple-600 dark:text-[#A978FF] shrink-0" />
+                <span className="truncate flex-1">
+                  Ask Canova AI: <span className="text-slate-900 dark:text-white font-semibold">"{searchQuery}"</span>
+                </span>
+                <ArrowRight size={13} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+              </div>
 
-            <div className="absolute right-2.5 flex items-center gap-1">
-              {searchQuery && (
+              {/* Quick Filter Shortcuts */}
+              <div className="pt-1 border-t border-black/5 dark:border-white/5 flex items-center gap-2 px-1">
+                <span className="text-[10px] font-bold text-slate-500 dark:text-[#657394]">Filter by:</span>
                 <button
                   type="button"
                   onClick={() => {
                     soundFx.playClick();
-                    setSearchQuery('');
+                    onNavigate('tasks');
                   }}
-                  aria-label="Clear search"
-                  className="w-6 h-6 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors cursor-pointer"
+                  className="neu-card-subtle px-2 py-0.5 rounded-lg text-[10px] font-bold text-cyan-700 dark:text-cyan-300 flex items-center gap-1 cursor-pointer hover:bg-cyan-500/10"
                 >
-                  <X size={13} />
+                  <CheckSquare size={10} />
+                  <span>Tasks</span>
                 </button>
-              )}
-
-              <button
-                type="submit"
-                aria-label="Submit search"
-                className="w-7 h-7 rounded-full neu-primary-btn flex items-center justify-center text-white cursor-pointer hover:scale-105 active:scale-95 transition-all shadow-xs"
-              >
-                <ArrowRight size={13} />
-              </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    soundFx.playClick();
+                    onNavigate('files');
+                  }}
+                  className="neu-card-subtle px-2 py-0.5 rounded-lg text-[10px] font-bold text-blue-700 dark:text-blue-300 flex items-center gap-1 cursor-pointer hover:bg-blue-500/10"
+                >
+                  <FileText size={10} />
+                  <span>Files</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    soundFx.playClick();
+                    onNavigate('explore');
+                  }}
+                  className="neu-card-subtle px-2 py-0.5 rounded-lg text-[10px] font-bold text-purple-700 dark:text-purple-300 flex items-center gap-1 cursor-pointer hover:bg-purple-500/10"
+                >
+                  <LayoutGrid size={10} />
+                  <span>Tools</span>
+                </button>
+              </div>
             </div>
-          </div>
-        </form>
+          )}
 
-        {/* Live Search Suggestions Dropdown when typing */}
-        {isSearchFocused && searchQuery.trim().length > 0 && (
-          <div className="w-full mt-2 neu-card rounded-2xl p-2.5 border border-black/10 dark:border-purple-500/25 bg-white/95 dark:bg-[#081226]/95 backdrop-blur-xl shadow-xl space-y-1 animate-fadeIn">
-            {/* Direct Ask AI Option */}
-            <div
-              onClick={() => executeSearch(searchQuery)}
-              className="flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-purple-500/10 cursor-pointer text-purple-700 dark:text-purple-300 font-bold text-xs transition-colors group"
-            >
-              <Sparkles size={14} className="text-purple-600 dark:text-[#A978FF] shrink-0" />
-              <span className="truncate flex-1">
-                Ask Canova AI: <span className="text-slate-900 dark:text-white font-semibold">"{searchQuery}"</span>
-              </span>
-              <ArrowRight size={13} className="opacity-0 group-hover:opacity-100 transition-opacity" />
-            </div>
-
-            {/* Quick Filter Shortcuts */}
-            <div className="pt-1 border-t border-black/5 dark:border-white/5 flex items-center gap-2 px-1">
-              <span className="text-[10px] font-bold text-slate-500 dark:text-[#657394]">Filter by:</span>
-              <button
-                type="button"
-                onClick={() => {
-                  soundFx.playClick();
-                  onNavigate('tasks');
-                }}
-                className="neu-card-subtle px-2 py-0.5 rounded-lg text-[10px] font-bold text-cyan-700 dark:text-cyan-300 flex items-center gap-1 cursor-pointer hover:bg-cyan-500/10"
-              >
-                <CheckSquare size={10} />
-                <span>Tasks</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  soundFx.playClick();
-                  onNavigate('files');
-                }}
-                className="neu-card-subtle px-2 py-0.5 rounded-lg text-[10px] font-bold text-blue-700 dark:text-blue-300 flex items-center gap-1 cursor-pointer hover:bg-blue-500/10"
-              >
-                <FileText size={10} />
-                <span>Files</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  soundFx.playClick();
-                  onNavigate('explore');
-                }}
-                className="neu-card-subtle px-2 py-0.5 rounded-lg text-[10px] font-bold text-purple-700 dark:text-purple-300 flex items-center gap-1 cursor-pointer hover:bg-purple-500/10"
-              >
-                <LayoutGrid size={10} />
-                <span>Tools</span>
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Recent Searches Chips below search bar (when empty) */}
-        {isSearchFocused && !searchQuery && recentSearches.length > 0 && (
-          <RecentSearchChips
-            searches={recentSearches}
-            onSelect={(item) => {
-              setSearchQuery(item);
-              executeSearch(item);
-            }}
-            onRemove={removeSearch}
-            onClear={clearSearches}
-            onClose={() => setIsSearchFocused(false)}
-          />
-        )}
+          {/* Recent Searches Chips below search bar (when empty) */}
+          {isSearchFocused && !searchQuery && recentSearches.length > 0 && (
+            <RecentSearchChips
+              searches={recentSearches}
+              onSelect={(item) => {
+                setSearchQuery(item);
+                executeSearch(item);
+              }}
+              onRemove={removeSearch}
+              onClear={clearSearches}
+              onClose={() => setIsSearchFocused(false)}
+            />
+          )}
+        </div>
       </div>
+
+
 
       {/* 3. Hero Card: AI Assistant */}
       <div className="relative rounded-3xl p-5 overflow-hidden neu-glass-card liquid-shimmer transition-all">

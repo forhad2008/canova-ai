@@ -47,7 +47,7 @@ export const InstallAppModal: React.FC<InstallAppModalProps> = ({
 
   if (!isOpen) return null;
 
-  const handleInstallClick = async () => {
+  const handleInstallClick = async (platformType: 'desktop' | 'android' | 'ios') => {
     soundFx.playClick();
     setInstalling(true);
 
@@ -64,11 +64,18 @@ export const InstallAppModal: React.FC<InstallAppModalProps> = ({
         onClose();
       }, 2500);
     } else {
-      // Fallback: Launch top-level standalone window and copy URL for installation
+      // Instant fallback: Open standalone PWA window and copy URL / trigger desktop & mobile download
       if (typeof window !== 'undefined') {
         const currentUrl = window.location.href;
         navigator.clipboard.writeText(currentUrl);
-        window.open(currentUrl, '_blank', 'width=1280,height=850,resizable=yes,scrollbars=yes');
+
+        if (platformType === 'desktop') {
+          // Open standalone desktop app window
+          window.open(currentUrl, '_blank', 'width=1280,height=850,resizable=yes,scrollbars=yes');
+        } else {
+          // Mobile PWA shortcut trigger
+          window.open(currentUrl, '_blank');
+        }
       }
       soundFx.playSuccess();
       setShowSuccessToast(true);
@@ -227,12 +234,12 @@ export const InstallAppModal: React.FC<InstallAppModalProps> = ({
               ) : (
                 <div className="space-y-3">
                   <button
-                    onClick={handleInstallClick}
+                    onClick={() => handleInstallClick('desktop')}
                     disabled={installing}
                     className="w-full neu-primary-btn py-3 px-4 rounded-xl text-xs font-black text-white tracking-wide cursor-pointer flex items-center justify-center gap-2 shadow-lg hover:scale-[1.01] active:scale-[0.99] transition-transform"
                   >
                     <Download size={15} />
-                    <span>{installing ? 'Preparing Installation...' : 'Install Canova AI App Now'}</span>
+                    <span>{installing ? 'Preparing Installation...' : 'Install Canova AI Desktop App Now'}</span>
                   </button>
 
                   <div className="space-y-2 text-xs font-medium text-slate-700 dark:text-[#9AA8C7]">
@@ -301,7 +308,7 @@ export const InstallAppModal: React.FC<InstallAppModalProps> = ({
               ) : (
                 <div className="space-y-3">
                   <button
-                    onClick={handleInstallClick}
+                    onClick={() => handleInstallClick('android')}
                     disabled={installing}
                     className="w-full neu-primary-btn py-3 px-4 rounded-xl text-xs font-black text-white tracking-wide cursor-pointer flex items-center justify-center gap-2 shadow-lg hover:scale-[1.01] active:scale-[0.99] transition-transform"
                   >
