@@ -70,7 +70,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   ];
 
   return (
-    <aside className="w-18 md:w-20 lg:w-60 xl:w-64 bg-[#EEF2F9]/85 dark:bg-[#071226]/85 border-r border-[#CBD5E1]/60 dark:border-white/10 backdrop-blur-2xl h-full flex flex-col justify-between p-3 md:p-3.5 lg:p-4 shrink-0 select-none transition-all duration-300 shadow-[8px_0_24px_rgba(166,180,204,0.35)] dark:shadow-[8px_0_30px_rgba(0,0,0,0.5)] z-20">
+    <aside className="w-18 md:w-20 lg:w-60 xl:w-64 bg-[#EEF2F9]/85 dark:bg-[#071226]/85 border-r border-[#CBD5E1]/60 dark:border-white/10 backdrop-blur-2xl h-full flex flex-col justify-between p-3 md:p-3.5 lg:p-4 shrink-0 select-none transition-all duration-300 shadow-[8px_0_24px_rgba(166,180,204,0.35)] dark:shadow-[8px_0_30px_rgba(0,0,0,0.5)] z-20 overflow-y-auto custom-scrollbar">
       {/* Brand logo & status (Click to return to Home Dashboard) */}
       <div>
         <button
