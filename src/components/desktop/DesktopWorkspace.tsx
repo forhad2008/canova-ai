@@ -56,6 +56,7 @@ import { OverdueBadge } from '../common/OverdueBadge';
 import { TaskCalendarView } from '../common/TaskCalendarView';
 import { isTaskOverdue } from '../../utils/alarmService';
 import { TaskProgressRing } from '../common/TaskProgressRing';
+import { WeeklyGoalCard } from '../common/WeeklyGoalCard';
 import { useTheme } from '../../utils/ThemeContext';
 import { soundFx } from '../../utils/audio';
 import { getTimeBasedGreeting } from '../../utils/greeting';
@@ -299,7 +300,7 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
   ];
 
   return (
-    <div className="w-full h-full flex flex-col overflow-hidden text-left select-none bg-[#EEF2F9] dark:bg-[#030712] transition-colors duration-200">
+    <div className="w-full h-full flex flex-col overflow-hidden text-left select-none bg-[#EEF2F9]/60 dark:bg-[#030712]/60 backdrop-blur-3xl transition-colors duration-200">
       {/* 1. Global Desktop Workspace Header */}
       <div className="relative z-50 px-4 md:px-6 lg:px-8 py-3.5 border-b border-[#CBD5E1]/60 dark:border-white/8 bg-[#EEF2F9]/90 dark:bg-[#071226]/75 backdrop-blur-2xl flex items-center justify-between gap-3 lg:gap-4 shrink-0 shadow-[0_4px_16px_rgba(166,180,204,0.35)] dark:shadow-md">
         {/* Global Upgraded Omnibar Search Bar (⌘K / Ctrl+K) */}
@@ -605,8 +606,8 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
             {/* Top Row: AI Hero Banner (2/3) + Focus Sprint Widget (1/3) */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* AI Hero Banner */}
-              <div className="lg:col-span-2 neu-card rounded-3xl p-7 relative overflow-hidden bg-white dark:bg-gradient-to-br dark:from-[#101e40] dark:via-[#09152e] dark:to-[#050c1c] border border-black/8 dark:border-purple-500/25 flex flex-col justify-between">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/10 dark:bg-purple-500/15 rounded-full blur-3xl pointer-events-none" />
+              <div className="lg:col-span-2 neu-glass-card rounded-3xl p-7 relative overflow-hidden liquid-shimmer flex flex-col justify-between">
+                <div className="absolute top-0 right-0 w-72 h-72 bg-gradient-to-br from-purple-500/20 via-cyan-400/15 to-transparent rounded-full blur-3xl pointer-events-none" />
 
                 <div className="flex items-start justify-between gap-6 relative z-10">
                   <div className="space-y-3 max-w-lg">
@@ -727,6 +728,9 @@ export const DesktopWorkspace: React.FC<DesktopWorkspaceProps> = ({
                   Manage All Tasks
                 </button>
               </div>
+
+              {/* Weekly Goal Progress Component */}
+              <WeeklyGoalCard tasks={tasks} onNavigate={onNavigate} />
             </div>
 
             {/* 4 Large Neumorphic Workspace Hubs */}

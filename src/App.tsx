@@ -30,6 +30,7 @@ import { InstallAppModal } from './components/modals/InstallAppModal';
 import { OfflineIndicator } from './components/common/OfflineIndicator';
 
 import { startAlarmService } from './utils/alarmService';
+import { checkAndExecute24hReset } from './utils/autoResetService';
 
 import photoAvatar from './assets/photo.png';
 
@@ -219,6 +220,23 @@ export default function App() {
     );
   }, [tasks]);
 
+  // 24-Hour Auto-Reset Tasks Runner (Runs on mount and interval)
+  useEffect(() => {
+    // Immediate check on app load
+    checkAndExecute24hReset(tasks, (newTasks) => {
+      setTasks(newTasks);
+    });
+
+    // Check every 10 seconds for 24h reset cycle expiry
+    const intervalId = setInterval(() => {
+      checkAndExecute24hReset(tasks, (newTasks) => {
+        setTasks(newTasks);
+      });
+    }, 10000);
+
+    return () => clearInterval(intervalId);
+  }, [tasks]);
+
   // Task actions
   const handleToggleTask = (id: string) => {
     setTasks((prev) =>
@@ -374,7 +392,23 @@ export default function App() {
   };
 
   return (
-    <div className="w-screen h-screen bg-[#EEF2F9] dark:bg-[#030712] text-[#1E293B] dark:text-[#F7F8FF] overflow-hidden flex flex-col transition-colors duration-200">
+    <div className="w-screen h-screen bg-[#EEF2F9] dark:bg-[#030712] text-[#1E293B] dark:text-[#F7F8FF] overflow-hidden flex flex-col relative transition-colors duration-200">
+      {/* 
+        ========================================================================
+        AMBIENT LIQUID LIGHT MESH (Refracted through all Neumorphic Glass layers)
+        ========================================================================
+      */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0 select-none">
+        {/* Top-left Liquid Purple Orb */}
+        <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-gradient-to-br from-purple-500/25 via-indigo-500/15 to-transparent blur-3xl animate-liquid-blob-1 dark:from-purple-600/20 dark:via-indigo-600/12" />
+        
+        {/* Top-right Liquid Cyan & Sky Orb */}
+        <div className="absolute top-1/4 -right-28 w-[420px] h-[420px] rounded-full bg-gradient-to-bl from-cyan-400/20 via-blue-500/15 to-transparent blur-3xl animate-liquid-blob-2 dark:from-cyan-500/15 dark:via-blue-600/10" />
+        
+        {/* Bottom-left Liquid Magenta & Violet Caustic Orb */}
+        <div className="absolute -bottom-24 left-1/3 w-[500px] h-[500px] rounded-full bg-gradient-to-tr from-fuchsia-400/18 via-purple-600/12 to-transparent blur-3xl animate-liquid-blob-3 dark:from-fuchsia-600/15 dark:via-purple-800/10" />
+      </div>
+
       {/* 
         ========================================================================
         DESKTOP SUITE (Real, full-screen edge-to-edge professional workstation)
@@ -382,7 +416,7 @@ export default function App() {
         NO mobile phone frame, NO mockup bezel, NO mobile switcher on desktop
         ========================================================================
       */}
-      <div className="hidden md:flex w-full h-full overflow-hidden">
+      <div className="hidden md:flex w-full h-full overflow-hidden relative z-10">
         {/* Left Desktop Sidebar */}
         <Sidebar
           currentScreen={currentScreen}
@@ -424,7 +458,7 @@ export default function App() {
         Full-screen responsive native mobile experience
         ========================================================================
       */}
-      <div className="flex md:hidden w-full h-full flex-col overflow-hidden bg-[#EEF2F9] dark:bg-[#030712] relative transition-colors duration-200">
+      <div className="flex md:hidden w-full h-full flex-col overflow-hidden bg-[#EEF2F9]/70 dark:bg-[#030712]/70 relative z-10 transition-colors duration-200 backdrop-blur-3xl">
         {/* Mobile Screen Content */}
         <div className="flex-1 overflow-y-auto overflow-x-hidden relative no-scrollbar">
           {renderMobileContent()}

@@ -21,6 +21,7 @@ import { ScreenType, UserProfile, Task } from '../types';
 import { SphereOrb, SmokePattern, SmokeColor } from '../components/common/SphereOrb';
 import { NeumorphicDensitySlider } from '../components/common/NeumorphicDensitySlider';
 import { TaskProgressRing } from '../components/common/TaskProgressRing';
+import { WeeklyGoalCard } from '../components/common/WeeklyGoalCard';
 import { soundFx } from '../utils/audio';
 import { useRecentSearches } from '../utils/useRecentSearches';
 import { RecentSearchChips } from '../components/common/RecentSearchChips';
@@ -304,8 +305,8 @@ export const Home: React.FC<HomeProps> = ({
       </div>
 
       {/* 3. Hero Card: AI Assistant */}
-      <div className="relative rounded-3xl p-5 overflow-hidden border border-white/95 dark:border-purple-500/20 bg-white dark:bg-gradient-to-br dark:from-[#101d3b] dark:via-[#09152e] dark:to-[#060e20] shadow-[10px_14px_30px_rgba(166,180,204,0.45),-10px_-10px_24px_rgba(255,255,255,1)] dark:shadow-[12px_16px_32px_rgba(0,0,0,0.58)] transition-all">
-        <div className="absolute top-0 right-0 w-44 h-44 bg-purple-400/10 dark:bg-purple-500/15 rounded-full blur-2xl pointer-events-none" />
+      <div className="relative rounded-3xl p-5 overflow-hidden neu-glass-card liquid-shimmer transition-all">
+        <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-br from-purple-500/20 via-cyan-400/15 to-transparent rounded-full blur-2xl pointer-events-none" />
 
         <div className="flex items-center justify-between gap-3 relative z-10">
           <div className="space-y-2 max-w-[62%]">
@@ -451,30 +452,35 @@ export const Home: React.FC<HomeProps> = ({
         </div>
       </div>
 
-      {/* 4. Daily Goal Progress Ring Component */}
-      <div
-        onClick={() => {
-          soundFx.playClick();
-          onNavigate('tasks');
-        }}
-        className="cursor-pointer group"
-      >
-        <div className="flex items-center justify-between mb-2 px-1">
-          <span className="text-xs font-extrabold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-1.5">
-            <CheckCircle2 size={15} className="text-purple-600 dark:text-[#8B5CFF]" />
-            <span>Daily Goal Progress</span>
-          </span>
-          <span className="text-[11px] font-bold text-purple-700 dark:text-purple-300 group-hover:underline flex items-center gap-0.5">
-            Manage Tasks <ArrowRight size={12} />
-          </span>
+      {/* 4. Daily & Weekly Goal Progress Section */}
+      <div className="space-y-4">
+        <div
+          onClick={() => {
+            soundFx.playClick();
+            onNavigate('tasks');
+          }}
+          className="cursor-pointer group"
+        >
+          <div className="flex items-center justify-between mb-2 px-1">
+            <span className="text-xs font-extrabold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-1.5">
+              <CheckCircle2 size={15} className="text-purple-600 dark:text-[#8B5CFF]" />
+              <span>Daily Goal Progress</span>
+            </span>
+            <span className="text-[11px] font-bold text-purple-700 dark:text-purple-300 group-hover:underline flex items-center gap-0.5">
+              Manage Tasks <ArrowRight size={12} />
+            </span>
+          </div>
+
+          <TaskProgressRing
+            total={activeTaskList.length}
+            completed={completedTodayCount}
+            highPriorityPending={highPriorityPendingCount}
+            activeTabLabel="Daily Goal"
+          />
         </div>
 
-        <TaskProgressRing
-          total={activeTaskList.length}
-          completed={completedTodayCount}
-          highPriorityPending={highPriorityPendingCount}
-          activeTabLabel="Daily Goal"
-        />
+        {/* Weekly Goal Progress Component with Circular Ring */}
+        <WeeklyGoalCard tasks={tasks} onNavigate={onNavigate} />
       </div>
 
       {/* 5. 2-Column Grid of 4 Cards */}

@@ -79,7 +79,7 @@ export const TaskProgressRing: React.FC<TaskProgressRingProps> = ({
   const pendingCount = Math.max(0, total - completed);
 
   return (
-    <div className="neu-card rounded-2xl p-4 sm:p-5 flex items-center gap-4 sm:gap-6 border border-black/8 dark:border-white/8 relative overflow-hidden transition-all duration-300">
+    <div className="neu-glass-card rounded-2xl p-4 sm:p-5 flex items-center gap-4 sm:gap-6 relative overflow-hidden liquid-shimmer transition-all duration-300">
       {/* Background ambient glow effect */}
       <div
         className="absolute -right-12 -top-12 w-32 h-32 rounded-full blur-3xl pointer-events-none opacity-20 dark:opacity-30"

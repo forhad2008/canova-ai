@@ -17,9 +17,9 @@ export const BottomNav: React.FC<BottomNavProps> = ({
   if (currentScreen === 'splash') return null;
 
   return (
-    <div className="sticky bottom-0 left-0 right-0 w-full z-50 shrink-0 select-none">
-      {/* Background container with rounded top and neumorphic glass finish */}
-      <div className="relative bg-[#EEF2F9]/95 dark:bg-[#071329]/95 backdrop-blur-xl border-t border-[#CBD5E1]/70 dark:border-white/10 rounded-t-[32px] px-4 pt-2 pb-2.5 shadow-[0_-8px_24px_rgba(166,180,204,0.45)] dark:shadow-[0_-10px_30px_rgba(0,0,0,0.7)] transition-colors duration-200">
+    <div className="sticky bottom-0 left-0 right-0 w-full z-50 shrink-0 select-none pb-safe">
+      {/* Background container with rounded top and neumorphic liquid glass finish */}
+      <div className="relative bg-[#EEF2F9]/85 dark:bg-[#071329]/85 backdrop-blur-2xl border-t border-white/90 dark:border-white/12 rounded-t-[32px] px-4 pt-2.5 pb-3 shadow-[0_-10px_32px_rgba(166,180,204,0.42),inset_0_1.5px_2px_rgba(255,255,255,0.95)] dark:shadow-[0_-12px_36px_rgba(0,0,0,0.8),inset_0_1.5px_2px_rgba(255,255,255,0.18)] transition-colors duration-200">
         <div className="flex items-center justify-between max-w-md mx-auto relative">
           {/* 1. Home */}
           <button

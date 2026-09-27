@@ -28,6 +28,12 @@ import {
   sendBrowserNotification,
   DailyCheckinSettings,
 } from '../utils/alarmService';
+import {
+  getAutoResetSettings,
+  saveAutoResetSettings,
+  getTimeUntilNextReset,
+  AutoResetSettings,
+} from '../utils/autoResetService';
 
 interface SettingsProps {
   onBack: () => void;
@@ -51,6 +57,31 @@ export const Settings: React.FC<SettingsProps> = ({
   const [checkinSettings, setCheckinSettings] = useState<DailyCheckinSettings>(() =>
     getCheckinSettings()
   );
+
+  // 24-Hour Auto-Reset Settings State
+  const [autoReset, setAutoReset] = useState<AutoResetSettings>(() => getAutoResetSettings());
+  const [nextResetTimer, setNextResetTimer] = useState(() =>
+    getTimeUntilNextReset(autoReset.lastResetTimestamp)
+  );
+
+  React.useEffect(() => {
+    const timerId = setInterval(() => {
+      setNextResetTimer(getTimeUntilNextReset(autoReset.lastResetTimestamp));
+    }, 1000);
+    return () => clearInterval(timerId);
+  }, [autoReset.lastResetTimestamp]);
+
+  const handleToggleAutoReset = () => {
+    soundFx.playClick();
+    const nextEnabled = !autoReset.enabled;
+    const updated: AutoResetSettings = {
+      enabled: nextEnabled,
+      // If enabling for the first time, reset cycle starts from now
+      lastResetTimestamp: nextEnabled ? Date.now() : autoReset.lastResetTimestamp,
+    };
+    setAutoReset(updated);
+    saveAutoResetSettings(updated);
+  };
   const [newCheckinTime, setNewCheckinTime] = useState('12:00');
   const [notifPermission, setNotifPermission] = useState<NotificationPermission | 'unsupported'>(
     getNotificationPermissionStatus()
@@ -234,6 +265,68 @@ export const Settings: React.FC<SettingsProps> = ({
                 <span>{testNotifSent ? 'Test Alert Sent!' : 'Test Notification'}</span>
               </button>
             </div>
+          </div>
+        )}
+      </div>
+
+      {/* 2B. 24-Hour Auto-Reset Tasks Switch */}
+      <div className="neu-card rounded-2xl p-4 space-y-3.5 border border-cyan-500/30 bg-white dark:bg-[#071329]">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2 text-xs font-extrabold text-cyan-600 dark:text-[#35C9FF]">
+            <Clock size={18} className="text-cyan-500" />
+            <span>24-Hour Task Auto-Reset</span>
+          </div>
+
+          <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full border ${
+            autoReset.enabled
+              ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/30'
+              : 'bg-slate-500/15 text-slate-600 dark:text-slate-400 border-slate-500/20'
+          }`}>
+            {autoReset.enabled ? 'Auto-Reset ON' : 'Disabled'}
+          </span>
+        </div>
+
+        <p className="text-[11px] font-medium text-slate-600 dark:text-[#9AA8C7] leading-relaxed">
+          When turned on, all completed tasks will automatically reset every 24 hours so you can start each day with a fresh task list.
+        </p>
+
+        {/* Master Auto-Reset Toggle Control */}
+        <div className="flex items-center justify-between p-3 rounded-xl neu-inset bg-[#F8FAFC] dark:bg-[#050d1e] border border-black/5 dark:border-white/5">
+          <div>
+            <h4 className="text-xs font-bold text-slate-900 dark:text-white">Auto-Reset All Tasks Every 24 Hours</h4>
+            <p className="text-[10.5px] text-slate-500 dark:text-[#657394]">
+              {autoReset.enabled
+                ? `Next reset cycle in: ${nextResetTimer.formatted}`
+                : 'Turn on to enable 24h reset cycle'}
+            </p>
+          </div>
+          <button
+            onClick={handleToggleAutoReset}
+            aria-label="Toggle 24-Hour Task Auto-Reset"
+            className={`w-11 h-6 rounded-full transition-colors relative p-0.5 cursor-pointer ${
+              autoReset.enabled ? 'bg-gradient-to-r from-cyan-500 to-blue-600' : 'bg-slate-700'
+            }`}
+          >
+            <div
+              className={`w-5 h-5 rounded-full bg-white shadow-sm transition-transform ${
+                autoReset.enabled ? 'translate-x-5' : 'translate-x-0'
+              }`}
+            />
+          </button>
+        </div>
+
+        {autoReset.enabled && (
+          <div className="p-2.5 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-between text-xs font-medium text-cyan-800 dark:text-cyan-200">
+            <span>Cycle duration: 24 Hours (86,400s)</span>
+            <button
+              onClick={() => {
+                soundFx.playClick();
+                handleReset();
+              }}
+              className="px-2.5 py-1 rounded-lg bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-900 dark:text-cyan-100 font-bold transition-colors cursor-pointer"
+            >
+              Reset Tasks Now
+            </button>
           </div>
         )}
       </div>
